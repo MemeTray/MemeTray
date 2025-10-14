@@ -1,7 +1,7 @@
 <!-- Project Title + Logo -->
 <div align="center">
   <a href="https://memetray.org/" target="_blank">
-    <img src="Images/MemeTray.png" alt="MemeTray">
+    <img src="Images/MemeTray.png" alt="MemeTray" width="240">
   </a>
   <h1>MemeTray</h1>
 </div>
