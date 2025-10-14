@@ -1,3 +1,11 @@
+<!-- Project Title + Logo -->
+<div align="center">
+  <a href="https://memetray.org/" target="_blank">
+    <img src="Images/MemeTray.png" alt="Catime" width="240">
+  </a>
+  <h1>MemeTray</h1>
+</div>
+
 ## ⚠️ Disclaimer & Copyright Notice
 
 **This notice applies to all GIF image content included in the `MemeTray` project.**
