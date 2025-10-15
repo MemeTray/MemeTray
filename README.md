@@ -45,3 +45,9 @@ Please include the following information in your notice:
 4.  A statement by you that you are the copyright owner or are authorized to act on the copyright owner's behalf.
 
 Upon receiving a valid notice and verifying the details, we are committed to **removing the infringing content immediately**.
+
+---
+
+<div align="center">
+  Made with ❤️ & ⌨️
+</div>
