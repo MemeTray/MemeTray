@@ -61,7 +61,7 @@ input[type="text"]{font-size:12px;padding:6px 10px;width:220px;border:1px solid 
 .tsIcon:hover{background:rgba(255,255,255,.67)}
 .taskIcon{display:flex;flex-direction:row;align-items:center;justify-content:center;width:24px}
 .prtclk{display:flex;align-items:center;gap:6px}
-.taskDate{display:flex;padding:0 8px;font-size:11px;flex-direction:column;justify-content:center}
+.taskDate{display:flex;padding:0 8px;font-size:12px;flex-direction:column;justify-content:center}
 .taskDate div{text-align:center;font-weight:400}
 .graybd{border:solid 1px transparent;height:1rem}
 .graybd:hover{border:solid 1px #a1a1a1;border-width:0 0 0 2px}
