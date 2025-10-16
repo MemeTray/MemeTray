@@ -1,5 +1,5 @@
 function zeroPad(num, size){const s=String(num);return s.length>=size?s:"0".repeat(size-s.length)+s}
-const sections=window.MEMETRAY_SECTIONS||[]
+let sections=window.MEMETRAY_SECTIONS||[]
 const GIF_BASE=location.pathname.includes('/docs/')?'../gifs/':'./gifs/'
 const container=document.getElementById("container")
 const searchInput=document.getElementById("search")
@@ -33,7 +33,56 @@ function updateClock(){const d=new Date();const hh=String(d.getHours()).padStart
   if(clockDate) clockDate.textContent=formatDate(d);
 }
 setInterval(updateClock,1000);updateClock()
-buildItems()
+
+function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
+async function fileExists(url){
+  try{
+    const u=url+(url.includes('?')?'&':'?')+"t="+Date.now();
+    // 先尝试 HEAD，部分静态托管不支持则回退 GET
+    const r=await fetch(u,{method:'HEAD',cache:'no-store'}); if(r.ok) return true;
+    const r2=await fetch(u,{cache:'no-store'}); return r2.ok;
+  }catch(e){return false}
+}
+async function probeCountForDir(dir){
+  let prev=0, curr=1, maxCap=10000;
+  // 指数探测：1,2,4,8,... 直到不存在
+  while(curr<=maxCap){
+    const ok=await fileExists(GIF_BASE+dir+"/"+fileName(dir,curr));
+    if(!ok) break; prev=curr; curr*=2;
+  }
+  if(prev===0){return 0}
+  // 二分查找最后存在的编号
+  let lo=prev, hi=Math.min(curr-1,maxCap);
+  while(lo<hi){
+    const mid=Math.floor((lo+hi+1)/2);
+    const ok=await fileExists(GIF_BASE+dir+"/"+fileName(dir,mid));
+    if(ok) lo=mid; else hi=mid-1;
+  }
+  return lo;
+}
+
+async function fetchSections(){
+  if(sections && sections.length){buildItems();return}
+  try{
+    // 仅使用本地静态索引，避免任何外部 API 依赖
+    const localIdx=await fetch(GIF_BASE+"_index.json",{cache:'no-store'})
+    if(localIdx.ok){
+      const data=await localIdx.json()
+      if(Array.isArray(data.sections)){
+        const dirs=data.sections.map(String)
+        const results=await Promise.all(dirs.map(async (name)=>{
+          const count=await probeCountForDir(name)
+          const files=[]; for(let i=1;i<=count;i++){files.push(fileName(name,i))}
+          return {key:name,title:name,dir:name,files}
+        }))
+        sections=results
+      }
+    }
+  }catch(err){console.warn('读取本地索引失败',err)}
+  buildItems()
+}
+
+fetchSections()
 
 // 禁止缩放（Ctrl +/-/0、Ctrl+滚轮、手势）
 window.addEventListener('keydown', (e)=>{
