@@ -44,8 +44,14 @@ function buildItems(){container.innerHTML="";const selected=sectionSelect.value;
 
 // 主题切换已移除
 
+const CATIME_LOGO_SRC = './docs/icons/catime.png'
+
 function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
-function clearTrayIcon(){if(trayIcon){trayIcon.innerHTML=""}}
+function clearTrayIcon(){
+  if(trayIcon){
+    trayIcon.innerHTML = `<img src="${CATIME_LOGO_SRC}" alt="Catime">`
+  }
+}
 
 // 时钟
 function formatDate(d){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return y+"/"+m+"/"+day}
@@ -54,6 +60,9 @@ function updateClock(){const d=new Date();const hh=String(d.getHours()).padStart
   if(clockDate) clockDate.textContent=formatDate(d);
 }
 setInterval(updateClock,1000);updateClock()
+
+// Set default tray icon on load
+clearTrayIcon()
 
 function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
 async function fileExists(url){
