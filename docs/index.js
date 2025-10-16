@@ -66,7 +66,7 @@ async function fetchSections(){
   if(sections && sections.length){buildItems();return}
   try{
     // 仅使用本地静态索引，避免任何外部 API 依赖
-    const localIdx=await fetch(GIF_BASE+"_index.json",{cache:'no-store'})
+    const localIdx=await fetch(GIF_BASE+"index.json",{cache:'no-store'})
     if(localIdx.ok){
       const data=await localIdx.json()
       if(Array.isArray(data.sections)){
