@@ -110,12 +110,12 @@ function buildItems(){
 
 // 主题切换已移除
 
-const CATIME_LOGO_SRC = './docs/icons/catime.png'
+// 移除默认 Catime 图标常量
 
 function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
 function clearTrayIcon(){
   if(trayIcon){
-    trayIcon.innerHTML = `<img src="${CATIME_LOGO_SRC}" alt="Catime">`
+    trayIcon.innerHTML=""
   }
 }
 
@@ -127,8 +127,7 @@ function updateClock(){const d=new Date();const hh=String(d.getHours()).padStart
 }
 setInterval(updateClock,1000);updateClock()
 
-// Set default tray icon on load
-clearTrayIcon()
+// 删除初始化时设置默认托盘图标的调用
 
 function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
 async function fileExists(url){
