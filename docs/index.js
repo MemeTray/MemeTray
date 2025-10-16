@@ -10,6 +10,22 @@ const trayIcon=document.getElementById("trayIcon")
 const clockTime=document.getElementById("clock-time")
 const clockDate=document.getElementById("clock-date")
 
+// 加载遮罩
+const splash=document.getElementById('splash')
+const splashDots=document.getElementById('splashDots')
+let splashTimer=null
+function startSplash(){
+  if(!splash) return
+  splash.classList.remove('splash--hide')
+  if(splashTimer) return
+  let i=0; const states=['.','..','...']
+  splashTimer=setInterval(()=>{if(splashDots){splashDots.textContent=states[i%3]} i++},400)
+}
+function stopSplash(){
+  if(splash){splash.classList.add('splash--hide')}
+  if(splashTimer){clearInterval(splashTimer); splashTimer=null}
+}
+
 function createSection(title,count){const sec=document.createElement('div');sec.className='section';const h2=document.createElement('h2');h2.textContent=count?`${title} (${count})`:title;const grid=document.createElement('div');grid.className='gallery';sec.appendChild(h2);sec.appendChild(grid);
   const legal=document.createElement('div');legal.className='legal';legal.innerHTML='<strong>版权声明</strong>：本网站展示的 GIF 资源均来源于公开互联网，版权归原作者或权利人所有；本站仅用于学习、研究与技术交流，严禁任何商业或非法用途。如您认为内容侵权，请联系我们，我们将在核实后立即移除。<div class="legal-links"><a href="https://github.com/MemeTray/MemeTray/issues" target="_blank" rel="noopener">提交 Issue</a><span>·</span><a href="mailto:vladelaina@gmail.com">vladelaina@gmail.com</a></div>';
   sec.appendChild(legal);
@@ -66,6 +82,7 @@ async function probeCountForDir(dir){
 }
 
 async function fetchSections(){
+  startSplash()
   if(sections && sections.length){buildItems();return}
   try{
     // 仅使用本地静态索引，避免任何外部 API 依赖
@@ -112,9 +129,12 @@ async function fetchSections(){
 
     // 3) 预加载所有分组前 48 张，确保后续切换秒开
     preloadOthers(sections)
+    // 完成本地索引探测和首屏渲染后，隐藏遮罩
+    stopSplash()
 
   }catch(err){
     console.warn('读取本地索引失败',err)
+    stopSplash()
   }
 }
 
