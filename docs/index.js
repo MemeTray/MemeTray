@@ -15,12 +15,14 @@ function createSection(title,count){const sec=document.createElement('div');sec.
   sec.appendChild(legal);
   return {sec,grid}}
 
-function buildItems(){container.innerHTML="";const q="";const selected=sectionSelect.value;for(const {key,title,dir,files} of sections){if(selected!=="all"&&selected!==key)continue;const list=files.slice().reverse();const shown=list;const {sec,grid}=createSection(title,shown.length);for(const id of shown){const href=GIF_BASE+dir+"/"+id;const a=document.createElement("a");a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};
-thumb.appendChild(img);a.appendChild(thumb);
-// 悬停预览：进入显示，离开清空
-a.addEventListener("mouseenter",()=>{setTrayIcon(href)})
-a.addEventListener("mouseleave",()=>{clearTrayIcon()})
-grid.appendChild(a)}container.appendChild(sec)}}
+function renderOneSection(secObj){const {key,title,dir,files}=secObj;const list=files.slice().reverse();const shown=list;const {sec,grid}=createSection(title,shown.length);for(const id of shown){const href=GIF_BASE+dir+"/"+id;const a=document.createElement("a");a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};thumb.appendChild(img);a.appendChild(thumb);a.addEventListener("mouseenter",()=>{setTrayIcon(href)});a.addEventListener("mouseleave",()=>{clearTrayIcon()});grid.appendChild(a)}container.appendChild(sec)}
+
+function progressiveRender(others){let i=0;const next=()=>{if(i>=others.length)return;const item=others[i++];const cb=()=>{renderOneSection(item);next()};if('requestIdleCallback'in window){requestIdleCallback(cb,{timeout:250})}else{setTimeout(cb,0)}};next()}
+
+function preloadSectionImages(secObj,max=48){const {dir,files}=secObj;const list=files.slice(0,max);for(const id of list){const img=new Image();img.decoding='async';img.loading='eager';img.src=GIF_BASE+dir+"/"+id}}
+function preloadOthers(others){let i=0;const tick=()=>{if(i>=others.length)return;preloadSectionImages(others[i++]);if('requestIdleCallback'in window){requestIdleCallback(tick,{timeout:200})}else{setTimeout(tick,0)}};tick()}
+
+function buildItems(){container.innerHTML="";const selected=sectionSelect.value;const first=(selected==="all"?sections[0]:sections.find(s=>s.key===selected));if(first) renderOneSection(first);const others=sections.filter(s=>s!==first);if(selected==="all"){progressiveRender(others)}else{preloadOthers(others)}}
 // 输入与清空控件已移除，交互通过顶部方格
 
 // 主题切换已移除
@@ -100,6 +102,8 @@ async function fetchSections(){
         if(sectionSelect && sections.length && sectionSelect.value==='all'){
           sectionSelect.value=sections[0].key
         }
+        // 预加载所有分组前 48 张，确保后续切换秒开
+        preloadOthers(sections)
       }
     }
   }catch(err){console.warn('读取本地索引失败',err)}
