@@ -36,3 +36,15 @@ function updateClock(){const d=new Date();const hh=String(d.getHours()).padStart
 setInterval(updateClock,1000);updateClock()
 buildItems()
 
+// 禁止缩放（Ctrl +/-/0、Ctrl+滚轮、手势）
+window.addEventListener('keydown', (e)=>{
+  if(e.ctrlKey && (e.key==='+'||e.key==='='||e.key==='-'||e.key==='0')){
+    e.preventDefault()
+  }
+})
+window.addEventListener('wheel', (e)=>{
+  if(e.ctrlKey){e.preventDefault()}
+},{passive:false})
+window.addEventListener('gesturestart', (e)=>{e.preventDefault()})
+window.addEventListener('gesturechange', (e)=>{e.preventDefault()})
+window.addEventListener('gestureend', (e)=>{e.preventDefault()})
