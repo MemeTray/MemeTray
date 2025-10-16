@@ -16,13 +16,13 @@ input[type="text"]{font-size:12px;padding:6px 10px;width:220px;border:1px solid 
 /* 区块与网格 */
 .section{margin:20px 0}
 .section h2{margin:0 0 12px 0;font-size:14px;color:var(--muted);letter-spacing:.2px}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;align-items:stretch}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;align-items:stretch}
 
 /* 卡片 */
-.gallery a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:110px;padding:14px;text-decoration:none;color:var(--text);background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease}
+.gallery a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:172px;padding:14px;text-decoration:none;color:var(--text);background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease}
 .gallery a:hover{border-color:var(--card-hover);transform:translateY(-1.5px);box-shadow:0 6px 18px rgba(0,0,0,.06)}
-.thumb{width:72px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#fff1;border:1px solid var(--card-border)}
-.gallery img{width:56px;height:56px;object-fit:contain;image-rendering:pixelated}
+.thumb{width:128px;height:128px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#fff1;border:1px solid var(--card-border)}
+.gallery img{width:128px;height:128px;object-fit:contain;image-rendering:pixelated}
 .label{width:100%;margin-top:10px;font-size:12px;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 .footer{margin-top:24px;font-size:12px;color:var(--muted)}
