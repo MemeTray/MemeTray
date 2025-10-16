@@ -26,6 +26,14 @@ input[type="text"]{font-size:12px;padding:6px 10px;width:220px;border:1px solid 
 .section h2{margin:0 0 12px 0;font-size:14px;color:var(--muted);letter-spacing:.2px}
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;align-items:stretch}
 
+/* 顶部分组小方格选择器 */
+.section-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin:8px 0 12px 0}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border:1px solid var(--card-border);border-radius:10px;background:var(--card-bg);cursor:pointer}
+.tile:hover{border-color:var(--card-hover)}
+.tile-thumb{width:64px;height:64px;border:1px solid var(--card-border);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:transparent}
+.tile-thumb img{width:100%;height:100%;object-fit:contain}
+.tile-title{font-size:12px;color:var(--text)}
+
 /* 卡片 */
 .gallery a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:172px;padding:14px;text-decoration:none;color:var(--text);background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease}
 .gallery a:hover{border-color:var(--card-hover);transform:translateY(-1.5px);box-shadow:0 6px 18px rgba(0,0,0,.06)}
