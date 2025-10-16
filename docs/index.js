@@ -13,8 +13,9 @@ function createSection(title){const sec=document.createElement("div");sec.classN
 
 function buildItems(){container.innerHTML="";const q=searchInput.value.trim().toLowerCase();const selected=sectionSelect.value;for(const {key,title,dir,files} of sections){if(selected!=="all"&&selected!==key)continue;const {sec,grid}=createSection(title);const list=files.slice().reverse();for(const id of list){if(q&&id.toLowerCase().indexOf(q)===-1)continue;const href=GIF_BASE+dir+"/"+id;const a=document.createElement("a");a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};
 thumb.appendChild(img);a.appendChild(thumb);
-// 悬停预览：仅托盘图标
+// 悬停预览：进入显示，离开清空
 a.addEventListener("mouseenter",()=>{setTrayIcon(href)})
+a.addEventListener("mouseleave",()=>{clearTrayIcon()})
 grid.appendChild(a)}container.appendChild(sec)}}
 searchInput.addEventListener("input",buildItems)
 sectionSelect.addEventListener("change",buildItems)
@@ -23,6 +24,7 @@ clearBtn.addEventListener("click",()=>{searchInput.value="";sectionSelect.value=
 // 主题切换已移除
 
 function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
+function clearTrayIcon(){if(trayIcon){trayIcon.innerHTML=""}}
 
 // 时钟
 function formatDate(d){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return y+"/"+m+"/"+day}
