@@ -19,6 +19,7 @@ button{font-size:12px;padding:6px 10px;margin-right:0;border:1px solid var(--car
 button:hover{border-color:var(--card-hover)}
 select{font-size:12px;padding:6px 8px;border:1px solid var(--card-border);border-radius:8px;background:var(--card-bg);color:var(--text)}
 input[type="text"]{font-size:12px;padding:6px 10px;width:220px;border:1px solid var(--card-border);border-radius:8px;background:var(--card-bg);color:var(--text)}
+.count{font-size:12px;color:var(--muted)}
 
 /* 区块与网格 */
 .section{margin:20px 0}

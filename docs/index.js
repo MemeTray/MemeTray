@@ -2,6 +2,7 @@ function zeroPad(num, size){const s=String(num);return s.length>=size?s:"0".repe
 let sections=window.MEMETRAY_SECTIONS||[]
 const GIF_BASE=location.pathname.includes('/docs/')?'../gifs/':'./gifs/'
 const container=document.getElementById("container")
+const totalCountEl=document.getElementById("totalCount")
 const searchInput=document.getElementById("search")
 const sectionSelect=document.getElementById("sectionSelect")
 const clearBtn=document.getElementById("clear")
@@ -11,12 +12,12 @@ const clockDate=document.getElementById("clock-date")
 
 function createSection(title){const sec=document.createElement("div");sec.className="section";const h2=document.createElement("h2");h2.textContent=title;const grid=document.createElement("div");grid.className="gallery";sec.appendChild(h2);sec.appendChild(grid);return {sec,grid}}
 
-function buildItems(){container.innerHTML="";const q=searchInput.value.trim().toLowerCase();const selected=sectionSelect.value;for(const {key,title,dir,files} of sections){if(selected!=="all"&&selected!==key)continue;const {sec,grid}=createSection(title);const list=files.slice().reverse();for(const id of list){if(q&&id.toLowerCase().indexOf(q)===-1)continue;const href=GIF_BASE+dir+"/"+id;const a=document.createElement("a");a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};
+function buildItems(){container.innerHTML="";let total=0;const q=searchInput.value.trim().toLowerCase();const selected=sectionSelect.value;for(const {key,title,dir,files} of sections){if(selected!=="all"&&selected!==key)continue;const {sec,grid}=createSection(title);const list=files.slice().reverse();for(const id of list){if(q&&id.toLowerCase().indexOf(q)===-1)continue;const href=GIF_BASE+dir+"/"+id;const a=document.createElement("a");a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};
 thumb.appendChild(img);a.appendChild(thumb);
 // 悬停预览：进入显示，离开清空
 a.addEventListener("mouseenter",()=>{setTrayIcon(href)})
 a.addEventListener("mouseleave",()=>{clearTrayIcon()})
-grid.appendChild(a)}container.appendChild(sec)}}
+grid.appendChild(a);total++}container.appendChild(sec)}if(totalCountEl){totalCountEl.textContent=String(total)}}
 searchInput.addEventListener("input",buildItems)
 sectionSelect.addEventListener("change",buildItems)
 clearBtn.addEventListener("click",()=>{searchInput.value="";sectionSelect.value="all";buildItems()})
