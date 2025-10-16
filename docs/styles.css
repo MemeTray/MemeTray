@@ -1,6 +1,5 @@
 /* 基础主题变量（可暗色切换） */
 :root{--bg:#f6f7fb;--text:#0b1220;--muted:#6b7280;--card-bg:#ffffff;--card-border:#e5e7eb;--card-hover:#0b1220;--accent:#0ea5e9}
-body.dark{--bg:#0b0d12;--text:#e5e7eb;--muted:#9ca3af;--card-bg:#0f131a;--card-border:#1f2937;--card-hover:#f1f5f9;--accent:#22d3ee}
 
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:16px;color:var(--text);background:var(--bg);}
 h1{margin:0 0 12px 0;font-size:18px;font-weight:700}

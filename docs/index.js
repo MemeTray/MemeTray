@@ -4,7 +4,6 @@ const container=document.getElementById("container")
 const searchInput=document.getElementById("search")
 const sectionSelect=document.getElementById("sectionSelect")
 const clearBtn=document.getElementById("clear")
-const themeToggle=document.getElementById("themeToggle")
 const trayIcon=document.getElementById("trayIcon")
 const clockTime=document.getElementById("clock-time")
 const clockDate=document.getElementById("clock-date")
@@ -20,10 +19,7 @@ searchInput.addEventListener("input",buildItems)
 sectionSelect.addEventListener("change",buildItems)
 clearBtn.addEventListener("click",()=>{searchInput.value="";sectionSelect.value="all";buildItems()})
 
-// 主题切换（持久化）
-const savedTheme=localStorage.getItem("memetray-theme")
-if(savedTheme==="dark"){document.body.classList.add("dark")}
-themeToggle&&themeToggle.addEventListener("click",()=>{document.body.classList.toggle("dark");localStorage.setItem("memetray-theme",document.body.classList.contains("dark")?"dark":"light")})
+// 主题切换已移除
 
 function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
 
