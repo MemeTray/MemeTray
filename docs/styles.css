@@ -95,3 +95,9 @@ input[type="text"]{font-size:12px;padding:6px 10px;width:220px;border:1px solid 
 .back-top{position:fixed;right:12px;bottom:60px;width:36px;height:36px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--text);display:none;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.08);cursor:pointer;z-index:1001}
 .back-top:hover{border-color:var(--card-hover)}
 
+/* 全屏加载遮罩 */
+.splash{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.splash-inner{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px;border-radius:16px}
+.splash-text{font-size:28px;color:var(--muted)}
+.splash--hide{opacity:0;pointer-events:none;transition:opacity .25s ease}
+
