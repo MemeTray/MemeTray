@@ -42,6 +42,7 @@ input[type="text"]{font-size:12px;padding:6px 10px;width:220px;border:1px solid 
 .label{width:100%;margin-top:10px;font-size:12px;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 .footer{margin-top:24px;font-size:12px;color:var(--muted)}
+/* 去掉固定页脚的样式，由每个分组内部显示 */
 
 /* 任务栏模拟 */
 .taskbar{position:fixed;bottom:0;left:0;right:0;z-index:1000;color:#0b1220;background:rgba(243,243,243,.85);backdrop-filter:saturate(3) blur(20px);border-top:1px solid #cfd8e3;height:48px;border-radius:12px;margin-top:0}
