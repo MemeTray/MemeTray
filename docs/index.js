@@ -70,44 +70,52 @@ async function fetchSections(){
   try{
     // 仅使用本地静态索引，避免任何外部 API 依赖
     const localIdx=await fetch(GIF_BASE+"index.json",{cache:'no-store'})
-    if(localIdx.ok){
-      const data=await localIdx.json()
-      if(Array.isArray(data.sections)){
-        const dirs=data.sections.map(String)
-        const results=await Promise.all(dirs.map(async (name)=>{
-          const count=await probeCountForDir(name)
-          const files=[]; for(let i=1;i<=count;i++){files.push(fileName(name,i))}
-          return {key:name,title:name,dir:name,files}
-        }))
-        sections=results
-        // 构建顶部方格选择器
-        if(sectionTiles){
-          sectionTiles.innerHTML=''
-          for(const {dir,title,files} of sections){
-            const t=document.createElement('div');t.className='tile';t.dataset.section=dir
-            const th=document.createElement('div');th.className='tile-thumb'
-            const img=document.createElement('img');const first=files.length? GIF_BASE+dir+'/'+files[0] : ''
-            if(first){img.src=first;img.alt=title;img.loading='lazy';img.decoding='async'}
-            th.appendChild(img)
-            const tt=document.createElement('div');tt.className='tile-title';tt.textContent=title
-            t.appendChild(th);t.appendChild(tt)
-            // 悬停分组方格时，在托盘显示该分组第一张 GIF 预览；移开后清空
-            t.addEventListener('mouseenter',()=>{if(first){setTrayIcon(first)}})
-            t.addEventListener('mouseleave',()=>{clearTrayIcon()})
-            t.addEventListener('click',()=>{sectionSelect.value=dir;buildItems();window.scrollTo({top:0,behavior:'smooth'})})
-            sectionTiles.appendChild(t)
-          }
-        }
-        // 首次进入：默认显示第一个分组而不是全部
-        if(sectionSelect && sections.length && sectionSelect.value==='all'){
-          sectionSelect.value=sections[0].key
-        }
-        // 预加载所有分组前 48 张，确保后续切换秒开
-        preloadOthers(sections)
+    if(!localIdx.ok) throw new Error('index.json not found')
+    const data=await localIdx.json()
+    if(!Array.isArray(data.sections) || !data.sections.length) throw new Error('empty sections')
+    const dirs=data.sections.map(String)
+
+    // 1) 先探测并渲染第一个分组，避免白屏
+    const firstDir=dirs[0]
+    const firstCount=await probeCountForDir(firstDir)
+    const firstFiles=[]; for(let i=1;i<=firstCount;i++){firstFiles.push(fileName(firstDir,i))}
+    sections=[{key:firstDir,title:firstDir,dir:firstDir,files:firstFiles}]
+    sectionSelect.value=firstDir
+    buildItems()
+
+    // 2) 后台并发探测其余分组，完成后一次性更新 tiles
+    const otherDirs=dirs.slice(1)
+    const otherSections=await Promise.all(otherDirs.map(async (name)=>{
+      const count=await probeCountForDir(name)
+      const files=[]; for(let i=1;i<=count;i++){files.push(fileName(name,i))}
+      return {key:name,title:name,dir:name,files}
+    }))
+    sections=[sections[0], ...otherSections]
+
+    // 构建顶部方格选择器（预览固定为 0001_分组名.gif）
+    if(sectionTiles){
+      sectionTiles.innerHTML=''
+      for(const {dir,title,files} of sections){
+        const t=document.createElement('div');t.className='tile';t.dataset.section=dir
+        const th=document.createElement('div');th.className='tile-thumb'
+        const img=document.createElement('img');const first=GIF_BASE+dir+'/'+fileName(dir,1)
+        img.src=first; img.alt=title; img.loading='lazy'; img.decoding='async'
+        th.appendChild(img)
+        const tt=document.createElement('div');tt.className='tile-title';tt.textContent=title
+        t.appendChild(th);t.appendChild(tt)
+        t.addEventListener('mouseenter',()=>{setTrayIcon(first)})
+        t.addEventListener('mouseleave',()=>{clearTrayIcon()})
+        t.addEventListener('click',()=>{sectionSelect.value=dir;buildItems();window.scrollTo({top:0,behavior:'smooth'})})
+        sectionTiles.appendChild(t)
       }
     }
-  }catch(err){console.warn('读取本地索引失败',err)}
-  buildItems()
+
+    // 3) 预加载所有分组前 48 张，确保后续切换秒开
+    preloadOthers(sections)
+
+  }catch(err){
+    console.warn('读取本地索引失败',err)
+  }
 }
 
 fetchSections()
