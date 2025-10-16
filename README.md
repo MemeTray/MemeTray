@@ -10,9 +10,6 @@
 See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Contributions, corrections & requests can be made on GitHub.</p>
 </p>
 
-## Contributor
-
-![cr](https://contrib.rocks/image?repo=MemeTray/MemeTray)
 
 ## ⚠️ Disclaimer & Copyright Notice
 
