@@ -1,5 +1,6 @@
 function zeroPad(num, size){const s=String(num);return s.length>=size?s:"0".repeat(size-s.length)+s}
 const sections=window.MEMETRAY_SECTIONS||[]
+const GIF_BASE=location.pathname.includes('/docs/')?'../gifs/':'./gifs/'
 const container=document.getElementById("container")
 const searchInput=document.getElementById("search")
 const sectionSelect=document.getElementById("sectionSelect")
@@ -10,7 +11,7 @@ const clockDate=document.getElementById("clock-date")
 
 function createSection(title){const sec=document.createElement("div");sec.className="section";const h2=document.createElement("h2");h2.textContent=title;const grid=document.createElement("div");grid.className="gallery";sec.appendChild(h2);sec.appendChild(grid);return {sec,grid}}
 
-function buildItems(){container.innerHTML="";const q=searchInput.value.trim().toLowerCase();const selected=sectionSelect.value;for(const {key,title,dir,files} of sections){if(selected!=="all"&&selected!==key)continue;const {sec,grid}=createSection(title);for(const id of files){if(q&&id.toLowerCase().indexOf(q)===-1)continue;const href="../gifs/"+dir+"/"+id;const a=document.createElement("a");a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};
+function buildItems(){container.innerHTML="";const q=searchInput.value.trim().toLowerCase();const selected=sectionSelect.value;for(const {key,title,dir,files} of sections){if(selected!=="all"&&selected!==key)continue;const {sec,grid}=createSection(title);for(const id of files){if(q&&id.toLowerCase().indexOf(q)===-1)continue;const href=GIF_BASE+dir+"/"+id;const a=document.createElement("a");a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};
 thumb.appendChild(img);a.appendChild(thumb);
 // 悬停预览：仅托盘图标
 a.addEventListener("mouseenter",()=>{setTrayIcon(href)})
