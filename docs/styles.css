@@ -3,6 +3,14 @@
 
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:16px;color:var(--text);background:var(--bg);}
 h1{margin:0 0 12px 0;font-size:18px;font-weight:700}
+.notice{margin:8px 0 10px 0;padding:8px 10px;font-size:12px;border:1px dashed var(--card-border);border-radius:10px;background:var(--card-bg)}
+.notice a{color:var(--accent);text-decoration:none}
+.notice a:hover{text-decoration:underline}
+.legal{margin:8px 0 12px 0;padding:10px 12px;font-size:12px;line-height:1.6;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;color:var(--muted)}
+.legal strong{color:var(--text);margin-right:6px}
+.legal-links{margin-top:6px}
+.legal-links a{color:var(--accent);text-decoration:none}
+.legal-links a:hover{text-decoration:underline}
 .meta{font-size:12px;color:var(--muted);margin-bottom:10px}
 
 /* 控件条 */
