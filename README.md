@@ -48,6 +48,9 @@ Please include the following information in your notice:
 
 Upon receiving a valid notice and verifying the details, we are committed to **removing the infringing content immediately**.
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=MemeTray/MemeTray&type=date&legend=top-left)](https://www.star-history.com/#MemeTray/MemeTray&type=date&legend=top-left)
 
 ## Contributors
 
@@ -55,8 +58,4 @@ Upon receiving a valid notice and verifying the details, we are committed to **r
   <img src="https://contrib.rocks/image?repo=MemeTray/MemeTray" />
 </a>
 
----
 
-<div align="center">
-  Made with ❤️ & ⌨️
-</div>
