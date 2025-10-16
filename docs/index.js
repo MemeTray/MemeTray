@@ -6,7 +6,8 @@ const sectionSelect=document.getElementById("sectionSelect")
 const clearBtn=document.getElementById("clear")
 const themeToggle=document.getElementById("themeToggle")
 const trayIcon=document.getElementById("trayIcon")
-const clockEl=document.getElementById("clock")
+const clockTime=document.getElementById("clock-time")
+const clockDate=document.getElementById("clock-date")
 
 function createSection(title){const sec=document.createElement("div");sec.className="section";const h2=document.createElement("h2");h2.textContent=title;const grid=document.createElement("div");grid.className="gallery";sec.appendChild(h2);sec.appendChild(grid);return {sec,grid}}
 
@@ -27,7 +28,11 @@ themeToggle&&themeToggle.addEventListener("click",()=>{document.body.classList.t
 function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
 
 // 时钟
-function updateClock(){const d=new Date();const hh=String(d.getHours()).padStart(2,'0');const mm=String(d.getMinutes()).padStart(2,'0');clockEl.textContent=hh+":"+mm}
+function formatDate(d){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return y+"/"+m+"/"+day}
+function updateClock(){const d=new Date();const hh=String(d.getHours()).padStart(2,'0');const mm=String(d.getMinutes()).padStart(2,'0');const ss=String(d.getSeconds()).padStart(2,'0');
+  if(clockTime) clockTime.textContent=hh+":"+mm+":"+ss;
+  if(clockDate) clockDate.textContent=formatDate(d);
+}
 setInterval(updateClock,1000);updateClock()
 buildItems()
 
