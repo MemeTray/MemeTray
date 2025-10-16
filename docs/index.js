@@ -16,13 +16,14 @@ const splashDots=document.getElementById('splashDots')
 let splashTimer=null
 function startSplash(){
   if(!splash) return
+  splash.style.display='flex'
   splash.classList.remove('splash--hide')
   if(splashTimer) return
   let i=0; const states=['.','..','...']
   splashTimer=setInterval(()=>{if(splashDots){splashDots.textContent=states[i%3]} i++},400)
 }
 function stopSplash(){
-  if(splash){splash.classList.add('splash--hide')}
+  if(splash){splash.classList.add('splash--hide'); splash.style.display='none'}
   if(splashTimer){clearInterval(splashTimer); splashTimer=null}
 }
 
