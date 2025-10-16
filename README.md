@@ -48,6 +48,13 @@ Please include the following information in your notice:
 
 Upon receiving a valid notice and verifying the details, we are committed to **removing the infringing content immediately**.
 
+
+## Contributors
+
+<a href="https://github.com/MemeTray/MemeTray/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=MemeTray/MemeTray" />
+</a>
+
 ---
 
 <div align="center">
