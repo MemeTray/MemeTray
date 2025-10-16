@@ -14,6 +14,9 @@ const clockDate=document.getElementById("clock-date")
 const splash=document.getElementById('splash')
 const splashDots=document.getElementById('splashDots')
 let splashTimer=null
+const ITEMS_PER_PAGE = 50
+let currentPage = {} // { [sectionKey]: pageNumber }
+
 function startSplash(){
   if(!splash) return
   splash.style.display='flex'
@@ -32,14 +35,77 @@ function createSection(title,count){const sec=document.createElement('div');sec.
   sec.appendChild(legal);
   return {sec,grid}}
 
-function renderOneSection(secObj){const {key,title,dir,files}=secObj;const list=files.slice().reverse();const shown=list;const {sec,grid}=createSection(title,shown.length);for(const id of shown){const href=GIF_BASE+dir+"/"+id;const a=document.createElement("a");a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};thumb.appendChild(img);a.appendChild(thumb);a.addEventListener("mouseenter",()=>{setTrayIcon(href)});a.addEventListener("mouseleave",()=>{clearTrayIcon()});grid.appendChild(a)}container.appendChild(sec)}
+function renderOneSection(secObj, page = 1){
+  const {key,title,dir,files}=secObj
+  const list=files.slice().reverse()
 
-function progressiveRender(others){let i=0;const next=()=>{if(i>=others.length)return;const item=others[i++];const cb=()=>{renderOneSection(item);next()};if('requestIdleCallback'in window){requestIdleCallback(cb,{timeout:250})}else{setTimeout(cb,0)}};next()}
+  const start = (page - 1) * ITEMS_PER_PAGE
+  const end = start + ITEMS_PER_PAGE
+  const pagedFiles = list.slice(start, end)
+  if (pagedFiles.length === 0) {
+    return null // No more items to render for this page
+  }
+
+  // Find existing or create new section
+  let sec = container.querySelector(`.section[data-key="${key}"]`)
+  let grid
+  if (!sec) {
+    const newSection = createSection(title, list.length)
+    sec = newSection.sec
+    grid = newSection.grid
+    sec.dataset.key = key
+    container.appendChild(sec)
+  } else {
+    grid = sec.querySelector('.gallery')
+  }
+
+  for(const id of pagedFiles){
+    const href=GIF_BASE+dir+"/"+id
+    const a=document.createElement("a")
+    a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};thumb.appendChild(img);a.appendChild(thumb);a.addEventListener("mouseenter",()=>{setTrayIcon(href)});a.addEventListener("mouseleave",()=>{clearTrayIcon()});grid.appendChild(a)
+  }
+  currentPage[key] = page
+  return sec
+}
+
+function progressiveRender(others){let i=0;const next=()=>{if(i>=others.length)return;const item=others[i++];const cb=()=>{renderOneSection(item, 1);next()};if('requestIdleCallback'in window){requestIdleCallback(cb,{timeout:250})}else{setTimeout(cb,0)}};next()}
 
 function preloadSectionImages(secObj,max=48){const {dir,files}=secObj;const list=files.slice(0,max);for(const id of list){const img=new Image();img.decoding='async';img.loading='eager';img.src=GIF_BASE+dir+"/"+id}}
 function preloadOthers(others){let i=0;const tick=()=>{if(i>=others.length)return;preloadSectionImages(others[i++]);if('requestIdleCallback'in window){requestIdleCallback(tick,{timeout:200})}else{setTimeout(tick,0)}};tick()}
 
-function buildItems(){container.innerHTML="";const selected=sectionSelect.value;const first=(selected==="all"?sections[0]:sections.find(s=>s.key===selected));if(first) renderOneSection(first);const others=sections.filter(s=>s!==first);if(selected==="all"){progressiveRender(others)}else{preloadOthers(others)}}
+function buildItems(){
+  const selected = sectionSelect.value
+
+  // Hide all sections first
+  const sectionsElements = container.querySelectorAll('.section')
+  sectionsElements.forEach(sec => {
+    sec.style.display = 'none'
+  })
+
+  if (selected === 'all') {
+    // Show all sections and render if not already present
+    sections.forEach(secObj => {
+      const existingSec = container.querySelector(`.section[data-key="${secObj.key}"]`)
+      if (existingSec) {
+        existingSec.style.display = 'block'
+      } else {
+        renderOneSection(secObj, 1)
+      }
+    })
+  } else {
+    const section = sections.find(s => s.key === selected)
+    if (section) {
+      const existingSec = container.querySelector(`.section[data-key="${selected}"]`)
+      if (existingSec) {
+        existingSec.style.display = 'block'
+      } else {
+        renderOneSection(section, 1)
+      }
+    }
+    const others = sections.filter(s => s.key !== selected)
+    preloadOthers(others)
+  }
+}
 // 输入与清空控件已移除，交互通过顶部方格
 
 // 主题切换已移除
@@ -172,3 +238,40 @@ function onScroll(){
 window.addEventListener('scroll',onScroll,{passive:true})
 backTopBtn&&backTopBtn.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})})
 onScroll()
+
+// Infinite Scroll
+let isLoading = false
+async function handleInfiniteScroll() {
+  if (isLoading) return
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+  if (scrollHeight - scrollTop - clientHeight < 300) {
+    isLoading = true
+    const selected = sectionSelect.value
+    
+    let section, nextPageKey;
+
+    if (selected === 'all') {
+      const lastSectionKey = Object.keys(currentPage).pop()
+      section = sections.find(s => s.key === lastSectionKey)
+      nextPageKey = lastSectionKey
+    } else {
+      section = sections.find(s => s.key === selected)
+      nextPageKey = selected
+    }
+
+    if (section) {
+      const currentTotal = (currentPage[nextPageKey] || 0) * ITEMS_PER_PAGE
+      if (currentTotal >= section.files.length) {
+        isLoading = false
+        return // All items loaded for this section
+      }
+      const nextPage = (currentPage[nextPageKey] || 0) + 1
+      renderOneSection(section, nextPage)
+    }
+
+    // A small delay to prevent rapid firing
+    setTimeout(() => { isLoading = false }, 200)
+  }
+}
+
+window.addEventListener('scroll', handleInfiniteScroll, { passive: true })
