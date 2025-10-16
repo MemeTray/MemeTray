@@ -2,7 +2,8 @@
 :root{--bg:#f6f7fb;--text:#0b1220;--muted:#6b7280;--card-bg:#ffffff;--card-border:#e5e7eb;--card-hover:#0b1220;--accent:#0ea5e9}
 
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:16px;color:var(--text);background:var(--bg);padding-bottom:64px}
-h1{margin:0 0 12px 0;font-size:18px;font-weight:700}
+.brand{display:flex;align-items:center;gap:8px;margin:0 0 12px 0}
+.brand span{font-size:18px;font-weight:700}
 .notice{margin:8px 0 10px 0;padding:8px 10px;font-size:12px;border:1px dashed var(--card-border);border-radius:10px;background:var(--card-bg)}
 .notice a{color:var(--accent);text-decoration:none}
 .notice a:hover{text-decoration:underline}
