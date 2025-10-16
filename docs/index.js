@@ -117,3 +117,13 @@ window.addEventListener('wheel', (e)=>{
 window.addEventListener('gesturestart', (e)=>{e.preventDefault()})
 window.addEventListener('gesturechange', (e)=>{e.preventDefault()})
 window.addEventListener('gestureend', (e)=>{e.preventDefault()})
+
+// 返回顶部按钮逻辑
+const backTopBtn=document.getElementById('backTop')
+function onScroll(){
+  if(!backTopBtn) return
+  backTopBtn.style.display=(window.scrollY>300)?'flex':'none'
+}
+window.addEventListener('scroll',onScroll,{passive:true})
+backTopBtn&&backTopBtn.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})})
+onScroll()

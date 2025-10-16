@@ -89,3 +89,7 @@ input[type="text"]{font-size:12px;padding:6px 10px;width:220px;border:1px solid 
 /* 已移除 iframe 嵌入 */
 
 
+/* 返回顶部按钮 */
+.back-top{position:fixed;right:12px;bottom:60px;width:36px;height:36px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--text);display:none;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.08);cursor:pointer;z-index:1001}
+.back-top:hover{border-color:var(--card-hover)}
+
