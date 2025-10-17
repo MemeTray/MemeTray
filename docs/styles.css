@@ -120,3 +120,16 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .crumb .sep{opacity:.6}
 .crumb:hover{text-decoration:underline}
 
+/* 标题栏内的面包屑采用横向排列 */
+.window-title #windowTitleText{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.window-title #windowTitleText .crumb{display:inline-flex}
+.window-title #windowTitleText .sep{opacity:.6}
+
+/* 标题栏中的面包屑 */
+.breadcrumbs--title{flex:0 1 auto;margin-left:8px;padding:4px 6px;border:none;background:transparent}
+.window-titlebar .breadcrumbs--title .sep{opacity:.6}
+.window-titlebar .breadcrumbs--title .crumb:hover{text-decoration:underline}
+
+/* 隐藏内容区原有面包屑容器边框以弱化存在感，或根据需要隐藏 */
+#pathbar .breadcrumbs{display:none}
+
