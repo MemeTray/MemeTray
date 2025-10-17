@@ -196,13 +196,18 @@ function renderBreadcrumbs(){
   if(titleTextEl){
     titleTextEl.innerHTML=''
     parts.forEach((name,idx)=>{
-      const span=document.createElement('span'); span.className='crumb'
+      const isLast=idx===parts.length-1
+      const span=document.createElement('span'); span.className='crumb ' + (isLast?'crumb--current':'crumb--link')
       span.textContent=name
-      if(idx===0){ span.addEventListener('click',()=>enterRoot()) }
-      if(idx===1){ span.addEventListener('click',()=>enterFolder(navState.currentKey)) }
+      if(!isLast){
+        span.addEventListener('click',()=>{
+          if(idx===0) return enterRoot()
+          if(idx===1) return enterFolder(navState.currentKey)
+        })
+      }
       titleTextEl.appendChild(span)
       if(idx<parts.length-1){
-        const sep=document.createElement('span'); sep.className='sep'; sep.textContent='>'
+        const sep=document.createElement('span'); sep.className='sep sep--chev'; sep.textContent='›'
         titleTextEl.appendChild(sep)
       }
     })
@@ -211,8 +216,8 @@ function renderBreadcrumbs(){
       const sec=sections && sections.find(s=>s.key===navState.currentKey)
       if(sec && Array.isArray(sec.files)){
         const cnt=document.createElement('span')
-        cnt.className='crumb'
-        cnt.textContent=` (${sec.files.length})`
+        cnt.className='count-badge'
+        cnt.textContent=String(sec.files.length)
         titleTextEl.appendChild(cnt)
       }
     }

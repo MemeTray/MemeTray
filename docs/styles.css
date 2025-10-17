@@ -27,10 +27,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .tile-title{font-size:12px;color:var(--text)}
 
 /* 卡片 */
-.gallery a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:172px;padding:14px;text-decoration:none;color:var(--text);background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:12px;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
-.gallery a:hover{border-color:var(--card-hover);transform:translateY(-1.5px);box-shadow:0 6px 18px rgba(0,0,0,.06)}
+.gallery a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:172px;padding:14px;text-decoration:none;color:var(--text);background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:12px;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.gallery a:hover{border-color:var(--card-hover);transform:translateY(-1px) scale(1.01);box-shadow:0 8px 22px rgba(0,0,0,.08)}
+.gallery a:active{transform:translateY(0) scale(.995)}
 .thumb{width:128px;height:128px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:transparent;border:1px solid var(--card-border)}
-.gallery img{width:128px;height:128px;object-fit:contain;image-rendering:pixelated}
+.gallery img{width:128px;height:128px;object-fit:contain}
 .label{width:100%;margin-top:10px;font-size:12px;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 .footer{margin-top:24px;font-size:12px;color:var(--muted)}
@@ -90,9 +91,9 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 
 /* 桌面与窗口 */
 .desktop{position:fixed;inset:0;z-index:0;background-image:url("../Images/background.jpg");background-size:cover;background-position:center;background-repeat:no-repeat;filter:saturate(1.05)}
-.window{position:fixed;z-index:500;left:8px;top:8px;width:calc(100vw - 16px);height:calc(100vh - 48px - 16px);display:flex;flex-direction:column;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-bg);box-shadow:var(--glass-shadow);overflow:hidden;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
+.window{position:fixed;z-index:500;left:8px;top:8px;width:calc(100vw - 16px);height:calc(100vh - 48px - 16px);display:flex;flex-direction:column;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-bg);box-shadow:var(--glass-shadow), inset 0 0 0 1px rgba(255,255,255,.25);overflow:hidden;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .window-titlebar{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px 0 6px;background:var(--glass-bg);border-bottom:1px solid var(--glass-border);cursor:move;user-select:none;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
-.window-title{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.window-title{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding-top:2px;padding-bottom:2px}
 .window-title img{display:block}
 .nav-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--glass-border);border-radius:6px;background:var(--glass-bg);color:var(--text);cursor:pointer;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .nav-btn[disabled]{opacity:.5;cursor:default}
@@ -119,6 +120,10 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .crumb{display:flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer}
 .crumb .sep{opacity:.6}
 .crumb:hover{text-decoration:underline}
+.crumb--link{opacity:.8}
+.crumb--current{opacity:1;color:var(--text);font-weight:600;cursor:default}
+.sep--chev{opacity:.45}
+.count-badge{margin-left:6px;padding:0 6px;height:18px;line-height:18px;border-radius:999px;background:rgba(0,0,0,.06);color:var(--muted);font-size:11px;display:inline-flex;align-items:center}
 
 /* 标题栏内的面包屑采用横向排列 */
 .window-title #windowTitleText{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
