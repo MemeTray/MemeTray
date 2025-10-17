@@ -8,6 +8,8 @@ const explorerTitlebar=document.getElementById('explorerTitlebar')
 const explorerContent=document.getElementById('explorerContent')
 const btnBack=document.getElementById('btnBack')
 const windowTitle=document.getElementById('windowTitle')
+const breadcrumbs=document.getElementById('breadcrumbs')
+const copyPathBtn=document.getElementById('copyPath')
 const sectionSelect={value:'all'}
 const trayIcon=document.getElementById("trayIcon")
 const clockTime=document.getElementById("clock-time")
@@ -20,6 +22,8 @@ let splashTimer=null
 const ITEMS_PER_PAGE = 50
 let currentPage = {} // { [sectionKey]: pageNumber }
 let navState={view:'root',currentKey:null}
+const WINDOWS_ROOT='此电脑'
+const CATIME_PATH='%LOCALAPPDATA%\\Catime\\animations'
 
 // 桌面背景支持（URL 参数优先，其次 localStorage）
 ;(function initBackground(){
@@ -135,6 +139,7 @@ function enterRoot(){
   if(btnBack){ btnBack.disabled=true }
   if(sectionTiles) sectionTiles.style.display='grid'
   if(container) container.style.display='none'
+  renderBreadcrumbs()
   updateBackTopVisibility()
 }
 
@@ -148,12 +153,40 @@ function enterFolder(key){
   sectionSelect.value=key
   buildItems()
   if(explorerContent){ explorerContent.scrollTo({top:0,behavior:'smooth'}) }
+  renderBreadcrumbs()
   updateBackTopVisibility()
+}
+
+function renderBreadcrumbs(){
+  if(!breadcrumbs) return
+  breadcrumbs.innerHTML=''
+  // Root: 此电脑 > MemeTray (静态)
+  const parts = navState.view==='folder' ? [WINDOWS_ROOT,'MemeTray',navState.currentKey] : [WINDOWS_ROOT,'MemeTray']
+  parts.forEach((name,idx)=>{
+    const span=document.createElement('span'); span.className='crumb'
+    span.textContent=name
+    if(idx===0){ span.addEventListener('click',()=>enterRoot()) }
+    if(idx===1){ span.addEventListener('click',()=>enterRoot()) }
+    if(idx===2){ span.addEventListener('click',()=>enterFolder(navState.currentKey)) }
+    breadcrumbs.appendChild(span)
+    if(idx<parts.length-1){
+      const sep=document.createElement('span'); sep.className='sep'; sep.textContent='>'
+      breadcrumbs.appendChild(sep)
+    }
+  })
 }
 
 // 按钮事件
 btnBack&&btnBack.addEventListener('click',()=>{
   if(navState.view==='folder') enterRoot()
+})
+
+copyPathBtn&&copyPathBtn.addEventListener('click',async ()=>{
+  try{
+    const path = navState.view==='folder' && navState.currentKey ? `${CATIME_PATH}\\${navState.currentKey}` : CATIME_PATH
+    await navigator.clipboard.writeText(path)
+    copyPathBtn.disabled=true; setTimeout(()=>{copyPathBtn.disabled=false},600)
+  }catch(_){/* ignore */}
 })
 
 function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
@@ -343,7 +376,7 @@ if(explorerContent){
   const onDown=(e)=>{
     // 如果点击在导航按钮上，不触发拖拽
     const target=e.target
-    if(target && (target.closest && target.closest('#btnBack'))) return
+    if(target && (target.closest && (target.closest('#btnBack')||target.closest('#pathbar')))) return
     dragging=true
     const pt = e.touches? e.touches[0] : e
     startX=pt.clientX; startY=pt.clientY
