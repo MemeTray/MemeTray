@@ -9,7 +9,7 @@ const explorerContent=document.getElementById('explorerContent')
 const btnBack=document.getElementById('btnBack')
 const windowTitle=document.getElementById('windowTitle')
 const breadcrumbs=document.getElementById('breadcrumbs')
-const copyPathBtn=document.getElementById('copyPath')
+// 移除复制路径按钮
 const resizeHandles=[...document.querySelectorAll('#explorer .resize-handle')]
 const sectionSelect={value:'all'}
 const trayIcon=document.getElementById("trayIcon")
@@ -95,9 +95,17 @@ function renderOneSection(secObj, page = 1){
     sec = newSection.sec
     grid = newSection.grid
     sec.dataset.key = key
+    // 文件夹视图不需要内容区上方的“名称与数量”标题
+    if(navState.view==='folder'){
+      const h2=sec.querySelector('h2'); if(h2) h2.remove()
+    }
     container.appendChild(sec)
   } else {
     grid = sec.querySelector('.gallery')
+    // 已存在 section 时也移除标题
+    if(navState.view==='folder'){
+      const h2=sec.querySelector('h2'); if(h2) h2.remove()
+    }
   }
 
   for(const id of pagedFiles){
@@ -169,28 +177,50 @@ function enterFolder(key){
   if(container) container.style.display='block'
   sectionSelect.value=key
   buildItems()
+  // 保险：进入文件夹后清理内容区所有分区标题
+  try{
+    if(container){
+      container.querySelectorAll('.section h2').forEach(h=>h.remove())
+    }
+  }catch(_){/* ignore */}
   if(explorerContent){ explorerContent.scrollTo({top:0,behavior:'smooth'}) }
   renderBreadcrumbs()
   updateBackTopVisibility()
 }
 
 function renderBreadcrumbs(){
-  if(!breadcrumbs) return
-  breadcrumbs.innerHTML=''
-  // Root: 此电脑 > MemeTray (静态)
-  const parts = navState.view==='folder' ? [WINDOWS_ROOT,'MemeTray',navState.currentKey] : [WINDOWS_ROOT,'MemeTray']
-  parts.forEach((name,idx)=>{
-    const span=document.createElement('span'); span.className='crumb'
-    span.textContent=name
-    if(idx===0){ span.addEventListener('click',()=>enterRoot()) }
-    if(idx===1){ span.addEventListener('click',()=>enterRoot()) }
-    if(idx===2){ span.addEventListener('click',()=>enterFolder(navState.currentKey)) }
-    breadcrumbs.appendChild(span)
-    if(idx<parts.length-1){
-      const sep=document.createElement('span'); sep.className='sep'; sep.textContent='>'
-      breadcrumbs.appendChild(sep)
+  const titleTextEl=document.getElementById('windowTitleText')
+  // 仅显示 MemeTray 起始，不显示 "此电脑"
+  const parts = navState.view==='folder' ? ['MemeTray',navState.currentKey] : ['MemeTray']
+  // 1) 清空并渲染到标题文本（与图标同一行）
+  if(titleTextEl){
+    titleTextEl.innerHTML=''
+    parts.forEach((name,idx)=>{
+      const span=document.createElement('span'); span.className='crumb'
+      span.textContent=name
+      if(idx===0){ span.addEventListener('click',()=>enterRoot()) }
+      if(idx===1){ span.addEventListener('click',()=>enterFolder(navState.currentKey)) }
+      titleTextEl.appendChild(span)
+      if(idx<parts.length-1){
+        const sep=document.createElement('span'); sep.className='sep'; sep.textContent='>'
+        titleTextEl.appendChild(sep)
+      }
+    })
+    // 在文件夹视图最后追加数量 (n)
+    if(navState.view==='folder' && navState.currentKey){
+      const sec=sections && sections.find(s=>s.key===navState.currentKey)
+      if(sec && Array.isArray(sec.files)){
+        const cnt=document.createElement('span')
+        cnt.className='crumb'
+        cnt.textContent=` (${sec.files.length})`
+        titleTextEl.appendChild(cnt)
+      }
     }
-  })
+  }
+  // 2) 清空内容区 breadcrumbs，避免重复显示
+  if(breadcrumbs){
+    breadcrumbs.innerHTML=''
+  }
 }
 
 // 按钮事件
@@ -198,13 +228,7 @@ btnBack&&btnBack.addEventListener('click',()=>{
   if(navState.view==='folder') enterRoot()
 })
 
-copyPathBtn&&copyPathBtn.addEventListener('click',async ()=>{
-  try{
-    const path = navState.view==='folder' && navState.currentKey ? `${CATIME_PATH}\\${navState.currentKey}` : CATIME_PATH
-    await navigator.clipboard.writeText(path)
-    copyPathBtn.disabled=true; setTimeout(()=>{copyPathBtn.disabled=false},600)
-  }catch(_){/* ignore */}
-})
+// 已移除复制路径按钮
 
 function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
 function clearTrayIcon(){
