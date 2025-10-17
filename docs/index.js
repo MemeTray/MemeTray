@@ -26,19 +26,35 @@ let navState={view:'root',currentKey:null}
 const WINDOWS_ROOT='此电脑'
 const CATIME_PATH='%LOCALAPPDATA%\\Catime\\animations'
 
-// 桌面背景支持（URL 参数优先，其次 localStorage）
+// 桌面背景支持（URL 参数优先，其次 localStorage），无值或无效时保留 CSS 默认
 ;(function initBackground(){
   try{
     const p=new URLSearchParams(location.search)
     const key='memetray.bg'
-    const fromUrl=p.get('bg')||p.get('background')||p.get('wallpaper')
-    const saved=localStorage.getItem(key)
+    const fromUrlRaw=p.get('bg')||p.get('background')||p.get('wallpaper')
+    const fromUrl=fromUrlRaw && fromUrlRaw.trim()
+    const savedRaw=localStorage.getItem(key)
+    const saved=savedRaw && savedRaw.trim()
     const val=fromUrl||saved||''
-    if(desktop){
-      if(val){desktop.style.backgroundImage=`url("${val}")`}
-      else{desktop.style.backgroundImage='none'}
+
+    const isValid=(u)=>{
+      if(!u) return false
+      const s=String(u).trim()
+      if(!s) return false
+      if(s==='none'||s==='null'||s==='undefined') return false
+      if(s.startsWith('data:')||s.startsWith('blob:')) return true
+      if(/\.(png|jpe?g|gif|webp|bmp|svg)(\?.*)?$/i.test(s)) return true
+      // 允许常见的相对/绝对/HTTP(S) 路径，但不做同步探测
+      return /^(https?:|\/|\.\/|\.\.\/)/.test(s)
     }
-    if(fromUrl){localStorage.setItem(key,fromUrl)}
+
+    if(desktop && isValid(val)){
+      desktop.style.backgroundImage=`url("${val}")`
+    }
+    // 仅在 URL 有效时保存
+    if(fromUrl && isValid(fromUrl)){
+      localStorage.setItem(key,fromUrl)
+    }
   }catch(_){}
 })()
 
