@@ -303,39 +303,7 @@ setInterval(updateClock,1000);updateClock()
 // 托盘图标根据悬停动态显示
 
 function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
-function isImageResponse(resp){
-  if(!resp) return false;
-  const ct=(resp.headers&&resp.headers.get('content-type'))||'';
-  return resp.ok && /^(image)\//i.test(ct);
-}
-async function fileExists(url){
-  try{
-    const u=url+(url.includes('?')?'&':'?')+"t="+Date.now();
-    // 先尝试 HEAD，部分静态托管（如启用 SPA 回退到 index.html）会返回 200 但 content-type 为 text/html
-    const r=await fetch(u,{method:'HEAD',cache:'no-store'});
-    if(isImageResponse(r)) return true;
-    // 回退 GET，再次校验 content-type 必须是图片，避免 SPA 200 误判
-    const r2=await fetch(u,{cache:'no-store'});
-    return isImageResponse(r2);
-  }catch(e){return false}
-}
-async function probeCountForDir(dir){
-  let prev=0, curr=1, maxCap=10000;
-  // 指数探测：1,2,4,8,... 直到不存在
-  while(curr<=maxCap){
-    const ok=await fileExists(GIF_BASE+dir+"/"+fileName(dir,curr));
-    if(!ok) break; prev=curr; curr*=2;
-  }
-  if(prev===0){return 0}
-  // 二分查找最后存在的编号
-  let lo=prev, hi=Math.min(curr-1,maxCap);
-  while(lo<hi){
-    const mid=Math.floor((lo+hi+1)/2);
-    const ok=await fileExists(GIF_BASE+dir+"/"+fileName(dir,mid));
-    if(ok) lo=mid; else hi=mid-1;
-  }
-  return lo;
-}
+// 已移除网络探针逻辑，数量完全由 index.json 提供
 
 async function fetchSections(){
   startSplash()
@@ -346,23 +314,29 @@ async function fetchSections(){
     if(!localIdx.ok) throw new Error('index.json not found')
     const data=await localIdx.json()
     if(!Array.isArray(data.sections) || !data.sections.length) throw new Error('empty sections')
-    const dirs=data.sections.map(String)
+    // 严格要求 { dir, count } 结构
+    const normalized=(data.sections||[])
+      .map((s)=>({
+        dir: String(s && s.dir != null ? s.dir : ''),
+        count: Number.isFinite(Number(s && s.count)) ? Number(s.count) : NaN
+      }))
+      .filter(({dir,count})=>!!dir && Number.isFinite(count) && count>=0)
+    if(!normalized.length) throw new Error('invalid sections schema: expect array of {dir, count>=0}')
 
-    // 1) 先探测并渲染第一个分组，避免白屏
-    const firstDir=dirs[0]
-    const firstCount=await probeCountForDir(firstDir)
-    const firstFiles=[]; for(let i=1;i<=firstCount;i++){firstFiles.push(fileName(firstDir,i))}
-    sections=[{key:firstDir,title:firstDir,dir:firstDir,files:firstFiles}]
-    sectionSelect.value=firstDir
+    // 1) 先基于数量快速渲染第一个分组，避免白屏
+    const first=normalized[0]
+    const firstCount=Math.max(0, Number(first.count)||0)
+    const firstFiles=[]; for(let i=1;i<=firstCount;i++){firstFiles.push(fileName(first.dir,i))}
+    sections=[{key:first.dir,title:first.dir,dir:first.dir,files:firstFiles}]
+    sectionSelect.value=first.dir
     buildItems()
 
-    // 2) 后台并发探测其余分组，完成后一次性更新 tiles
-    const otherDirs=dirs.slice(1)
-    const otherSections=await Promise.all(otherDirs.map(async (name)=>{
-      const count=await probeCountForDir(name)
-      const files=[]; for(let i=1;i<=count;i++){files.push(fileName(name,i))}
-      return {key:name,title:name,dir:name,files}
-    }))
+    // 2) 构建其余分组文件列表（严格使用 count）
+    const otherSections=normalized.slice(1).map(({dir,count})=>{
+      const c=Math.max(0, Number(count)||0)
+      const files=[]; for(let i=1;i<=c;i++){files.push(fileName(dir,i))}
+      return {key:dir,title:dir,dir,files}
+    })
     sections=[sections[0], ...otherSections]
 
     // 构建顶部方格选择器（预览固定为 0001_分组名.gif）
