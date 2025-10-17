@@ -15,6 +15,7 @@ const sectionSelect={value:'all'}
 const trayIcon=document.getElementById("trayIcon")
 const clockTime=document.getElementById("clock-time")
 const clockDate=document.getElementById("clock-date")
+const infiniteLoader=document.getElementById('infiniteLoader')
 
 // 加载遮罩
 const splash=document.getElementById('splash')
@@ -108,10 +109,43 @@ function renderOneSection(secObj, page = 1){
     }
   }
 
+  // 首屏骨架：仅在第一页且该分区尚未渲染任何卡片时
+  let pending = 0
+  const needsSkeleton = page===1 && grid && !grid.dataset.skeleton && grid.querySelectorAll('a').length===0
+  const removeSkeletons = ()=>{
+    if(!grid) return
+    delete grid.dataset.skeleton
+    grid.querySelectorAll('.skeleton').forEach(n=>n.remove())
+  }
+  if(needsSkeleton){
+    grid.dataset.skeleton = '1'
+    const skeletonCount = Math.min(12, (list && list.length) || 12)
+    for(let i=0;i<skeletonCount;i++){
+      const sk=document.createElement('div'); sk.className='skeleton'
+      const th=document.createElement('div'); th.className='thumb'
+      sk.appendChild(th)
+      grid.appendChild(sk)
+    }
+    // 超时兜底，防止懒加载场景骨架滞留
+    setTimeout(removeSkeletons, 1800)
+  }
+
   for(const id of pagedFiles){
     const href=GIF_BASE+dir+"/"+id
     const a=document.createElement("a")
-    a.href=href;a.download=id;const thumb=document.createElement("div");thumb.className="thumb";const img=document.createElement("img");img.src=href;img.alt=id;img.loading="lazy";img.decoding="async";img.onerror=()=>{console.warn("图片加载失败:",href);a.style.display="none"};thumb.appendChild(img);a.appendChild(thumb);a.addEventListener("mouseenter",()=>{setTrayIcon(href)});a.addEventListener("mouseleave",()=>{clearTrayIcon()});grid.appendChild(a)
+    a.href=href
+    a.download=id
+    const thumb=document.createElement("div"); thumb.className="thumb"
+    const img=document.createElement("img");
+    img.src=href; img.alt=id; img.loading="lazy"; img.decoding="async"
+    if(needsSkeleton){ pending++ }
+    img.addEventListener('load', ()=>{ if(needsSkeleton){ pending--; if(pending<=0) removeSkeletons() } }, { once:true })
+    img.addEventListener('error', ()=>{ console.warn("图片加载失败:",href); a.style.display="none"; if(needsSkeleton){ pending--; if(pending<=0) removeSkeletons() } }, { once:true })
+    thumb.appendChild(img)
+    a.appendChild(thumb)
+    a.addEventListener("mouseenter",()=>{setTrayIcon(href)})
+    a.addEventListener("mouseleave",()=>{clearTrayIcon()})
+    grid.appendChild(a)
   }
   currentPage[key] = page
   return sec
@@ -164,6 +198,7 @@ function enterRoot(){
   if(btnBack){ btnBack.disabled=true }
   if(sectionTiles) sectionTiles.style.display='grid'
   if(container) container.style.display='none'
+  if(infiniteLoader){infiniteLoader.style.display='none'}
   renderBreadcrumbs()
   updateBackTopVisibility()
 }
@@ -386,6 +421,7 @@ async function handleInfiniteScroll() {
   const { scrollTop, scrollHeight, clientHeight } = scroller
   if (scrollHeight - scrollTop - clientHeight < 300) {
     isLoading = true
+    if(infiniteLoader){infiniteLoader.style.display='flex'}
     const selected = sectionSelect.value
     let section, nextPageKey
     if (selected === 'all') {
@@ -400,12 +436,13 @@ async function handleInfiniteScroll() {
       const currentTotal = (currentPage[nextPageKey] || 0) * ITEMS_PER_PAGE
       if (currentTotal >= section.files.length) {
         isLoading = false
+        if(infiniteLoader){infiniteLoader.style.display='none'}
         return
       }
       const nextPage = (currentPage[nextPageKey] || 0) + 1
       renderOneSection(section, nextPage)
     }
-    setTimeout(() => { isLoading = false }, 200)
+    setTimeout(() => { isLoading = false; if(infiniteLoader){infiniteLoader.style.display='none'} }, 200)
   }
 }
 
