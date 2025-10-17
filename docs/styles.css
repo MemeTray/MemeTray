@@ -1,12 +1,12 @@
 /* 基础主题变量（可暗色切换） */
-:root{--bg:#f6f7fb;--text:#0b1220;--muted:#6b7280;--card-bg:#ffffff;--card-border:#e5e7eb;--card-hover:#0b1220;--accent:#0ea5e9}
+:root{--bg:#f6f7fb;--text:#0b1220;--muted:#6b7280;--card-bg:#ffffff;--card-border:#e5e7eb;--card-hover:#0b1220;--accent:#0ea5e9;--glass-bg:rgba(255,255,255,.2);--glass-border:rgba(255,255,255,.35);--glass-shadow:0 18px 60px rgba(0,0,0,.18)}
 
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:16px;color:var(--text);background:var(--bg);padding-bottom:64px}
 .brand{display:none}
-.notice{margin:8px 0 10px 0;padding:8px 10px;font-size:12px;border:1px dashed var(--card-border);border-radius:10px;background:var(--card-bg)}
+.notice{margin:8px 0 10px 0;padding:8px 10px;font-size:12px;border:1px dashed var(--glass-border);border-radius:10px;background:var(--glass-bg);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .notice a{color:var(--accent);text-decoration:none}
 .notice a:hover{text-decoration:underline}
-.legal{margin:8px 0 12px 0;padding:10px 12px;font-size:12px;line-height:1.6;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;color:var(--muted)}
+.legal{margin:8px 0 12px 0;padding:10px 12px;font-size:12px;line-height:1.6;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:10px;color:var(--muted);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .legal strong{color:var(--text);margin-right:6px}
 .legal-links{margin-top:6px}
 .legal-links a{color:var(--accent);text-decoration:none}
@@ -20,14 +20,14 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 
 /* 顶部分组小方格选择器 */
 .section-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin:8px 0 12px 0}
-.tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border:1px solid var(--card-border);border-radius:10px;background:var(--card-bg);cursor:pointer}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass-bg);cursor:pointer;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .tile:hover{border-color:var(--card-hover)}
 .tile-thumb{width:64px;height:64px;border:1px solid var(--card-border);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:transparent}
 .tile-thumb img{width:100%;height:100%;object-fit:contain}
 .tile-title{font-size:12px;color:var(--text)}
 
 /* 卡片 */
-.gallery a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:172px;padding:14px;text-decoration:none;color:var(--text);background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease}
+.gallery a{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:172px;padding:14px;text-decoration:none;color:var(--text);background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:12px;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .gallery a:hover{border-color:var(--card-hover);transform:translateY(-1.5px);box-shadow:0 6px 18px rgba(0,0,0,.06)}
 .thumb{width:128px;height:128px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:transparent;border:1px solid var(--card-border)}
 .gallery img{width:128px;height:128px;object-fit:contain;image-rendering:pixelated}
@@ -36,11 +36,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .footer{margin-top:24px;font-size:12px;color:var(--muted)}
 
 /* 任务栏模拟 */
-.taskbar{position:fixed;bottom:0;left:0;right:0;z-index:1000;color:#0b1220;background:rgba(243,243,243,.85);backdrop-filter:saturate(3) blur(20px);border-top:1px solid #cfd8e3;height:48px;border-radius:0;margin-top:0}
+.taskbar{position:fixed;bottom:0;left:0;right:0;z-index:1000;color:#0b1220;background:var(--glass-bg);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px);border-top:1px solid var(--glass-border);height:48px;border-radius:0;margin-top:0}
 .taskbar--light{background:rgba(243,243,243,.85)}
 .taskcont{position:relative;width:100%;height:100%}
 .taskright{position:absolute;top:0;right:0;height:100%;display:flex;align-items:center;gap:8px;padding-right:8px}
-.tray{display:flex;align-items:center;gap:6px;padding:0 6px;border-left:1px solid #d1d5db;border-right:1px solid #d1d5db;border-radius:6px;background:transparent}
+.tray{display:flex;align-items:center;gap:6px;padding:0 6px;border-left:1px solid var(--glass-border);border-right:1px solid var(--glass-border);border-radius:6px;background:transparent}
 .tray-icon{width:20px;height:20px;border-radius:4px;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .tray-icon img{width:100%;height:100%;object-fit:contain}
 .tasksCont{width:100%;height:100%;display:flex;flex-direction:column}
@@ -69,7 +69,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .taskright>.px-2{margin-right:4px}
 
 /* GitHub link button */
-.gh-link{position:fixed;top:10px;right:10px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--card-border);border-radius:8px;background:var(--card-bg);color:var(--text);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.gh-link{position:fixed;top:10px;right:10px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--glass-border);border-radius:8px;background:var(--glass-bg);color:var(--text);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.06);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .gh-link:hover{border-color:var(--card-hover)}
 
 /* 让托盘图标与 Win11React 一致：行内并排、16px 等比、垂直居中 */
@@ -79,7 +79,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .uicon.taskIcon{display:flex;align-items:center}
 
 /* 返回顶部按钮 */
-.back-top{position:fixed;right:12px;bottom:60px;width:36px;height:36px;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--text);display:none;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.08);cursor:pointer;z-index:1001}
+.back-top{position:fixed;right:12px;bottom:60px;width:36px;height:36px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--text);display:none;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.08);cursor:pointer;z-index:1001;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .back-top:hover{border-color:var(--card-hover)}
 
 /* 全屏加载遮罩 */
@@ -90,11 +90,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 
 /* 桌面与窗口 */
 .desktop{position:fixed;inset:0;z-index:0;background-image:url("../Images/background.jpg");background-size:cover;background-position:center;background-repeat:no-repeat;filter:saturate(1.05)}
-.window{position:fixed;z-index:500;left:8px;top:8px;width:calc(100vw - 16px);height:calc(100vh - 48px - 16px);display:flex;flex-direction:column;border:1px solid var(--card-border);border-radius:12px;background:var(--card-bg);box-shadow:0 18px 60px rgba(0,0,0,.18);overflow:hidden}
-.window-titlebar{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px 0 6px;background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(245,245,245,.9));border-bottom:1px solid var(--card-border);cursor:move;user-select:none}
+.window{position:fixed;z-index:500;left:8px;top:8px;width:calc(100vw - 16px);height:calc(100vh - 48px - 16px);display:flex;flex-direction:column;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-bg);box-shadow:var(--glass-shadow);overflow:hidden;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
+.window-titlebar{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px 0 6px;background:var(--glass-bg);border-bottom:1px solid var(--glass-border);cursor:move;user-select:none;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .window-title{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
 .window-title img{display:block}
-.nav-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--card-border);border-radius:6px;background:var(--card-bg);color:var(--text);cursor:pointer}
+.nav-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--glass-border);border-radius:6px;background:var(--glass-bg);color:var(--text);cursor:pointer;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .nav-btn[disabled]{opacity:.5;cursor:default}
 .nav-btn:hover:not([disabled]){border-color:var(--card-hover)}
 .window-content{flex:1;min-height:0;overflow:auto;padding:12px;background:transparent}
@@ -115,7 +115,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 
 /* 路径栏 */
 .pathbar{display:flex;align-items:center;gap:8px;margin:0 0 10px 0}
-.breadcrumbs{display:flex;align-items:center;gap:6px;flex:1;min-width:0;padding:6px 8px;border:1px solid var(--card-border);border-radius:8px;background:var(--card-bg);font-size:12px;color:var(--text)}
+.breadcrumbs{display:flex;align-items:center;gap:6px;flex:1;min-width:0;padding:6px 8px;border:1px solid var(--glass-border);border-radius:8px;background:var(--glass-bg);font-size:12px;color:var(--text);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .crumb{display:flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer}
 .crumb .sep{opacity:.6}
 .crumb:hover{text-decoration:underline}
