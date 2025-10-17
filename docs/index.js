@@ -130,12 +130,20 @@ setInterval(updateClock,1000);updateClock()
 // 删除初始化时设置默认托盘图标的调用
 
 function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
+function isImageResponse(resp){
+  if(!resp) return false;
+  const ct=(resp.headers&&resp.headers.get('content-type'))||'';
+  return resp.ok && /^(image)\//i.test(ct);
+}
 async function fileExists(url){
   try{
     const u=url+(url.includes('?')?'&':'?')+"t="+Date.now();
-    // 先尝试 HEAD，部分静态托管不支持则回退 GET
-    const r=await fetch(u,{method:'HEAD',cache:'no-store'}); if(r.ok) return true;
-    const r2=await fetch(u,{cache:'no-store'}); return r2.ok;
+    // 先尝试 HEAD，部分静态托管（如启用 SPA 回退到 index.html）会返回 200 但 content-type 为 text/html
+    const r=await fetch(u,{method:'HEAD',cache:'no-store'});
+    if(isImageResponse(r)) return true;
+    // 回退 GET，再次校验 content-type 必须是图片，避免 SPA 200 误判
+    const r2=await fetch(u,{cache:'no-store'});
+    return isImageResponse(r2);
   }catch(e){return false}
 }
 async function probeCountForDir(dir){
