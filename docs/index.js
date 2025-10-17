@@ -10,6 +10,7 @@ const btnBack=document.getElementById('btnBack')
 const windowTitle=document.getElementById('windowTitle')
 const breadcrumbs=document.getElementById('breadcrumbs')
 const copyPathBtn=document.getElementById('copyPath')
+const resizeHandles=[...document.querySelectorAll('#explorer .resize-handle')]
 const sectionSelect={value:'all'}
 const trayIcon=document.getElementById("trayIcon")
 const clockTime=document.getElementById("clock-time")
@@ -411,4 +412,76 @@ if(explorerContent){
   }
   explorerTitlebar.addEventListener('mousedown',onDown)
   explorerTitlebar.addEventListener('touchstart',onDown,{passive:true})
+})()
+
+// 窗口缩放（旧逻辑移除，保留新版）
+
+// 窗口缩放
+;(function enableResize(){
+  if(!explorer||!resizeHandles.length) return
+  const storeKey='memetray.window.bounds'
+  const minW=520, minH=320
+  function loadBounds(){
+    try{const j=localStorage.getItem(storeKey);return j?JSON.parse(j):null}catch(_){return null}
+  }
+  function saveBounds(){
+    const r=explorer.getBoundingClientRect()
+    const b={left:r.left,top:r.top,width:r.width,height:r.height}
+    try{localStorage.setItem(storeKey,JSON.stringify(b))}catch(_){/* ignore */}
+  }
+  // 初始化位置尺寸（若有存储，应用之）
+  const saved=loadBounds()
+  if(saved&&Number.isFinite(saved.width)&&Number.isFinite(saved.height)){
+    explorer.style.left=saved.left+"px"
+    explorer.style.top=saved.top+"px"
+    explorer.style.width=saved.width+"px"
+    explorer.style.height=saved.height+"px"
+  }
+  let resizing=false, dir='', startX=0, startY=0, start={left:0,top:0,width:0,height:0}
+  function onDown(e){
+    const target=e.currentTarget
+    dir=target.getAttribute('data-dir')||''
+    const pt=e.touches? e.touches[0] : e
+    startX=pt.clientX; startY=pt.clientY
+    const r=explorer.getBoundingClientRect()
+    start={left:r.left,top:r.top,width:r.width,height:r.height}
+    resizing=true
+    document.addEventListener('mousemove',onMove)
+    document.addEventListener('mouseup',onUp)
+    document.addEventListener('touchmove',onMove,{passive:false})
+    document.addEventListener('touchend',onUp)
+    e.preventDefault()
+  }
+  function onMove(e){
+    if(!resizing) return
+    const pt=e.touches? e.touches[0] : e
+    if(e.cancelable) e.preventDefault()
+    const dx=pt.clientX-startX, dy=pt.clientY-startY
+    let left=start.left, top=start.top, width=start.width, height=start.height
+    const vw=window.innerWidth, vh=window.innerHeight
+    const tb=48 // taskbar height margin bottom
+    if(dir.includes('e')) width=Math.max(minW, Math.min(vw-8-left, start.width+dx))
+    if(dir.includes('s')) height=Math.max(minH, Math.min(vh-tb-8-top, start.height+dy))
+    if(dir.includes('w')){ left=Math.max(8, Math.min(start.left+start.width-minW, start.left+dx)); width=Math.max(minW, start.width+(start.left-left)) }
+    if(dir.includes('n')){ top=Math.max(8, Math.min(start.top+start.height-minH, start.top+dy)); height=Math.max(minH, start.height+(start.top-top)) }
+    explorer.style.left=left+"px"
+    explorer.style.top=top+"px"
+    explorer.style.width=width+"px"
+    explorer.style.height=height+"px"
+  }
+  function onUp(){
+    if(!resizing) return
+    resizing=false
+    document.removeEventListener('mousemove',onMove)
+    document.removeEventListener('mouseup',onUp)
+    document.removeEventListener('touchmove',onMove)
+    document.removeEventListener('touchend',onUp)
+    saveBounds()
+  }
+  resizeHandles.forEach(h=>{
+    h.addEventListener('mousedown',onDown)
+    h.addEventListener('touchstart',onDown,{passive:false})
+  })
+  // 窗口拖拽结束也保存位置
+  window.addEventListener('mouseup',()=>{ if(!resizing) saveBounds() })
 })()
