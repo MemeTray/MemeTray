@@ -1,4 +1,3 @@
-function zeroPad(num, size){const s=String(num);return s.length>=size?s:"0".repeat(size-s.length)+s}
 let sections=window.MEMETRAY_SECTIONS||[]
 const GIF_BASE=location.pathname.includes('/docs/')?'../gifs/':'./gifs/'
 const container=document.getElementById("container")
@@ -7,9 +6,7 @@ const desktop=document.getElementById('desktop')
 const explorer=document.getElementById('explorer')
 const explorerTitlebar=document.getElementById('explorerTitlebar')
 const explorerContent=document.getElementById('explorerContent')
-const searchInput=null
 const sectionSelect={value:'all'}
-const clearBtn=null
 const trayIcon=document.getElementById("trayIcon")
 const clockTime=document.getElementById("clock-time")
 const clockDate=document.getElementById("clock-date")
@@ -88,7 +85,6 @@ function renderOneSection(secObj, page = 1){
   return sec
 }
 
-function progressiveRender(others){let i=0;const next=()=>{if(i>=others.length)return;const item=others[i++];const cb=()=>{renderOneSection(item, 1);next()};if('requestIdleCallback'in window){requestIdleCallback(cb,{timeout:250})}else{setTimeout(cb,0)}};next()}
 
 function preloadSectionImages(secObj,max=48){const {dir,files}=secObj;const list=files.slice(0,max);for(const id of list){const img=new Image();img.decoding='async';img.loading='eager';img.src=GIF_BASE+dir+"/"+id}}
 function preloadOthers(others){let i=0;const tick=()=>{if(i>=others.length)return;preloadSectionImages(others[i++]);if('requestIdleCallback'in window){requestIdleCallback(tick,{timeout:200})}else{setTimeout(tick,0)}};tick()}
@@ -126,11 +122,7 @@ function buildItems(){
     preloadOthers(others)
   }
 }
-// 输入与清空控件已移除，交互通过顶部方格
-
-// 主题切换已移除
-
-// 移除默认 Catime 图标常量
+// 顶部方格作为主要交互入口
 
 function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
 function clearTrayIcon(){
@@ -147,7 +139,7 @@ function updateClock(){const d=new Date();const hh=String(d.getHours()).padStart
 }
 setInterval(updateClock,1000);updateClock()
 
-// 删除初始化时设置默认托盘图标的调用
+// 托盘图标根据悬停动态显示
 
 function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
 function isImageResponse(resp){
