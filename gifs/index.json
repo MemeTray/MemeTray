@@ -1,4 +1,9 @@
 {
-  "sections": ["doro", "genshin", "maodie", "maomaochong"]
+  "sections": [
+    { "dir": "doro", "count": 181 },
+    { "dir": "genshin", "count": 3 },
+    { "dir": "maodie", "count": 14 },
+    { "dir": "maomaochong", "count": 349 }
+  ]
 }
 
