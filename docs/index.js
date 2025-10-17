@@ -3,6 +3,10 @@ let sections=window.MEMETRAY_SECTIONS||[]
 const GIF_BASE=location.pathname.includes('/docs/')?'../gifs/':'./gifs/'
 const container=document.getElementById("container")
 const sectionTiles=document.getElementById("sectionTiles")
+const desktop=document.getElementById('desktop')
+const explorer=document.getElementById('explorer')
+const explorerTitlebar=document.getElementById('explorerTitlebar')
+const explorerContent=document.getElementById('explorerContent')
 const searchInput=null
 const sectionSelect={value:'all'}
 const clearBtn=null
@@ -16,6 +20,22 @@ const splashDots=document.getElementById('splashDots')
 let splashTimer=null
 const ITEMS_PER_PAGE = 50
 let currentPage = {} // { [sectionKey]: pageNumber }
+
+// 桌面背景支持（URL 参数优先，其次 localStorage）
+;(function initBackground(){
+  try{
+    const p=new URLSearchParams(location.search)
+    const key='memetray.bg'
+    const fromUrl=p.get('bg')||p.get('background')||p.get('wallpaper')
+    const saved=localStorage.getItem(key)
+    const val=fromUrl||saved||''
+    if(desktop){
+      if(val){desktop.style.backgroundImage=`url("${val}")`}
+      else{desktop.style.backgroundImage='none'}
+    }
+    if(fromUrl){localStorage.setItem(key,fromUrl)}
+  }catch(_){}
+})()
 
 function startSplash(){
   if(!splash) return
@@ -205,7 +225,7 @@ async function fetchSections(){
         t.appendChild(th);t.appendChild(tt)
         t.addEventListener('mouseenter',()=>{setTrayIcon(first)})
         t.addEventListener('mouseleave',()=>{clearTrayIcon()})
-        t.addEventListener('click',()=>{sectionSelect.value=dir;buildItems();window.scrollTo({top:0,behavior:'smooth'})})
+        t.addEventListener('click',()=>{sectionSelect.value=dir;buildItems();if(explorerContent){explorerContent.scrollTo({top:0,behavior:'smooth'})}else{window.scrollTo({top:0,behavior:'smooth'})}})
         sectionTiles.appendChild(t)
       }
     }
@@ -236,27 +256,31 @@ window.addEventListener('gesturestart', (e)=>{e.preventDefault()})
 window.addEventListener('gesturechange', (e)=>{e.preventDefault()})
 window.addEventListener('gestureend', (e)=>{e.preventDefault()})
 
-// 返回顶部按钮逻辑
+// 返回顶部按钮逻辑（绑定到窗口内容滚动）
 const backTopBtn=document.getElementById('backTop')
-function onScroll(){
-  if(!backTopBtn) return
-  backTopBtn.style.display=(window.scrollY>300)?'flex':'none'
+function updateBackTopVisibility(){
+  if(!backTopBtn||!explorerContent) return
+  backTopBtn.style.display=(explorerContent.scrollTop>300)?'flex':'none'
 }
-window.addEventListener('scroll',onScroll,{passive:true})
-backTopBtn&&backTopBtn.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})})
-onScroll()
+if(explorerContent){
+  explorerContent.addEventListener('scroll',updateBackTopVisibility,{passive:true})
+}
+backTopBtn&&backTopBtn.addEventListener('click',()=>{
+  if(explorerContent){explorerContent.scrollTo({top:0,behavior:'smooth'})}
+  else{window.scrollTo({top:0,behavior:'smooth'})}
+})
+updateBackTopVisibility()
 
-// Infinite Scroll
+// Infinite Scroll（绑定到窗口内容滚动）
 let isLoading = false
 async function handleInfiniteScroll() {
   if (isLoading) return
-  const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+  const scroller = explorerContent || document.documentElement
+  const { scrollTop, scrollHeight, clientHeight } = scroller
   if (scrollHeight - scrollTop - clientHeight < 300) {
     isLoading = true
     const selected = sectionSelect.value
-    
-    let section, nextPageKey;
-
+    let section, nextPageKey
     if (selected === 'all') {
       const lastSectionKey = Object.keys(currentPage).pop()
       section = sections.find(s => s.key === lastSectionKey)
@@ -265,20 +289,62 @@ async function handleInfiniteScroll() {
       section = sections.find(s => s.key === selected)
       nextPageKey = selected
     }
-
     if (section) {
       const currentTotal = (currentPage[nextPageKey] || 0) * ITEMS_PER_PAGE
       if (currentTotal >= section.files.length) {
         isLoading = false
-        return // All items loaded for this section
+        return
       }
       const nextPage = (currentPage[nextPageKey] || 0) + 1
       renderOneSection(section, nextPage)
     }
-
-    // A small delay to prevent rapid firing
     setTimeout(() => { isLoading = false }, 200)
   }
 }
 
-window.addEventListener('scroll', handleInfiniteScroll, { passive: true })
+if(explorerContent){
+  explorerContent.addEventListener('scroll', handleInfiniteScroll, { passive: true })
+}else{
+  window.addEventListener('scroll', handleInfiniteScroll, { passive: true })
+}
+
+// 窗口拖拽
+;(function enableDrag(){
+  if(!explorer||!explorerTitlebar) return
+  let dragging=false, startX=0, startY=0, startLeft=0, startTop=0
+  const onDown=(e)=>{
+    dragging=true
+    const pt = e.touches? e.touches[0] : e
+    startX=pt.clientX; startY=pt.clientY
+    const rect=explorer.getBoundingClientRect()
+    startLeft=rect.left; startTop=rect.top
+    document.addEventListener('mousemove',onMove)
+    document.addEventListener('mouseup',onUp)
+    document.addEventListener('touchmove',onMove,{passive:false})
+    document.addEventListener('touchend',onUp)
+  }
+  const onMove=(e)=>{
+    if(!dragging) return
+    const pt = e.touches? e.touches[0] : e
+    if(e.cancelable) e.preventDefault()
+    const dx=pt.clientX-startX, dy=pt.clientY-startY
+    let nx=startLeft+dx, ny=startTop+dy
+    const margin=8
+    const vw=window.innerWidth, vh=window.innerHeight
+    const rect=explorer.getBoundingClientRect()
+    const w=rect.width, h=rect.height
+    nx=Math.min(vw-margin, Math.max(margin-w+40, nx))
+    ny=Math.min(vh-56, Math.max(margin, ny))
+    explorer.style.left=nx+"px"
+    explorer.style.top=ny+"px"
+  }
+  const onUp=()=>{
+    dragging=false
+    document.removeEventListener('mousemove',onMove)
+    document.removeEventListener('mouseup',onUp)
+    document.removeEventListener('touchmove',onMove)
+    document.removeEventListener('touchend',onUp)
+  }
+  explorerTitlebar.addEventListener('mousedown',onDown)
+  explorerTitlebar.addEventListener('touchstart',onDown,{passive:true})
+})()
