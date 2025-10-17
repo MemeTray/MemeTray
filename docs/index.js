@@ -201,6 +201,14 @@ function enterRoot(){
   if(infiniteLoader){infiniteLoader.style.display='none'}
   renderBreadcrumbs()
   updateBackTopVisibility()
+  // 根视图：展示右下角小药丸
+  try{
+    const lf=document.getElementById('legalFooter')
+    if(lf){
+      lf.classList.add('legal--compact')
+      lf.innerHTML='<a class="legal-link" href="https://github.com/MemeTray/MemeTray/blob/main/DISCLAIMER.md" target="_blank" rel="noopener">法律 / 免责声明</a>'
+    }
+  }catch(_){/* ignore */}
 }
 
 function enterFolder(key){
@@ -221,6 +229,15 @@ function enterFolder(key){
   if(explorerContent){ explorerContent.scrollTo({top:0,behavior:'smooth'}) }
   renderBreadcrumbs()
   updateBackTopVisibility()
+  // 文件夹视图：隐藏药丸（避免与分组内声明重复）
+  try{
+    const lf=document.getElementById('legalFooter')
+    if(lf){
+      lf.classList.remove('legal--compact')
+      // 如果需要保留底部声明，可在此填充完整内容；当前不重复以避免干扰
+      lf.innerHTML=''
+    }
+  }catch(_){/* ignore */}
 }
 
 function renderBreadcrumbs(){

@@ -93,12 +93,12 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .desktop{position:fixed;inset:0;z-index:0;background-image:url("../Images/background.jpg");background-size:cover;background-position:center;background-repeat:no-repeat;filter:saturate(1.05)}
 .window{position:fixed;z-index:500;left:8px;top:8px;width:calc(100vw - 16px);height:calc(100vh - 48px - 16px);display:flex;flex-direction:column;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-bg);box-shadow:var(--glass-shadow), inset 0 0 0 1px rgba(255,255,255,.25);overflow:hidden;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .window-titlebar{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px 0 6px;background:var(--glass-bg);border-bottom:1px solid var(--glass-border);cursor:move;user-select:none;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
-.window-title{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding-top:2px;padding-bottom:2px}
+.window-title{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding-top:2px;padding-bottom:2px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
 .window-title img{display:block}
 .nav-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--glass-border);border-radius:6px;background:var(--glass-bg);color:var(--text);cursor:pointer;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .nav-btn[disabled]{opacity:.5;cursor:default}
 .nav-btn:hover:not([disabled]){border-color:var(--card-hover)}
-.window-content{flex:1;min-height:0;overflow:auto;padding:12px;background:transparent}
+.window-content{flex:1;min-height:0;overflow:auto;padding:12px;background:transparent;display:flex;flex-direction:column;position:relative}
 
 /* 缩放手柄 */
 .resize-handle{position:absolute;z-index:10}
@@ -123,12 +123,12 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .crumb--link{opacity:.8}
 .crumb--current{opacity:1;color:var(--text);font-weight:600;cursor:default}
 .sep--chev{opacity:.45}
-.count-badge{margin-left:6px;padding:0 6px;height:18px;line-height:18px;border-radius:999px;background:rgba(0,0,0,.06);color:var(--muted);font-size:11px;display:inline-flex;align-items:center}
+.count-badge{margin-left:6px;padding:0 6px;height:18px;line-height:18px;border-radius:999px;background:rgba(0,0,0,.45);color:#fff;font-size:11px;display:inline-flex;align-items:center;text-shadow:0 1px 2px rgba(0,0,0,.25)}
 
 /* 标题栏内的面包屑采用横向排列 */
 .window-title #windowTitleText{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
 .window-title #windowTitleText .crumb{display:inline-flex}
-.window-title #windowTitleText .sep{opacity:.6}
+.window-title #windowTitleText .sep{opacity:.6;text-shadow:0 1px 2px rgba(0,0,0,.25)}
 
 /* 标题栏中的面包屑 */
 .breadcrumbs--title{flex:0 1 auto;margin-left:8px;padding:4px 6px;border:none;background:transparent}
@@ -137,4 +137,10 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 
 /* 隐藏内容区原有面包屑容器边框以弱化存在感，或根据需要隐藏 */
 #pathbar .breadcrumbs{display:none}
+
+/* 页脚固定在资源管理器底部 */
+#legalFooter{margin-top:auto}
+#legalFooter.legal--compact{position:absolute;right:12px;bottom:12px;margin:0;padding:6px 10px;background:#3E495C;border:1px solid rgba(255,255,255,.32);color:#fff;border-radius:999px;display:inline-flex;width:fit-content;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+#legalFooter .legal-link{color:#fff;text-decoration:none}
+#legalFooter .legal-link:hover{text-decoration:underline}
 
