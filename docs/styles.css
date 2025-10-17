@@ -2,8 +2,7 @@
 :root{--bg:#f6f7fb;--text:#0b1220;--muted:#6b7280;--card-bg:#ffffff;--card-border:#e5e7eb;--card-hover:#0b1220;--accent:#0ea5e9}
 
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:16px;color:var(--text);background:var(--bg);padding-bottom:64px}
-.brand{display:flex;align-items:center;gap:8px;margin:0 0 12px 0}
-.brand span{font-size:18px;font-weight:700}
+.brand{display:none}
 .notice{margin:8px 0 10px 0;padding:8px 10px;font-size:12px;border:1px dashed var(--card-border);border-radius:10px;background:var(--card-bg)}
 .notice a{color:var(--accent);text-decoration:none}
 .notice a:hover{text-decoration:underline}
@@ -92,7 +91,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 /* 桌面与窗口 */
 .desktop{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;background-repeat:no-repeat;filter:saturate(1.05)}
 .window{position:fixed;z-index:500;left:6vw;top:6vh;width:min(1200px,88vw);height:min(74vh,800px);display:flex;flex-direction:column;border:1px solid var(--card-border);border-radius:12px;background:var(--card-bg);box-shadow:0 18px 60px rgba(0,0,0,.18);overflow:hidden}
-.window-titlebar{height:40px;display:flex;align-items:center;padding:0 12px;background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(245,245,245,.9));border-bottom:1px solid var(--card-border);cursor:move;user-select:none}
-.window-title{font-size:13px;color:var(--muted)}
+.window-titlebar{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px 0 6px;background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(245,245,245,.9));border-bottom:1px solid var(--card-border);cursor:move;user-select:none}
+.window-title{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.window-title img{display:block}
+.nav-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--card-border);border-radius:6px;background:var(--card-bg);color:var(--text);cursor:pointer}
+.nav-btn[disabled]{opacity:.5;cursor:default}
+.nav-btn:hover:not([disabled]){border-color:var(--card-hover)}
 .window-content{flex:1;min-height:0;overflow:auto;padding:12px;background:transparent}
 
