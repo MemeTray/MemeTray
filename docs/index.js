@@ -436,6 +436,12 @@ if(explorerContent){
     explorer.style.top=saved.top+"px"
     explorer.style.width=saved.width+"px"
     explorer.style.height=saved.height+"px"
+  }else{
+    // 默认占满视口，四周留缝隙（与 CSS 初始一致）
+    explorer.style.left='8px'
+    explorer.style.top='8px'
+    explorer.style.width=(window.innerWidth-16)+"px"
+    explorer.style.height=(window.innerHeight-48-16)+"px"
   }
   let resizing=false, dir='', startX=0, startY=0, start={left:0,top:0,width:0,height:0}
   function onDown(e){
