@@ -6,6 +6,8 @@ const desktop=document.getElementById('desktop')
 const explorer=document.getElementById('explorer')
 const explorerTitlebar=document.getElementById('explorerTitlebar')
 const explorerContent=document.getElementById('explorerContent')
+const btnBack=document.getElementById('btnBack')
+const windowTitle=document.getElementById('windowTitle')
 const sectionSelect={value:'all'}
 const trayIcon=document.getElementById("trayIcon")
 const clockTime=document.getElementById("clock-time")
@@ -17,6 +19,7 @@ const splashDots=document.getElementById('splashDots')
 let splashTimer=null
 const ITEMS_PER_PAGE = 50
 let currentPage = {} // { [sectionKey]: pageNumber }
+let navState={view:'root',currentKey:null}
 
 // 桌面背景支持（URL 参数优先，其次 localStorage）
 ;(function initBackground(){
@@ -124,6 +127,35 @@ function buildItems(){
 }
 // 顶部方格作为主要交互入口
 
+// 视图切换
+function enterRoot(){
+  navState.view='root'; navState.currentKey=null
+  const titleTextEl=document.getElementById('windowTitleText')
+  if(titleTextEl) titleTextEl.textContent='MemeTray'
+  if(btnBack){ btnBack.disabled=true }
+  if(sectionTiles) sectionTiles.style.display='grid'
+  if(container) container.style.display='none'
+  updateBackTopVisibility()
+}
+
+function enterFolder(key){
+  navState.view='folder'; navState.currentKey=key
+  const titleTextEl=document.getElementById('windowTitleText')
+  if(titleTextEl) titleTextEl.textContent=key
+  if(btnBack){ btnBack.disabled=false }
+  if(sectionTiles) sectionTiles.style.display='none'
+  if(container) container.style.display='block'
+  sectionSelect.value=key
+  buildItems()
+  if(explorerContent){ explorerContent.scrollTo({top:0,behavior:'smooth'}) }
+  updateBackTopVisibility()
+}
+
+// 按钮事件
+btnBack&&btnBack.addEventListener('click',()=>{
+  if(navState.view==='folder') enterRoot()
+})
+
 function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
 function clearTrayIcon(){
   if(trayIcon){
@@ -217,7 +249,7 @@ async function fetchSections(){
         t.appendChild(th);t.appendChild(tt)
         t.addEventListener('mouseenter',()=>{setTrayIcon(first)})
         t.addEventListener('mouseleave',()=>{clearTrayIcon()})
-        t.addEventListener('click',()=>{sectionSelect.value=dir;buildItems();if(explorerContent){explorerContent.scrollTo({top:0,behavior:'smooth'})}else{window.scrollTo({top:0,behavior:'smooth'})}})
+        t.addEventListener('click',()=>{enterFolder(dir)})
         sectionTiles.appendChild(t)
       }
     }
@@ -226,6 +258,8 @@ async function fetchSections(){
     preloadOthers(sections)
     // 完成本地索引探测和首屏渲染后，隐藏遮罩
     stopSplash()
+    // 默认进入根视图（只显示文件夹）
+    enterRoot()
 
   }catch(err){
     console.warn('读取本地索引失败',err)
@@ -252,6 +286,7 @@ window.addEventListener('gestureend', (e)=>{e.preventDefault()})
 const backTopBtn=document.getElementById('backTop')
 function updateBackTopVisibility(){
   if(!backTopBtn||!explorerContent) return
+  if(navState.view!=='folder'){ backTopBtn.style.display='none'; return }
   backTopBtn.style.display=(explorerContent.scrollTop>300)?'flex':'none'
 }
 if(explorerContent){
@@ -267,6 +302,7 @@ updateBackTopVisibility()
 let isLoading = false
 async function handleInfiniteScroll() {
   if (isLoading) return
+  if (navState.view!=='folder') return
   const scroller = explorerContent || document.documentElement
   const { scrollTop, scrollHeight, clientHeight } = scroller
   if (scrollHeight - scrollTop - clientHeight < 300) {
@@ -305,6 +341,9 @@ if(explorerContent){
   if(!explorer||!explorerTitlebar) return
   let dragging=false, startX=0, startY=0, startLeft=0, startTop=0
   const onDown=(e)=>{
+    // 如果点击在导航按钮上，不触发拖拽
+    const target=e.target
+    if(target && (target.closest && target.closest('#btnBack'))) return
     dragging=true
     const pt = e.touches? e.touches[0] : e
     startX=pt.clientX; startY=pt.clientY
