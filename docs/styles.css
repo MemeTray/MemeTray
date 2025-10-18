@@ -98,18 +98,18 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .nav-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--glass-border);border-radius:6px;background:var(--glass-bg);color:var(--text);cursor:pointer;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .nav-btn[disabled]{opacity:.5;cursor:default}
 .nav-btn:hover:not([disabled]){border-color:var(--card-hover)}
-.window-content{flex:1;min-height:0;overflow:auto;padding:12px;background:transparent;display:flex;flex-direction:column;position:relative}
+.window-content{flex:1;min-height:0;overflow:hidden;padding:12px;background:transparent;display:flex;flex-direction:column;position:relative}
 
 /* 主体与侧栏布局 */
-.content-row{display:flex;gap:12px;min-height:0}
-.sidebar{flex:0 0 200px;max-width:240px;min-width:160px;display:none;flex-direction:column;gap:6px;padding:8px;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass-bg);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
+.content-row{display:flex;gap:12px;min-height:0;align-items:stretch;flex:1}
+.sidebar{position:relative;height:100%;overflow:auto;flex:0 0 200px;max-width:240px;min-width:160px;display:none;flex-direction:column;gap:6px;padding:8px;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass-bg);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .sidebar .side-title{font-size:12px;color:var(--muted);margin:2px 4px 6px}
 .sidebar .side-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:var(--text);text-decoration:none;cursor:pointer;border:1px solid transparent}
 .sidebar .side-item:hover{background:rgba(255,255,255,.55);border-color:var(--glass-border)}
 .sidebar .side-item.active{background:rgba(255,255,255,.8);border-color:var(--card-hover);font-weight:600}
 .sidebar .side-item .thumb{width:24px;height:24px;border-radius:6px;border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .sidebar .side-item img{width:100%;height:100%;object-fit:contain}
-.main-pane{flex:1;min-width:0;display:flex;flex-direction:column}
+.main-pane{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:auto}
 
 /* 缩放手柄 */
 .resize-handle{position:absolute;z-index:10}

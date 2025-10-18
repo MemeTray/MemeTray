@@ -412,14 +412,15 @@ const backTopBtn=document.getElementById('backTop')
 function updateBackTopVisibility(){
   if(!backTopBtn||!explorerContent) return
   if(navState.view!=='folder'){ backTopBtn.style.display='none'; return }
-  backTopBtn.style.display=(explorerContent.scrollTop>300)?'flex':'none'
+  const scroller = mainPane || explorerContent
+  backTopBtn.style.display=((scroller && scroller.scrollTop>300)?'flex':'none')
 }
-if(explorerContent){
-  explorerContent.addEventListener('scroll',updateBackTopVisibility,{passive:true})
-}
+const scrollerTarget = mainPane || explorerContent
+if(scrollerTarget){ scrollerTarget.addEventListener('scroll',updateBackTopVisibility,{passive:true}) }
 backTopBtn&&backTopBtn.addEventListener('click',()=>{
-  if(explorerContent){explorerContent.scrollTo({top:0,behavior:'smooth'})}
-  else{window.scrollTo({top:0,behavior:'smooth'})}
+  const scroller = mainPane || explorerContent || window
+  if(scroller && scroller.scrollTo){ scroller.scrollTo({top:0,behavior:'smooth'}) }
+  else{ window.scrollTo({top:0,behavior:'smooth'}) }
 })
 updateBackTopVisibility()
 function highlightSidebar(dir){
@@ -435,7 +436,7 @@ let isLoading = false
 async function handleInfiniteScroll() {
   if (isLoading) return
   if (navState.view!=='folder') return
-  const scroller = explorerContent || document.documentElement
+  const scroller = mainPane || explorerContent || document.documentElement
   const { scrollTop, scrollHeight, clientHeight } = scroller
   if (scrollHeight - scrollTop - clientHeight < 300) {
     isLoading = true
@@ -463,9 +464,9 @@ async function handleInfiniteScroll() {
     setTimeout(() => { isLoading = false; if(infiniteLoader){infiniteLoader.style.display='none'} }, 200)
   }
 }
-
-if(explorerContent){
-  explorerContent.addEventListener('scroll', handleInfiniteScroll, { passive: true })
+const infTarget = mainPane || explorerContent || window
+if(infTarget && infTarget.addEventListener){
+  infTarget.addEventListener('scroll', handleInfiniteScroll, { passive: true })
 }else{
   window.addEventListener('scroll', handleInfiniteScroll, { passive: true })
 }
