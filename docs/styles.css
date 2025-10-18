@@ -116,14 +116,14 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 #container .section:first-child{margin-top:0}
 
 /* 缩放手柄 */
-.resize-handle{position:absolute;z-index:10}
-.rh-n,.rh-s{left:0;right:0;height:6px;cursor:ns-resize}
+.resize-handle{position:absolute;z-index:1001;pointer-events:auto}
+.rh-n,.rh-s{left:0;right:0;height:8px;cursor:ns-resize}
 .rh-e,.rh-w{top:0;bottom:0;width:6px;cursor:ew-resize}
 .rh-n{top:0}
 .rh-s{bottom:0}
 .rh-e{right:0}
 .rh-w{left:0}
-.rh-ne,.rh-nw,.rh-se,.rh-sw{width:10px;height:10px}
+.rh-ne,.rh-nw,.rh-se,.rh-sw{width:12px;height:12px}
 .rh-ne{top:0;right:0;cursor:nesw-resize}
 .rh-nw{top:0;left:0;cursor:nwse-resize}
 .rh-se{right:0;bottom:0;cursor:nwse-resize}
