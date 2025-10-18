@@ -199,6 +199,7 @@ function enterRoot(){
   if(sectionTiles) sectionTiles.style.display='grid'
   if(container) container.style.display='none'
   if(sidebar) sidebar.style.display='none'
+  if(container) container.classList.remove('container--folder')
   if(infiniteLoader){infiniteLoader.style.display='none'}
   renderBreadcrumbs()
   updateBackTopVisibility()
@@ -220,6 +221,7 @@ function enterFolder(key){
   if(sectionTiles) sectionTiles.style.display='none'
   if(container) container.style.display='block'
   if(sidebar) sidebar.style.display='flex'
+  if(container) container.classList.add('container--folder')
   sectionSelect.value=key
   buildItems()
   // 保险：进入文件夹后清理内容区所有分区标题
