@@ -221,6 +221,8 @@ function enterFolder(key){
   if(sectionTiles) sectionTiles.style.display='none'
   if(container) container.style.display='block'
   if(sidebar) sidebar.style.display='flex'
+  // 确保侧栏高亮与当前分组一致（从主页点击方块进入时生效）
+  highlightSidebar(key)
   if(container) container.classList.add('container--folder')
   sectionSelect.value=key
   buildItems()
