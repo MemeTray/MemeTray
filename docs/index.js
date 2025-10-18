@@ -526,6 +526,9 @@ if(infTarget && infTarget.addEventListener){
   if(!explorer||!resizeHandles.length) return
   const storeKey='memetray.window.bounds'
   const minW=520, minH=320
+  const rhN=document.querySelector('.rh-n')
+  const rhNE=document.querySelector('.rh-ne')
+  const rhNW=document.querySelector('.rh-nw')
   function loadBounds(){
     try{const j=localStorage.getItem(storeKey);return j?JSON.parse(j):null}catch(_){return null}
   }
@@ -595,4 +598,41 @@ if(infTarget && infTarget.addEventListener){
   })
   // 窗口拖拽结束也保存位置
   window.addEventListener('mouseup',()=>{ if(!resizing) saveBounds() })
+
+  // 让标题栏顶边与顶角也可触发缩放与显示对应光标
+  if(explorerTitlebar){
+    const edge=8
+    const corner=12
+    const updateCursor=(e)=>{
+      const r=explorer.getBoundingClientRect()
+      const y=e.clientY - r.top
+      const x=e.clientX - r.left
+      const onTop=y>=0 && y<=edge
+      const onLeft=x>=0 && x<=corner
+      const onRight=x>=r.width-corner && x<=r.width
+      if(onTop && onLeft){ explorerTitlebar.style.cursor='nwse-resize' }
+      else if(onTop && onRight){ explorerTitlebar.style.cursor='nesw-resize' }
+      else if(onTop){ explorerTitlebar.style.cursor='ns-resize' }
+      else{ explorerTitlebar.style.cursor='move' }
+    }
+    const startResizeFromTitlebar=(e)=>{
+      const r=explorer.getBoundingClientRect()
+      const y=e.clientY - r.top
+      const x=e.clientX - r.left
+      if(y<0 || y>edge) return
+      e.preventDefault(); e.stopPropagation()
+      const opts={clientX:e.clientX, clientY:e.clientY, bubbles:true}
+      if(x<=12 && rhNW){ rhNW.dispatchEvent(new MouseEvent('mousedown',opts)); return }
+      if(x>=r.width-12 && rhNE){ rhNE.dispatchEvent(new MouseEvent('mousedown',opts)); return }
+      if(rhN){ rhN.dispatchEvent(new MouseEvent('mousedown',opts)) }
+    }
+    explorerTitlebar.addEventListener('mousemove',updateCursor)
+    explorerTitlebar.addEventListener('mouseleave',()=>{ explorerTitlebar.style.cursor='move' })
+    explorerTitlebar.addEventListener('mousedown',startResizeFromTitlebar)
+    explorerTitlebar.addEventListener('touchstart',(e)=>{
+      const t=e.touches&&e.touches[0]; if(!t) return
+      const fake=new MouseEvent('mousedown',{clientX:t.clientX,clientY:t.clientY,bubbles:true})
+      startResizeFromTitlebar(fake)
+    },{passive:false})
+  }
 })()
