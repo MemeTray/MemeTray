@@ -2,6 +2,8 @@ let sections=window.MEMETRAY_SECTIONS||[]
 const GIF_BASE=location.pathname.includes('/docs/')?'../gifs/':'./gifs/'
 const container=document.getElementById("container")
 const sectionTiles=document.getElementById("sectionTiles")
+const sidebar=document.getElementById('sidebar')
+const mainPane=document.getElementById('mainPane')
 const desktop=document.getElementById('desktop')
 const explorer=document.getElementById('explorer')
 const explorerTitlebar=document.getElementById('explorerTitlebar')
@@ -196,6 +198,7 @@ function enterRoot(){
   if(btnBack){ btnBack.disabled=true }
   if(sectionTiles) sectionTiles.style.display='grid'
   if(container) container.style.display='none'
+  if(sidebar) sidebar.style.display='none'
   if(infiniteLoader){infiniteLoader.style.display='none'}
   renderBreadcrumbs()
   updateBackTopVisibility()
@@ -216,6 +219,7 @@ function enterFolder(key){
   if(btnBack){ btnBack.disabled=false }
   if(sectionTiles) sectionTiles.style.display='none'
   if(container) container.style.display='block'
+  if(sidebar) sidebar.style.display='flex'
   sectionSelect.value=key
   buildItems()
   // 保险：进入文件夹后清理内容区所有分区标题
@@ -357,6 +361,24 @@ async function fetchSections(){
       }
     }
 
+    // 构建左侧侧边栏（分组快速切换）
+    if(sidebar){
+      sidebar.innerHTML=''
+      const title=document.createElement('div'); title.className='side-title'; title.textContent='分组'
+      sidebar.appendChild(title)
+      for(const {dir} of sections){
+        const item=document.createElement('div'); item.className='side-item'; item.dataset.section=dir
+        const th=document.createElement('div'); th.className='thumb'
+        const img=document.createElement('img'); img.src=GIF_BASE+dir+'/'+fileName(dir,1); img.alt=dir; img.loading='lazy'; img.decoding='async'
+        th.appendChild(img)
+        const label=document.createElement('div'); label.textContent=dir
+        item.appendChild(th); item.appendChild(label)
+        item.addEventListener('click',()=>{enterFolder(dir); highlightSidebar(dir)})
+        sidebar.appendChild(item)
+      }
+      highlightSidebar(first.dir)
+    }
+
     // 3) 预加载所有分组前 48 张，确保后续切换秒开
     preloadOthers(sections)
     // 完成本地索引探测和首屏渲染后，隐藏遮罩
@@ -400,6 +422,13 @@ backTopBtn&&backTopBtn.addEventListener('click',()=>{
   else{window.scrollTo({top:0,behavior:'smooth'})}
 })
 updateBackTopVisibility()
+function highlightSidebar(dir){
+  if(!sidebar) return
+  sidebar.querySelectorAll('.side-item').forEach(el=>{
+    const isActive = el && el.dataset && el.dataset.section===dir
+    if(isActive) el.classList.add('active'); else el.classList.remove('active')
+  })
+}
 
 // Infinite Scroll（绑定到窗口内容滚动）
 let isLoading = false
