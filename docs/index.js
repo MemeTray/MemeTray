@@ -354,13 +354,29 @@ async function fetchSections(){
       for(const {dir} of sections){
         const item=document.createElement('div'); item.className='side-item'; item.dataset.section=dir
         const th=document.createElement('div'); th.className='thumb'
-        const img=document.createElement('img'); img.src=GIF_BASE+dir+'/'+fileName(dir,1); img.alt=dir; img.loading='lazy'; img.decoding='async'
+        const preview=GIF_BASE+dir+'/'+fileName(dir,1)
+        item.dataset.preview=preview
+        const img=document.createElement('img'); img.src=preview; img.alt=dir; img.loading='lazy'; img.decoding='async'
         th.appendChild(img)
         const label=document.createElement('div'); label.textContent=dir
         item.appendChild(th); item.appendChild(label)
         item.addEventListener('click',()=>{enterFolder(dir); highlightSidebar(dir)})
         sidebar.appendChild(item)
       }
+      // 侧边栏悬停预览（事件委托，覆盖所有子项）
+      const onOver=(e)=>{
+        const el=e.target && e.target.closest && e.target.closest('.side-item')
+        if(!el || !sidebar.contains(el)) return
+        const p=el.dataset && el.dataset.preview
+        if(p) setTrayIcon(p)
+      }
+      const onOut=(e)=>{
+        const from=e.target && e.target.closest && e.target.closest('.side-item')
+        const to=e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.side-item')
+        if(from && from!==to) clearTrayIcon()
+      }
+      sidebar.addEventListener('mouseover', onOver)
+      sidebar.addEventListener('mouseout', onOut)
       highlightSidebar(first.dir)
     }
 
