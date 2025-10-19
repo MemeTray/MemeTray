@@ -30,7 +30,7 @@ const WINDOWS_ROOT='此电脑'
 const CATIME_PATH='%LOCALAPPDATA%\\Catime\\animations'
 
 // 多语言支持
-let currentLang = localStorage.getItem('memetray.lang') || 'zh'
+let currentLang = localStorage.getItem('memetray.lang') || 'en'
 const translations = {
   zh: {
     loading: 'Loading',
@@ -61,6 +61,16 @@ const translations = {
     langLabel: 'Switch Language / 切换语言'
   }
 }
+
+// URL 参数覆盖语言并持久化（?lang=en 或 ?lang=zh）
+try{
+  const sp = new URLSearchParams(location.search)
+  const q = (sp.get('lang') || sp.get('language') || '').trim()
+  if(q==='en' || q==='zh'){
+    currentLang = q
+    try{ localStorage.setItem('memetray.lang', q) }catch(_){/* ignore */}
+  }
+}catch(_){/* ignore */}
 
 function t(key) {
   return translations[currentLang][key] || key
