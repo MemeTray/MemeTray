@@ -349,8 +349,34 @@ async function fetchSections(){
     // 构建左侧侧边栏（分组快速切换）
     if(sidebar){
       sidebar.innerHTML=''
+      // 添加标题和折叠按钮
+      const header=document.createElement('div'); header.className='side-header'
       const title=document.createElement('div'); title.className='side-title'; title.textContent='分组'
-      sidebar.appendChild(title)
+      const toggleBtn=document.createElement('button'); toggleBtn.className='sidebar-toggle'; toggleBtn.setAttribute('aria-label','折叠侧边栏'); toggleBtn.title='折叠侧边栏'
+      toggleBtn.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" fill="currentColor"></path></svg>'
+      header.appendChild(title)
+      header.appendChild(toggleBtn)
+      sidebar.appendChild(header)
+      
+      // 折叠按钮事件
+      toggleBtn.addEventListener('click',toggleSidebar)
+      
+      // 恢复侧边栏状态（默认收起）
+      try{
+        const saved=localStorage.getItem('memetray.sidebar.collapsed')
+        // 如果用户从未设置过，默认为收起（collapsed=true）
+        // 如果用户设置过，则按用户偏好显示
+        const collapsed = saved === null ? true : saved === 'true'
+        if(collapsed){
+          sidebar.classList.add('sidebar--collapsed')
+          toggleBtn.setAttribute('title','展开侧边栏')
+        }
+      }catch(_){
+        // 如果 localStorage 失败，也默认收起
+        sidebar.classList.add('sidebar--collapsed')
+        toggleBtn.setAttribute('title','展开侧边栏')
+      }
+      
       for(const {dir} of sections){
         const item=document.createElement('div'); item.className='side-item'; item.dataset.section=dir
         const th=document.createElement('div'); th.className='thumb'
@@ -430,6 +456,25 @@ function highlightSidebar(dir){
     const isActive = el && el.dataset && el.dataset.section===dir
     if(isActive) el.classList.add('active'); else el.classList.remove('active')
   })
+}
+
+// 侧边栏折叠/展开切换
+function toggleSidebar(){
+  if(!sidebar) return
+  const isCollapsed=sidebar.classList.contains('sidebar--collapsed')
+  if(isCollapsed){
+    sidebar.classList.remove('sidebar--collapsed')
+    const btn=sidebar.querySelector('.sidebar-toggle')
+    if(btn) btn.setAttribute('title','折叠侧边栏')
+  }else{
+    sidebar.classList.add('sidebar--collapsed')
+    const btn=sidebar.querySelector('.sidebar-toggle')
+    if(btn) btn.setAttribute('title','展开侧边栏')
+  }
+  // 保存状态到 localStorage
+  try{
+    localStorage.setItem('memetray.sidebar.collapsed',String(!isCollapsed))
+  }catch(_){/* ignore */}
 }
 
 // Infinite Scroll（绑定到窗口内容滚动）
