@@ -107,12 +107,13 @@ After adding or deleting GIFs, you **must** update the `gifs/index.json` file in
 
 To avoid copyright issues and legal risks, we **do not accept** the following types of GIFs:
 
-1.  **Brand Logos**: Any content that includes clearly identifiable commercial brand logos.
-2.  **Memes of Public Figures**: Memes featuring the likeness of public figures (e.g., actors, influencers, politicians).
-3.  **Content from Film and Television**:
+1.  **Pornographic or Sexually Explicit Content**: Any material that is pornographic, sexually explicit, or NSFW (Not Safe For Work).
+2.  **Brand Logos**: Any content that includes clearly identifiable commercial brand logos.
+3.  **Memes of Public Figures**: Memes featuring the likeness of public figures (e.g., actors, influencers, politicians).
+4.  **Content from Film and Television**:
     - Direct clips from movies, TV shows, animations, etc.
     - Fan-made content based on copyrighted works.
-4.  **Brands with Strict Copyright Policies**: Content from the following companies (and others) that are known for strictly protecting their brand identity:
+5.  **Brands with Strict Copyright Policies**: Content from the following companies (and others) that are known for strictly protecting their brand identity:
     - Amazon / AWS
     - BP
     - Disney
