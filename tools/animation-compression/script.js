@@ -13,8 +13,8 @@ async function initPyodide() {
         
         setupEventListeners();
     } catch (error) {
-        console.error('加载 Pyodide 失败:', error);
-        document.getElementById('loading').innerHTML = '<p style="color: red;">加载失败，请刷新页面重试</p>';
+        console.error('Failed to load Pyodide:', error);
+        document.getElementById('loading').innerHTML = '<p style="color: red;">Failed to load, please refresh the page</p>';
     }
 }
 
@@ -27,10 +27,10 @@ function setupEventListeners() {
     webpToggle.addEventListener('change', () => {
         if (webpToggle.checked) {
             fileInput.setAttribute('accept', 'image/gif,image/webp');
-            uploadText.textContent = '点击选择或拖拽 GIF/WebP 文件/文件夹';
+            uploadText.textContent = 'Click to select or drag GIF/WebP files/folder';
         } else {
             fileInput.setAttribute('accept', 'image/gif');
-            uploadText.textContent = '点击选择或拖拽 GIF 文件/文件夹';
+            uploadText.textContent = 'Click to select or drag GIF files/folder';
         }
     });
     
@@ -73,7 +73,7 @@ function setupEventListeners() {
         if (validFiles.length > 0) {
             processFiles(validFiles);
         } else {
-            alert(webpEnabled ? '未找到 GIF 或 WebP 文件' : '未找到 GIF 文件');
+            alert(webpEnabled ? 'No GIF or WebP files found' : 'No GIF files found');
         }
     });
 
@@ -169,7 +169,7 @@ async function processFiles(files) {
                 processedCount++;
                 
                 const percent = Math.round((processedCount / totalFiles) * 100);
-                progressText.textContent = `正在处理: ${processedCount} / ${totalFiles}`;
+                progressText.textContent = `Processing: ${processedCount} / ${totalFiles}`;
                 progressPercent.textContent = `${percent}%`;
                 progressFill.style.width = `${percent}%`;
                 
@@ -296,8 +296,8 @@ if frames:
         pyodide.FS.unlink('/output.gif');
         
     } catch (error) {
-        console.error('处理图片出错:', error);
-        alert('处理图片时出错: ' + error.message);
+        console.error('Error processing image:', error);
+        alert('Error processing image: ' + error.message);
     }
 }
 
@@ -324,12 +324,12 @@ function displayPreview(url, fileName, blob, filePath, hash) {
     
     const downloadBtn = document.createElement('button');
     downloadBtn.className = 'download-btn';
-    downloadBtn.textContent = '下载';
+    downloadBtn.textContent = 'Download';
     downloadBtn.onclick = () => downloadImage(url, fileName);
     
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
-    deleteBtn.textContent = '删除';
+    deleteBtn.textContent = 'Delete';
     deleteBtn.onclick = () => deleteFile(fileId);
     
     buttonContainer.appendChild(downloadBtn);
@@ -342,7 +342,7 @@ function displayPreview(url, fileName, blob, filePath, hash) {
     const duplicateWarning = document.createElement('div');
     duplicateWarning.className = 'duplicate-warning';
     duplicateWarning.style.display = 'none';
-    duplicateWarning.innerHTML = '⚠️ 检测到重复文件';
+    duplicateWarning.innerHTML = '⚠️ Duplicate file detected';
     
     imageContainer.appendChild(img);
     previewItem.appendChild(name);
@@ -418,8 +418,8 @@ function checkDuplicates() {
             const duplicateSection = document.createElement('div');
             duplicateSection.className = 'section-header duplicate-section';
             duplicateSection.innerHTML = `
-                <h2>🔴 重复文件 (${duplicateItems.length} 个)</h2>
-                <p>以下文件内容完全相同，建议删除重复项</p>
+                <h2>🔴 Duplicate Files (${duplicateItems.length})</h2>
+                <p>The following files have identical content, consider removing duplicates</p>
             `;
             preview.appendChild(duplicateSection);
             
@@ -432,7 +432,7 @@ function checkDuplicates() {
             const uniqueSection = document.createElement('div');
             uniqueSection.className = 'section-header unique-section';
             uniqueSection.innerHTML = `
-                <h2>✅ 唯一文件 (${uniqueItems.length} 个)</h2>
+                <h2>✅ Unique Files (${uniqueItems.length})</h2>
             `;
             preview.appendChild(uniqueSection);
             
@@ -450,8 +450,8 @@ function checkDuplicates() {
         alert.id = 'duplicateAlert';
         alert.className = 'duplicate-alert';
         alert.innerHTML = `
-            <span>⚠️ 检测到 ${duplicateCount} 个重复文件，已移至顶部显示</span>
-            <button onclick="autoRemoveDuplicates()" class="auto-remove-btn">自动删除重复项</button>
+            <span>⚠️ Detected ${duplicateCount} duplicate files, moved to top</span>
+            <button onclick="autoRemoveDuplicates()" class="auto-remove-btn">Auto Remove Duplicates</button>
         `;
         
         const batchActions = document.getElementById('batchActions');
@@ -469,7 +469,7 @@ function deleteFile(fileId) {
             previewItem.style.filter = 'grayscale(100%)';
             const deleteBtn = previewItem.querySelector('.delete-btn');
             if (deleteBtn) {
-                deleteBtn.textContent = '已删除';
+                deleteBtn.textContent = 'Deleted';
                 deleteBtn.disabled = true;
                 deleteBtn.style.background = '#999';
                 deleteBtn.style.cursor = 'not-allowed';
@@ -527,7 +527,7 @@ async function downloadAllAsZip() {
     const activeFiles = processedFiles.filter(f => !f.deleted);
     
     if (activeFiles.length === 0) {
-        alert('没有可下载的文件');
+        alert('No files to download');
         return;
     }
 

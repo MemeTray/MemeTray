@@ -29,6 +29,118 @@ let navState={view:'root',currentKey:null}
 const WINDOWS_ROOT='此电脑'
 const CATIME_PATH='%LOCALAPPDATA%\\Catime\\animations'
 
+// 多语言支持
+let currentLang = localStorage.getItem('memetray.lang') || 'zh'
+const translations = {
+  zh: {
+    loading: 'Loading',
+    backBtn: '返回',
+    backBtnTitle: '返回',
+    backTop: '返回顶部',
+    sidebarTitle: '分组',
+    sidebarCollapse: '折叠侧边栏',
+    sidebarExpand: '展开侧边栏',
+    legalCompact: '法律 / 免责声明',
+    legalFull: '<strong>版权声明</strong>：本网站展示的 GIF 资源均来源于公开互联网，版权归原作者或权利人所有；本站仅用于学习、研究与技术交流，严禁任何商业或非法用途。如您认为内容侵权，请联系我们，我们将在核实后立即移除。<div class="legal-links"><a href="https://github.com/MemeTray/MemeTray/issues" target="_blank" rel="noopener">提交 Issue</a><span>·</span><a href="mailto:vladelaina@gmail.com">vladelaina@gmail.com</a></div>',
+    githubLabel: 'GitHub',
+    toolLabel: 'Animation Compression',
+    langLabel: '切换语言 / Switch Language'
+  },
+  en: {
+    loading: 'Loading',
+    backBtn: 'Back',
+    backBtnTitle: 'Back',
+    backTop: 'Back to Top',
+    sidebarTitle: 'Groups',
+    sidebarCollapse: 'Collapse Sidebar',
+    sidebarExpand: 'Expand Sidebar',
+    legalCompact: 'Legal / Disclaimer',
+    legalFull: '<strong>Copyright Notice</strong>: All GIF resources displayed on this website are sourced from the public Internet, and the copyright belongs to the original author or rights holder. This site is for learning, research and technical exchange only, and any commercial or illegal use is strictly prohibited. If you believe the content infringes on your rights, please contact us and we will remove it immediately after verification.<div class="legal-links"><a href="https://github.com/MemeTray/MemeTray/issues" target="_blank" rel="noopener">Submit Issue</a><span>·</span><a href="mailto:vladelaina@gmail.com">vladelaina@gmail.com</a></div>',
+    githubLabel: 'GitHub',
+    toolLabel: 'Animation Compression',
+    langLabel: 'Switch Language / 切换语言'
+  }
+}
+
+function t(key) {
+  return translations[currentLang][key] || key
+}
+
+function updateLanguage() {
+  const langIcon = document.getElementById('langIcon')
+  if (langIcon) {
+    langIcon.textContent = currentLang === 'zh' ? 'EN' : '中文'
+  }
+  
+  // 更新按钮
+  if (btnBack) {
+    btnBack.setAttribute('aria-label', t('backBtn'))
+    btnBack.setAttribute('title', t('backBtnTitle'))
+  }
+  
+  // 更新返回顶部按钮
+  const backTopBtn = document.getElementById('backTop')
+  if (backTopBtn) {
+    backTopBtn.setAttribute('aria-label', t('backTop'))
+    backTopBtn.setAttribute('title', t('backTop'))
+  }
+  
+  // 更新顶部链接
+  const toolLink = document.getElementById('toolLink')
+  if (toolLink) {
+    toolLink.setAttribute('aria-label', t('toolLabel'))
+    toolLink.setAttribute('title', t('toolLabel'))
+  }
+  
+  const githubLink = document.querySelector('a[href="https://github.com/MemeTray/MemeTray"]')
+  if (githubLink) {
+    githubLink.setAttribute('aria-label', t('githubLabel'))
+    githubLink.setAttribute('title', t('githubLabel'))
+  }
+  
+  const langToggle = document.getElementById('langToggle')
+  if (langToggle) {
+    langToggle.setAttribute('aria-label', t('langLabel'))
+    langToggle.setAttribute('title', t('langLabel'))
+  }
+  
+  // 更新侧边栏标题
+  const sideTitle = sidebar && sidebar.querySelector('.side-title')
+  if (sideTitle) {
+    sideTitle.textContent = t('sidebarTitle')
+  }
+  
+  // 更新侧边栏折叠按钮
+  const sidebarToggle = sidebar && sidebar.querySelector('.sidebar-toggle')
+  if (sidebarToggle) {
+    const isCollapsed = sidebar.classList.contains('sidebar--collapsed')
+    sidebarToggle.setAttribute('aria-label', isCollapsed ? t('sidebarExpand') : t('sidebarCollapse'))
+    sidebarToggle.setAttribute('title', isCollapsed ? t('sidebarExpand') : t('sidebarCollapse'))
+  }
+  
+  // 更新法律声明
+  const lf = document.getElementById('legalFooter')
+  if (lf) {
+    if (lf.classList.contains('legal--compact')) {
+      lf.innerHTML = `<a class="legal-link" href="https://github.com/MemeTray/MemeTray/blob/main/DISCLAIMER.md" target="_blank" rel="noopener">${t('legalCompact')}</a>`
+    } else {
+      lf.innerHTML = t('legalFull')
+    }
+  }
+  
+  // 保存语言设置
+  localStorage.setItem('memetray.lang', currentLang)
+}
+
+// 语言切换
+const langToggle = document.getElementById('langToggle')
+if (langToggle) {
+  langToggle.addEventListener('click', () => {
+    currentLang = currentLang === 'zh' ? 'en' : 'zh'
+    updateLanguage()
+  })
+}
+
 // 桌面背景支持（URL 参数优先，其次 localStorage），无值或无效时保留 CSS 默认
 ;(function initBackground(){
   try{
@@ -184,12 +296,12 @@ function enterRoot(){
   if(infiniteLoader){infiniteLoader.style.display='none'}
   renderBreadcrumbs()
   updateBackTopVisibility()
-  // 根视图：展示右下角小药丸
+    // 根视图：展示右下角小药丸
   try{
     const lf=document.getElementById('legalFooter')
     if(lf){
       lf.classList.add('legal--compact')
-      lf.innerHTML='<a class="legal-link" href="https://github.com/MemeTray/MemeTray/blob/main/DISCLAIMER.md" target="_blank" rel="noopener">法律 / 免责声明</a>'
+      lf.innerHTML=`<a class="legal-link" href="https://github.com/MemeTray/MemeTray/blob/main/DISCLAIMER.md" target="_blank" rel="noopener">${t('legalCompact')}</a>`
     }
   }catch(_){/* ignore */}
 }
@@ -222,7 +334,7 @@ function enterFolder(key){
     if(lf){
       lf.classList.remove('legal--compact')
       // 文件夹视图填充完整声明，贴在窗口底部
-      lf.innerHTML='<strong>版权声明</strong>：本网站展示的 GIF 资源均来源于公开互联网，版权归原作者或权利人所有；本站仅用于学习、研究与技术交流，严禁任何商业或非法用途。如您认为内容侵权，请联系我们，我们将在核实后立即移除。<div class="legal-links"><a href="https://github.com/MemeTray/MemeTray/issues" target="_blank" rel="noopener">提交 Issue</a><span>·</span><a href="mailto:vladelaina@gmail.com">vladelaina@gmail.com</a></div>'
+      lf.innerHTML=t('legalFull')
     }
   }catch(_){/* ignore */}
 }
@@ -351,8 +463,8 @@ async function fetchSections(){
       sidebar.innerHTML=''
       // 添加标题和折叠按钮
       const header=document.createElement('div'); header.className='side-header'
-      const title=document.createElement('div'); title.className='side-title'; title.textContent='分组'
-      const toggleBtn=document.createElement('button'); toggleBtn.className='sidebar-toggle'; toggleBtn.setAttribute('aria-label','折叠侧边栏'); toggleBtn.title='折叠侧边栏'
+      const title=document.createElement('div'); title.className='side-title'; title.textContent=t('sidebarTitle')
+      const toggleBtn=document.createElement('button'); toggleBtn.className='sidebar-toggle'; toggleBtn.setAttribute('aria-label',t('sidebarCollapse')); toggleBtn.title=t('sidebarCollapse')
       toggleBtn.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" fill="currentColor"></path></svg>'
       header.appendChild(title)
       header.appendChild(toggleBtn)
@@ -369,12 +481,12 @@ async function fetchSections(){
         const collapsed = saved === null ? true : saved === 'true'
         if(collapsed){
           sidebar.classList.add('sidebar--collapsed')
-          toggleBtn.setAttribute('title','展开侧边栏')
+          toggleBtn.setAttribute('title',t('sidebarExpand'))
         }
       }catch(_){
         // 如果 localStorage 失败，也默认收起
         sidebar.classList.add('sidebar--collapsed')
-        toggleBtn.setAttribute('title','展开侧边栏')
+        toggleBtn.setAttribute('title',t('sidebarExpand'))
       }
       
       for(const {dir} of sections){
@@ -412,6 +524,8 @@ async function fetchSections(){
     stopSplash()
     // 默认进入根视图（只显示文件夹）
     enterRoot()
+    // 初始化语言设置
+    updateLanguage()
 
   }catch(err){
     console.warn('读取本地索引失败',err)
@@ -465,11 +579,17 @@ function toggleSidebar(){
   if(isCollapsed){
     sidebar.classList.remove('sidebar--collapsed')
     const btn=sidebar.querySelector('.sidebar-toggle')
-    if(btn) btn.setAttribute('title','折叠侧边栏')
+    if(btn){
+      btn.setAttribute('title',t('sidebarCollapse'))
+      btn.setAttribute('aria-label',t('sidebarCollapse'))
+    }
   }else{
     sidebar.classList.add('sidebar--collapsed')
     const btn=sidebar.querySelector('.sidebar-toggle')
-    if(btn) btn.setAttribute('title','展开侧边栏')
+    if(btn){
+      btn.setAttribute('title',t('sidebarExpand'))
+      btn.setAttribute('aria-label',t('sidebarExpand'))
+    }
   }
   // 保存状态到 localStorage
   try{
