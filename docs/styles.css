@@ -76,6 +76,10 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .top-links{position:fixed;top:10px;right:10px;display:flex;gap:8px;z-index:1000}
 .top-link{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--glass-border);border-radius:8px;background:var(--glass-bg);color:var(--text);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.06);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px);transition:border-color .15s ease,transform .15s ease}
 .top-link:hover{border-color:var(--card-hover);transform:translateY(-1px)}
+/* 语言切换按钮样式 */
+.top-link#langToggle{cursor:pointer;font-size:10px;font-weight:600;padding:0;min-width:28px;width:auto;padding:0 6px}
+.top-link#langToggle:active{transform:translateY(0) scale(.95)}
+#langIcon{display:block;white-space:nowrap}
 /* 保留旧的 gh-link 类以兼容 */
 .gh-link{position:fixed;top:10px;right:10px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--glass-border);border-radius:8px;background:var(--glass-bg);color:var(--text);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.06);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .gh-link:hover{border-color:var(--card-hover)}
