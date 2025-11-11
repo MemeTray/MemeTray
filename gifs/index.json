@@ -1,10 +1,35 @@
 {
   "sections": [
-    { "dir": "doro", "count": 181 },
-    { "dir": "genshin", "count": 3 },
-    { "dir": "maodie", "count": 18 },
-    { "dir": "maomaochong", "count": 349 },
-    { "dir": "catmeme", "count": 60 }
+    {
+      "dir": "doro",
+      "count": 181,
+      "repository": "https://github.com/MemeTray/gifs-doro",
+      "baseUrl": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-doro@main/doro/"
+    },
+    {
+      "dir": "genshin",
+      "count": 3,
+      "repository": "https://github.com/MemeTray/gifs-genshin",
+      "baseUrl": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-genshin@main/"
+    },
+    {
+      "dir": "maodie",
+      "count": 18,
+      "repository": "https://github.com/MemeTray/gifs-maodie",
+      "baseUrl": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maodie@main/"
+    },
+    {
+      "dir": "maomaochong",
+      "count": 349,
+      "repository": "https://github.com/MemeTray/gifs-maomaochong",
+      "baseUrl": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maomaochong@main/"
+    },
+    {
+      "dir": "catmeme",
+      "count": 60,
+      "repository": "https://github.com/MemeTray/gifs-catmeme",
+      "baseUrl": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-catmeme@main/"
+    }
   ]
 }
 

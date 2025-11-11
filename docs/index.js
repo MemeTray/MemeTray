@@ -229,9 +229,12 @@ function renderOneSection(secObj, page = 1){
   }
 
   // 移除骨架占位，改为图片淡入
+  
+  // 使用 baseUrl（如果存在）或回退到本地路径
+  const baseUrl = secObj.baseUrl || (GIF_BASE + dir + "/")
 
   for(const id of pagedFiles){
-    const href=GIF_BASE+dir+"/"+id
+    const href=baseUrl+id
     const a=document.createElement("a")
     a.href=href
     a.download=id
@@ -252,7 +255,7 @@ function renderOneSection(secObj, page = 1){
 }
 
 
-function preloadSectionImages(secObj,max=48){const {dir,files}=secObj;const list=files.slice(0,max);for(const id of list){const img=new Image();img.decoding='async';img.loading='eager';img.src=GIF_BASE+dir+"/"+id}}
+function preloadSectionImages(secObj,max=48){const {dir,files,baseUrl}=secObj;const list=files.slice(0,max);const urlBase=baseUrl||(GIF_BASE+dir+"/");for(const id of list){const img=new Image();img.decoding='async';img.loading='eager';img.src=urlBase+id}}
 function preloadOthers(others){let i=0;const tick=()=>{if(i>=others.length)return;preloadSectionImages(others[i++]);if('requestIdleCallback'in window){requestIdleCallback(tick,{timeout:200})}else{setTimeout(tick,0)}};tick()}
 
 function buildItems(){
@@ -427,11 +430,13 @@ async function fetchSections(){
     if(!localIdx.ok) throw new Error('index.json not found')
     const data=await localIdx.json()
     if(!Array.isArray(data.sections) || !data.sections.length) throw new Error('empty sections')
-    // 严格要求 { dir, count } 结构
+    // 严格要求 { dir, count } 结构，同时保留 baseUrl 和 repository
     const normalized=(data.sections||[])
       .map((s)=>({
         dir: String(s && s.dir != null ? s.dir : ''),
-        count: Number.isFinite(Number(s && s.count)) ? Number(s.count) : NaN
+        count: Number.isFinite(Number(s && s.count)) ? Number(s.count) : NaN,
+        baseUrl: s && s.baseUrl ? String(s.baseUrl) : null,
+        repository: s && s.repository ? String(s.repository) : null
       }))
       .filter(({dir,count})=>!!dir && Number.isFinite(count) && count>=0)
     if(!normalized.length) throw new Error('invalid sections schema: expect array of {dir, count>=0}')
@@ -440,25 +445,26 @@ async function fetchSections(){
     const first=normalized[0]
     const firstCount=Math.max(0, Number(first.count)||0)
     const firstFiles=[]; for(let i=1;i<=firstCount;i++){firstFiles.push(fileName(first.dir,i))}
-    sections=[{key:first.dir,title:first.dir,dir:first.dir,files:firstFiles}]
+    sections=[{key:first.dir,title:first.dir,dir:first.dir,files:firstFiles,baseUrl:first.baseUrl,repository:first.repository}]
     sectionSelect.value=first.dir
     buildItems()
 
-    // 2) 构建其余分组文件列表（严格使用 count）
-    const otherSections=normalized.slice(1).map(({dir,count})=>{
+    // 2) 构建其余分组文件列表（严格使用 count），同时传递 baseUrl
+    const otherSections=normalized.slice(1).map(({dir,count,baseUrl,repository})=>{
       const c=Math.max(0, Number(count)||0)
       const files=[]; for(let i=1;i<=c;i++){files.push(fileName(dir,i))}
-      return {key:dir,title:dir,dir,files}
+      return {key:dir,title:dir,dir,files,baseUrl,repository}
     })
     sections=[sections[0], ...otherSections]
 
     // 构建顶部方格选择器（预览固定为 0001_分组名.gif）
     if(sectionTiles){
       sectionTiles.innerHTML=''
-      for(const {dir,title,files} of sections){
+      for(const {dir,title,files,baseUrl} of sections){
         const t=document.createElement('div');t.className='tile';t.dataset.section=dir
         const th=document.createElement('div');th.className='tile-thumb'
-        const img=document.createElement('img');const first=GIF_BASE+dir+'/'+fileName(dir,1)
+        const urlBase=baseUrl||(GIF_BASE+dir+'/')
+        const img=document.createElement('img');const first=urlBase+fileName(dir,1)
         img.src=first; img.alt=title; img.loading='lazy'; img.decoding='async'
         th.appendChild(img)
         const tt=document.createElement('div');tt.className='tile-title';tt.textContent=title
@@ -501,10 +507,11 @@ async function fetchSections(){
         toggleBtn.setAttribute('title',t('sidebarExpand'))
       }
       
-      for(const {dir} of sections){
+      for(const {dir,baseUrl} of sections){
         const item=document.createElement('div'); item.className='side-item'; item.dataset.section=dir
         const th=document.createElement('div'); th.className='thumb'
-        const preview=GIF_BASE+dir+'/'+fileName(dir,1)
+        const urlBase=baseUrl||(GIF_BASE+dir+'/')
+        const preview=urlBase+fileName(dir,1)
         item.dataset.preview=preview
         const img=document.createElement('img'); img.src=preview; img.alt=dir; img.loading='lazy'; img.decoding='async'
         th.appendChild(img)
