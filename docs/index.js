@@ -833,4 +833,28 @@ if(infTarget && infTarget.addEventListener){
       startResizeFromTitlebar(fake)
     },{passive:false})
   }
+
+  // 工具下拉菜单交互
+  const toolsToggle = document.getElementById('toolsToggle')
+  const toolsMenu = document.getElementById('toolsMenu')
+  if (toolsToggle && toolsMenu) {
+    toolsToggle.addEventListener('click', (e) => {
+      e.stopPropagation()
+      toolsMenu.classList.toggle('show')
+    })
+    
+    // 点击外部关闭下拉菜单
+    document.addEventListener('click', (e) => {
+      if (!toolsToggle.contains(e.target) && !toolsMenu.contains(e.target)) {
+        toolsMenu.classList.remove('show')
+      }
+    })
+    
+    // ESC 键关闭下拉菜单
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toolsMenu.classList.contains('show')) {
+        toolsMenu.classList.remove('show')
+      }
+    })
+  }
 })()
