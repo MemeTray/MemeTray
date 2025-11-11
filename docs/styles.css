@@ -40,11 +40,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .footer{margin-top:24px;font-size:12px;color:var(--muted)}
 
 /* 任务栏模拟 */
-.taskbar{position:fixed;bottom:0;left:0;right:0;z-index:1000;color:#0b1220;background:var(--glass-bg);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px);border-top:1px solid var(--glass-border);height:48px;border-radius:0;margin-top:0}
-.taskbar--light{background:rgba(243,243,243,.85)}
+.taskbar{position:fixed;bottom:0;left:0;right:0;z-index:1000;color:#0b1220;background:transparent;height:48px;border-radius:0;margin-top:0}
+.taskbar--light{background:transparent}
 .taskcont{position:relative;width:100%;height:100%}
 .taskright{position:absolute;top:0;right:0;height:100%;display:flex;align-items:center;gap:8px;padding-right:8px}
-.tray{display:flex;align-items:center;gap:6px;padding:0 6px;border-left:1px solid var(--glass-border);border-right:1px solid var(--glass-border);border-radius:6px;background:transparent}
+.tray{display:flex;align-items:center;gap:6px;padding:0 6px;background:transparent}
 .tray-icon{width:20px;height:20px;border-radius:4px;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .tray-icon img{width:100%;height:100%;object-fit:contain}
 .tasksCont{width:100%;height:100%;display:flex;flex-direction:column}
@@ -59,7 +59,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .taskDate div{text-align:center;font-weight:400}
 .graybd{border:solid 1px transparent;height:1rem}
 .graybd:hover{border:solid 1px #a1a1a1;border-width:0 0 0 2px}
-.hvlight:hover{background:rgba(255,255,255,.8);transition:all 200ms ease-in-out}
+.hvlight:hover{background:transparent;transition:all 200ms ease-in-out}
 .battery{display:flex;position:relative}
 .btFull{overflow:hidden;position:absolute;z-index:0}
 .charger svg{position:absolute;z-index:1}
