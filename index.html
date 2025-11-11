@@ -5,22 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 <title>MemeTray</title>
 <style>
-/* splash 关键样式兜底，防止外链 CSS 缓存或加载失败时遮罩不全屏 */
-.splash{position:fixed;top:0;left:0;right:0;bottom:0;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#fff;width:100vw;height:100vh}
-.splash--hide{display:none}
-.splash-text{font-size:28px}
+/* 移除了 splash 加载遮罩相关样式 */
 </style>
 <link id="main-css" rel="stylesheet">
 <link rel="icon" type="image/png" href="./Images/MemeTray.png">
 <link rel="apple-touch-icon" href="./Images/MemeTray.png">
 </head>
 <body>
-<div id="splash" class="splash" aria-live="polite" aria-busy="true">
-<div class="splash-inner">
-<img src="./Images/MemeTray.png" alt="MemeTray" width="192" height="192">
-<div class="splash-text"><span>Loading</span><span id="splashDots">...</span></div>
-</div>
-</div>
 <!-- 桌面背景层 -->
 <div id="desktop" class="desktop" aria-hidden="true"></div>
 <div class="top-links">

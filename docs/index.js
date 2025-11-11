@@ -19,10 +19,6 @@ const clockTime=document.getElementById("clock-time")
 const clockDate=document.getElementById("clock-date")
 const infiniteLoader=document.getElementById('infiniteLoader')
 
-// 加载遮罩
-const splash=document.getElementById('splash')
-const splashDots=document.getElementById('splashDots')
-let splashTimer=null
 const ITEMS_PER_PAGE = 50
 let currentPage = {} // { [sectionKey]: pageNumber }
 let navState={view:'root',currentKey:null}
@@ -197,19 +193,6 @@ if (langToggle) {
   }catch(_){}
 })()
 
-function startSplash(){
-  if(!splash) return
-  splash.style.display='flex'
-  splash.classList.remove('splash--hide')
-  if(splashTimer) return
-  let i=0; const states=['.','..','...']
-  splashTimer=setInterval(()=>{if(splashDots){splashDots.textContent=states[i%3]} i++},400)
-}
-function stopSplash(){
-  if(splash){splash.classList.add('splash--hide'); splash.style.display='none'}
-  if(splashTimer){clearInterval(splashTimer); splashTimer=null}
-}
-
 function createSection(title,count){const sec=document.createElement('div');sec.className='section';const h2=document.createElement('h2');h2.textContent=count?`${title} (${count})`:title;const grid=document.createElement('div');grid.className='gallery';sec.appendChild(h2);sec.appendChild(grid);
   return {sec,grid}}
 
@@ -320,6 +303,9 @@ function enterRoot(){
   if(infiniteLoader){infiniteLoader.style.display='none'}
   renderBreadcrumbs()
   updateBackTopVisibility()
+  // 清除 URL hash
+  if(history.replaceState){ history.replaceState(null,null,' ') }
+  else{ location.hash='' }
     // 根视图：展示右下角小药丸
   try{
     const lf=document.getElementById('legalFooter')
@@ -343,6 +329,9 @@ function enterFolder(key){
   if(container) container.classList.add('container--folder')
   sectionSelect.value=key
   buildItems()
+  // 更新 URL hash 以保持状态
+  if(history.replaceState){ history.replaceState(null,null,'#'+encodeURIComponent(key)) }
+  else{ location.hash=key }
   // 保险：进入文件夹后清理内容区所有分区标题
   try{
     if(container){
@@ -431,7 +420,6 @@ function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
 // 已移除网络探针逻辑，数量完全由 index.json 提供
 
 async function fetchSections(){
-  startSplash()
   if(sections && sections.length){buildItems();return}
   try{
     // 仅使用本地静态索引，避免任何外部 API 依赖
@@ -544,16 +532,25 @@ async function fetchSections(){
 
     // 3) 预加载所有分组前 48 张，确保后续切换秒开
     preloadOthers(sections)
-    // 完成本地索引探测和首屏渲染后，隐藏遮罩
-    stopSplash()
-    // 默认进入根视图（只显示文件夹）
-    enterRoot()
+    
+    // 检查 URL hash 以恢复之前的目录状态
+    const hash=location.hash.slice(1)
+    const targetKey=hash && decodeURIComponent(hash)
+    const hasValidTarget=targetKey && sections.some(s=>s.key===targetKey)
+    
+    if(hasValidTarget){
+      // 恢复到之前的文件夹视图
+      enterFolder(targetKey)
+    }else{
+      // 默认进入根视图（只显示文件夹）
+      enterRoot()
+    }
+    
     // 初始化语言设置
     updateLanguage()
 
   }catch(err){
     console.warn('读取本地索引失败',err)
-    stopSplash()
   }
 }
 
