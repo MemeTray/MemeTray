@@ -5,13 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 <title>MemeTray</title>
 <style>
-/* 移除了 splash 加载遮罩相关样式 */
+/* 加载遮罩样式 */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #ffffff;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+#splash.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 </style>
 <link id="main-css" rel="stylesheet">
 <link rel="icon" type="image/png" href="./Images/MemeTray.png">
 <link rel="apple-touch-icon" href="./Images/MemeTray.png">
 </head>
 <body>
+<!-- 加载遮罩 -->
+<div id="splash"></div>
 <!-- 桌面背景层 -->
 <div id="desktop" class="desktop" aria-hidden="true"></div>
 <div class="top-links">

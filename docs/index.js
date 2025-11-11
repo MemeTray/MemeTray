@@ -29,7 +29,7 @@ const CATIME_PATH='%LOCALAPPDATA%\\Catime\\animations'
 let currentLang = localStorage.getItem('memetray.lang') || 'en'
 const translations = {
   zh: {
-    loading: 'Loading',
+    loading: '加载中...',
     backBtn: '返回',
     backBtnTitle: '返回',
     backTop: '返回顶部',
@@ -548,9 +548,24 @@ async function fetchSections(){
     
     // 初始化语言设置
     updateLanguage()
+    
+    // 隐藏加载遮罩
+    setTimeout(()=>{
+      const splash = document.getElementById('splash')
+      if(splash){
+        splash.classList.add('hidden')
+        setTimeout(()=>{ splash.style.display='none' }, 500)
+      }
+    }, 100)
 
   }catch(err){
     console.warn('读取本地索引失败',err)
+    // 即使出错也隐藏遮罩
+    const splash = document.getElementById('splash')
+    if(splash){
+      splash.classList.add('hidden')
+      setTimeout(()=>{ splash.style.display='none' }, 500)
+    }
   }
 }
 
