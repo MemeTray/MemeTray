@@ -236,8 +236,26 @@ function renderOneSection(secObj, page = 1){
   for(const id of pagedFiles){
     const href=baseUrl+id
     const a=document.createElement("a")
-    a.href=href
-    a.download=id
+    a.href="#"
+    a.style.cursor="pointer"
+    a.addEventListener("click", async (e)=>{
+      e.preventDefault()
+      try{
+        const response = await fetch(href)
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = id
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+      }catch(err){
+        console.error("下载失败:",err)
+        alert("下载失败，请重试")
+      }
+    })
     const thumb=document.createElement("div"); thumb.className="thumb"
     const img=document.createElement("img");
     img.src=href; img.alt=id; img.loading="lazy"; img.decoding="async"
@@ -430,14 +448,20 @@ async function fetchSections(){
     if(!localIdx.ok) throw new Error('index.json not found')
     const data=await localIdx.json()
     if(!Array.isArray(data.sections) || !data.sections.length) throw new Error('empty sections')
-    // 严格要求 { dir, count } 结构，同时保留 baseUrl 和 repository
+    // 严格要求 { dir, count } 结构，自动生成 baseUrl 和 repository
     const normalized=(data.sections||[])
-      .map((s)=>({
-        dir: String(s && s.dir != null ? s.dir : ''),
-        count: Number.isFinite(Number(s && s.count)) ? Number(s.count) : NaN,
-        baseUrl: s && s.baseUrl ? String(s.baseUrl) : null,
-        repository: s && s.repository ? String(s.repository) : null
-      }))
+      .map((s)=>{
+        const dir = String(s && s.dir != null ? s.dir : '')
+        const count = Number.isFinite(Number(s && s.count)) ? Number(s.count) : NaN
+        // 自动生成 URL，也可以通过配置文件覆盖
+        const baseUrl = s && s.baseUrl 
+          ? String(s.baseUrl) 
+          : `https://cdn.jsdelivr.net/gh/MemeTray/gifs-${dir}@main/${dir}/`
+        const repository = s && s.repository 
+          ? String(s.repository) 
+          : `https://github.com/MemeTray/gifs-${dir}`
+        return {dir, count, baseUrl, repository}
+      })
       .filter(({dir,count})=>!!dir && Number.isFinite(count) && count>=0)
     if(!normalized.length) throw new Error('invalid sections schema: expect array of {dir, count>=0}')
 
