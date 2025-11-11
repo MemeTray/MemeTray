@@ -22,6 +22,12 @@ See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Co
 
 [![Star History Chart](https://api.star-history.com/svg?repos=MemeTray/MemeTray&type=date&legend=top-left)](https://www.star-history.com/#MemeTray/MemeTray&type=date&legend=top-left)
 
+## Acknowledgments
+
+This project uses the following services:
+
+- **[Alcy.cc Random Wallpaper API](https://t.alcy.cc/)** - Free random wallpaper service used for desktop backgrounds.
+
 ## Contributors
 
 <a href="https://github.com/MemeTray/MemeTray/graphs/contributors">
