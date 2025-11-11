@@ -151,7 +151,7 @@ if (langToggle) {
   })
 }
 
-// 桌面背景支持（URL 参数优先，其次 localStorage），无值或无效时保留 CSS 默认
+// 桌面背景支持（URL 参数优先，其次 localStorage），无值或无效时从API池随机选择
 ;(function initBackground(){
   try{
     const p=new URLSearchParams(location.search)
@@ -160,7 +160,21 @@ if (langToggle) {
     const fromUrl=fromUrlRaw && fromUrlRaw.trim()
     const savedRaw=localStorage.getItem(key)
     const saved=savedRaw && savedRaw.trim()
-    const val=fromUrl||saved||''
+    
+    // 随机壁纸API池
+    const apiPool=[
+      'https://t.alcy.cc/ycy',
+      'https://t.alcy.cc/moez',
+      'https://t.alcy.cc/ysz',
+      'https://t.alcy.cc/pc',
+      'https://t.alcy.cc/moe',
+      'https://t.alcy.cc/fj',
+      'https://t.alcy.cc/bd',
+      'https://t.alcy.cc/ys'
+    ]
+    const randomApi=apiPool[Math.floor(Math.random()*apiPool.length)]
+    
+    const val=fromUrl||saved||randomApi
 
     const isValid=(u)=>{
       if(!u) return false
