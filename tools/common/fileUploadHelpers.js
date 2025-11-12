@@ -150,25 +150,25 @@ export function setupPasteSupport(options) {
 /**
  * 初始化随机背景
  * @param {string} selector - 背景元素选择器（默认 '.desktop'）
+ * @deprecated 请使用 backgroundConfig.js 中的 initRandomBackground
  */
 export function initRandomBackground(selector = '.desktop') {
-    try {
-        const desktop = document.querySelector(selector);
-        if (!desktop) return;
-        
-        const apiPool = [
-            'https://t.alcy.cc/ycy',
-            'https://t.alcy.cc/moez',
-            'https://t.alcy.cc/ysz',
-            'https://t.alcy.cc/pc',
-            'https://t.alcy.cc/moe',
-            'https://t.alcy.cc/fj',
-            'https://t.alcy.cc/bd',
-            'https://t.alcy.cc/ys'
-        ];
-        const randomApi = apiPool[Math.floor(Math.random() * apiPool.length)];
-        desktop.style.backgroundImage = `url("${randomApi}")`;
-    } catch (_) {}
+    // 为了向后兼容，保留此函数，但建议导入 backgroundConfig.js
+    import('./backgroundConfig.js').then(({ initRandomBackground: init }) => {
+        init(selector);
+    }).catch(() => {
+        // 降级处理：如果模块加载失败，使用内联实现
+        try {
+            const desktop = document.querySelector(selector);
+            if (!desktop) return;
+            const apiPool = [
+                'https://t.alcy.cc/ycy', 'https://t.alcy.cc/moez', 'https://t.alcy.cc/ysz',
+                'https://t.alcy.cc/pc', 'https://t.alcy.cc/moe', 'https://t.alcy.cc/fj',
+                'https://t.alcy.cc/bd', 'https://t.alcy.cc/ys', 'https://t.alcy.cc/lai'
+            ];
+            desktop.style.backgroundImage = `url("${apiPool[Math.floor(Math.random() * apiPool.length)]}")`;
+        } catch (_) {}
+    });
 }
 
 /**

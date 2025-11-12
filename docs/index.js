@@ -148,7 +148,7 @@ if (langToggle) {
 }
 
 // 桌面背景支持（URL 参数优先，其次 localStorage），无值或无效时从API池随机选择
-;(function initBackground(){
+;(async function initBackground(){
   try{
     const p=new URLSearchParams(location.search)
     const key='memetray.bg'
@@ -157,18 +157,20 @@ if (langToggle) {
     const savedRaw=localStorage.getItem(key)
     const saved=savedRaw && savedRaw.trim()
     
-    // 随机壁纸API池
-    const apiPool=[
-      'https://t.alcy.cc/ycy',
-      'https://t.alcy.cc/moez',
-      'https://t.alcy.cc/ysz',
-      'https://t.alcy.cc/pc',
-      'https://t.alcy.cc/moe',
-      'https://t.alcy.cc/fj',
-      'https://t.alcy.cc/bd',
-      'https://t.alcy.cc/ys'
-    ]
-    const randomApi=apiPool[Math.floor(Math.random()*apiPool.length)]
+    // 动态导入随机壁纸配置
+    let randomApi
+    try{
+      const {getRandomWallpaper} = await import('./tools/common/backgroundConfig.js')
+      randomApi = getRandomWallpaper()
+    }catch(_){
+      // 降级：如果模块加载失败，使用内联配置
+      const apiPool=[
+        'https://t.alcy.cc/ycy','https://t.alcy.cc/moez','https://t.alcy.cc/ysz',
+        'https://t.alcy.cc/pc','https://t.alcy.cc/moe','https://t.alcy.cc/fj',
+        'https://t.alcy.cc/bd','https://t.alcy.cc/ys','https://t.alcy.cc/lai'
+      ]
+      randomApi=apiPool[Math.floor(Math.random()*apiPool.length)]
+    }
     
     const val=fromUrl||saved||randomApi
 

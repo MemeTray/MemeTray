@@ -593,24 +593,7 @@ function clearAll() {
 }
 
 // 随机背景初始化
-(function initBackground() {
-    try {
-        const desktop = document.querySelector('.desktop');
-        if (!desktop) return;
-        
-        const apiPool = [
-            'https://t.alcy.cc/ycy',
-            'https://t.alcy.cc/moez',
-            'https://t.alcy.cc/ysz',
-            'https://t.alcy.cc/pc',
-            'https://t.alcy.cc/moe',
-            'https://t.alcy.cc/fj',
-            'https://t.alcy.cc/bd',
-            'https://t.alcy.cc/ys'
-        ];
-        const randomApi = apiPool[Math.floor(Math.random() * apiPool.length)];
-        desktop.style.backgroundImage = `url("${randomApi}")`;
-    } catch (_) {}
-})();
+import { initRandomBackground } from '../common/backgroundConfig.js';
+initRandomBackground();
 
 initPyodide();

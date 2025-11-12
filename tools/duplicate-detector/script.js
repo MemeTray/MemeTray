@@ -2,9 +2,9 @@ import {
     setupDragAndDrop, 
     setupPasteSupport, 
     setupFileInput,
-    formatFileSize,
-    initRandomBackground 
+    formatFileSize
 } from '../common/fileUploadHelpers.js';
+import { initRandomBackground } from '../common/backgroundConfig.js';
 
 let allFiles = [];
 let fileIdCounter = 0;
