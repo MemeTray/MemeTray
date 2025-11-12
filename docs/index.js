@@ -550,21 +550,17 @@ async function fetchSections(){
   if(sections && sections.length){buildItems();return}
   try{
     // 仅使用本地静态索引，避免任何外部 API 依赖
-    const localIdx=await fetch("./docs/sections.json",{cache:'no-store'})
-    if(!localIdx.ok) throw new Error('sections.json not found')
-    const data=await localIdx.json()
-    if(!Array.isArray(data.sections) || !data.sections.length) throw new Error('empty sections')
+    const localIdx=await fetch("./sections.txt",{cache:'no-store'})
+    if(!localIdx.ok) throw new Error('sections.txt not found')
+    const text=await localIdx.text()
+    const sections_list = text.trim().split('\n').map(line => line.trim()).filter(line => line.length > 0)
+    if(!sections_list.length) throw new Error('empty sections')
     // 处理分类配置，从各个仓库获取 count 信息
-    const normalized=(data.sections||[])
-      .map((s)=>{
-        const dir = String(s && s.dir != null ? s.dir : '')
-        // 自动生成 URL，也可以通过配置文件覆盖
-        const baseUrl = s && s.baseUrl 
-          ? String(s.baseUrl) 
-          : `https://cdn.jsdelivr.net/gh/MemeTray/gifs-${dir}@main/${dir}/`
-        const repository = s && s.repository 
-          ? String(s.repository) 
-          : `https://github.com/MemeTray/gifs-${dir}`
+    const normalized = sections_list
+      .map((dir)=>{
+        // 自动生成 URL
+        const baseUrl = `https://cdn.jsdelivr.net/gh/MemeTray/gifs-${dir}@main/${dir}/`
+        const repository = `https://github.com/MemeTray/gifs-${dir}`
         return {dir, baseUrl, repository}
       })
       .filter(({dir})=>!!dir)
