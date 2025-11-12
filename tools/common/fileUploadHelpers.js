@@ -13,13 +13,19 @@ export async function traverseFileTree(item, path, files) {
     if (item.isFile) {
         return new Promise((resolve, reject) => {
             item.file((file) => {
+                console.log(`找到文件: ${file.name} (${file.type}, ${file.size} bytes)`);
                 files.push({ file, path: path + file.name });
                 resolve();
-            }, reject);
+            }, (error) => {
+                console.warn(`读取文件失败: ${item.name}`, error);
+                reject(error);
+            });
         });
     } else if (item.isDirectory) {
         const dirReader = item.createReader();
         const newPath = path + item.name + '/';
+        
+        console.log(`进入目录: ${item.name}`);
         
         const readAllEntries = () => {
             return new Promise((resolve, reject) => {
@@ -33,16 +39,25 @@ export async function traverseFileTree(item, path, files) {
                         } else {
                             resolve(allEntries);
                         }
-                    }, reject);
+                    }, (error) => {
+                        console.warn(`读取目录失败: ${item.name}`, error);
+                        reject(error);
+                    });
                 };
                 
                 readBatch();
             });
         };
         
-        const entries = await readAllEntries();
-        for (const entry of entries) {
-            await traverseFileTree(entry, newPath, files);
+        try {
+            const entries = await readAllEntries();
+            console.log(`目录 ${item.name} 包含 ${entries.length} 个项目`);
+            
+            // 使用 Promise.all 并行处理所有条目
+            const promises = entries.map(entry => traverseFileTree(entry, newPath, files));
+            await Promise.all(promises);
+        } catch (error) {
+            console.warn(`处理目录 ${item.name} 时出错:`, error);
         }
     }
 }
@@ -101,14 +116,32 @@ async function handleDrop(e, acceptType, callback) {
     const items = e.dataTransfer.items;
     const files = [];
     
+    console.log(`开始处理拖拽，共 ${items.length} 个项目`)
+    
+    // 处理所有拖拽项目
+    const promises = [];
     for (let i = 0; i < items.length; i++) {
         const item = items[i].webkitGetAsEntry();
         if (item) {
-            await traverseFileTree(item, '', files);
+            promises.push(traverseFileTree(item, '', files));
         }
     }
     
-    const validFiles = files.filter(f => f.file.type === acceptType);
+    // 等待所有文件处理完成
+    await Promise.all(promises);
+    
+    console.log(`文件遍历完成，共找到 ${files.length} 个文件`)
+    
+    // 过滤有效文件
+    const validFiles = files.filter(f => {
+        const isValid = f.file.type === acceptType || f.file.type.startsWith('image/');
+        if (!isValid) {
+            console.log(`跳过文件: ${f.file.name} (类型: ${f.file.type})`);
+        }
+        return isValid;
+    });
+    
+    console.log(`有效文件数量: ${validFiles.length}`)
     
     if (validFiles.length > 0) {
         callback(validFiles);

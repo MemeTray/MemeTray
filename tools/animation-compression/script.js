@@ -52,21 +52,31 @@ function setupEventListeners() {
         const items = e.dataTransfer.items;
         const files = [];
         
+        console.log(`开始处理拖拽，共 ${items.length} 个项目`);
+        
+        // 处理所有拖拽项目
+        const promises = [];
         for (let i = 0; i < items.length; i++) {
             const item = items[i].webkitGetAsEntry();
             if (item) {
                 console.log('Processing item:', item.name, 'isDirectory:', item.isDirectory);
-                await traverseFileTree(item, '', files);
+                promises.push(traverseFileTree(item, '', files));
             }
         }
+        
+        // 等待所有文件处理完成
+        await Promise.all(promises);
         
         console.log('Total files found:', files.length);
         const webpEnabled = document.getElementById('webpToggle').checked;
         const validFiles = files.filter(f => {
-            if (webpEnabled) {
-                return f.file.type === 'image/gif' || f.file.type === 'image/webp';
+            const isValid = webpEnabled 
+                ? (f.file.type === 'image/gif' || f.file.type === 'image/webp')
+                : f.file.type === 'image/gif';
+            if (!isValid) {
+                console.log(`跳过文件: ${f.file.name} (类型: ${f.file.type})`);
             }
-            return f.file.type === 'image/gif';
+            return isValid;
         });
         console.log('Valid files found:', validFiles.length);
         
@@ -85,10 +95,13 @@ async function traverseFileTree(item, path, files) {
     if (item.isFile) {
         return new Promise((resolve, reject) => {
             item.file((file) => {
-                console.log('Found file:', path + file.name);
+                console.log(`找到文件: ${file.name} (${file.type}, ${file.size} bytes)`);
                 files.push({ file, path: path + file.name });
                 resolve();
-            }, reject);
+            }, (error) => {
+                console.warn(`读取文件失败: ${item.name}`, error);
+                reject(error);
+            });
         });
     } else if (item.isDirectory) {
         if (!folderName) {
@@ -97,7 +110,7 @@ async function traverseFileTree(item, path, files) {
         const dirReader = item.createReader();
         const newPath = path + item.name + '/';
         
-        console.log('Reading directory:', newPath);
+        console.log(`进入目录: ${item.name}`);
         
         // readEntries 需要多次调用才能读取所有文件
         const readAllEntries = () => {
@@ -114,16 +127,25 @@ async function traverseFileTree(item, path, files) {
                             console.log('Finished reading directory:', newPath, 'Total entries:', allEntries.length);
                             resolve(allEntries);
                         }
-                    }, reject);
+                    }, (error) => {
+                        console.warn(`读取目录失败: ${item.name}`, error);
+                        reject(error);
+                    });
                 };
                 
                 readBatch();
             });
         };
         
-        const entries = await readAllEntries();
-        for (const entry of entries) {
-            await traverseFileTree(entry, newPath, files);
+        try {
+            const entries = await readAllEntries();
+            console.log(`目录 ${item.name} 包含 ${entries.length} 个项目`);
+            
+            // 使用 Promise.all 并行处理所有条目
+            const promises = entries.map(entry => traverseFileTree(entry, newPath, files));
+            await Promise.all(promises);
+        } catch (error) {
+            console.warn(`处理目录 ${item.name} 时出错:`, error);
         }
     }
 }

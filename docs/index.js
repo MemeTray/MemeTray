@@ -891,12 +891,21 @@ if(infTarget && infTarget.addEventListener){
   
   // 处理预览文件
   function handlePreviewFiles(files) {
-    files.forEach(fileObj => {
+    console.log(`处理 ${files.length} 个文件`)
+    
+    files.forEach((fileObj, index) => {
       const { file, path } = fileObj
+      
+      // 检查文件类型
+      if (!file.type.startsWith('image/')) {
+        console.warn(`跳过非图片文件: ${file.name} (${file.type})`)
+        return
+      }
+      
       const url = URL.createObjectURL(file)
       
       const previewItem = {
-        id: Date.now() + Math.random(),
+        id: `${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
         file,
         path,
         url,
@@ -906,6 +915,7 @@ if(infTarget && infTarget.addEventListener){
       
       previewFiles.push(previewItem)
       renderPreviewItem(previewItem)
+      console.log(`添加文件: ${file.name}`)
     })
     
     // 隐藏上传提示，显示批量操作按钮
@@ -915,6 +925,8 @@ if(infTarget && infTarget.addEventListener){
         previewActions.style.display = 'flex'
       }
     }
+    
+    console.log(`文件处理完成，当前预览文件总数: ${previewFiles.length}`)
   }
   
   // 渲染预览项
