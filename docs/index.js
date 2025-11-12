@@ -266,7 +266,7 @@ function renderOneSection(secObj, page = 1){
     img.addEventListener('error', ()=>{ console.warn("图片加载失败:",href); a.style.display="none" }, { once:true })
     thumb.appendChild(img)
     a.appendChild(thumb)
-    a.addEventListener("mouseenter",()=>{setTrayIcon(href)})
+    a.addEventListener("mouseenter",()=>{setTrayIcon(href, img)})
     a.addEventListener("mouseleave",()=>{clearTrayIcon()})
     grid.appendChild(a)
   }
@@ -422,7 +422,37 @@ btnBack&&btnBack.addEventListener('click',()=>{
 
 // 已移除复制路径按钮
 
-function setTrayIcon(src){trayIcon.innerHTML="";const img=document.createElement("img");img.src=src;img.alt="tray";trayIcon.appendChild(img)}
+function setTrayIcon(src, sourceImg = null){
+  if(!trayIcon) return
+  trayIcon.innerHTML=""
+  
+  // 如果提供了源图片且已加载完成，尝试直接复制当前帧
+  if(sourceImg && sourceImg.complete && sourceImg.naturalWidth > 0) {
+    try {
+      // 方法1：直接克隆图片元素（最简单，但可能重新开始播放）
+      const clonedImg = sourceImg.cloneNode(true)
+      clonedImg.alt = "tray"
+      // 移除可能的类名和事件监听器
+      clonedImg.className = ""
+      clonedImg.style.width = "100%"
+      clonedImg.style.height = "100%"
+      clonedImg.style.objectFit = "contain"
+      trayIcon.appendChild(clonedImg)
+      return
+    } catch (err) {
+      console.warn("Failed to clone image:", err)
+    }
+  }
+  
+  // 降级方案：创建新的图片元素
+  const img=document.createElement("img")
+  img.src=src
+  img.alt="tray"
+  img.style.width = "100%"
+  img.style.height = "100%"
+  img.style.objectFit = "contain"
+  trayIcon.appendChild(img)
+}
 function clearTrayIcon(){
   if(trayIcon){
     trayIcon.innerHTML=""
@@ -505,7 +535,7 @@ async function fetchSections(){
         th.appendChild(img)
         const tt=document.createElement('div');tt.className='tile-title';tt.textContent=title
         t.appendChild(th);t.appendChild(tt)
-        t.addEventListener('mouseenter',()=>{setTrayIcon(first)})
+        t.addEventListener('mouseenter',()=>{setTrayIcon(first, img)})
         t.addEventListener('mouseleave',()=>{clearTrayIcon()})
         t.addEventListener('click',()=>{enterFolder(dir)})
         sectionTiles.appendChild(t)
@@ -561,7 +591,8 @@ async function fetchSections(){
         const el=e.target && e.target.closest && e.target.closest('.side-item')
         if(!el || !sidebar.contains(el)) return
         const p=el.dataset && el.dataset.preview
-        if(p) setTrayIcon(p)
+        const sourceImg=el.querySelector('img')
+        if(p) setTrayIcon(p, sourceImg)
       }
       const onOut=(e)=>{
         const from=e.target && e.target.closest && e.target.closest('.side-item')
