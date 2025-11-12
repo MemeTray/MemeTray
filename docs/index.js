@@ -160,7 +160,7 @@ if (langToggle) {
     // 动态导入随机壁纸配置
     let randomApi
     try{
-      const {getRandomWallpaper} = await import('./tools/common/backgroundConfig.js')
+      const {getRandomWallpaper} = await import('../tools/common/backgroundConfig.js')
       randomApi = getRandomWallpaper()
     }catch(_){
       // 降级：如果模块加载失败，使用内联配置
@@ -446,15 +446,14 @@ async function fetchSections(){
   if(sections && sections.length){buildItems();return}
   try{
     // 仅使用本地静态索引，避免任何外部 API 依赖
-    const localIdx=await fetch("./sections.json",{cache:'no-store'})
+    const localIdx=await fetch("./docs/sections.json",{cache:'no-store'})
     if(!localIdx.ok) throw new Error('sections.json not found')
     const data=await localIdx.json()
     if(!Array.isArray(data.sections) || !data.sections.length) throw new Error('empty sections')
-    // 严格要求 { dir, count } 结构，自动生成 baseUrl 和 repository
+    // 处理分类配置，从各个仓库获取 count 信息
     const normalized=(data.sections||[])
       .map((s)=>{
         const dir = String(s && s.dir != null ? s.dir : '')
-        const count = Number.isFinite(Number(s && s.count)) ? Number(s.count) : NaN
         // 自动生成 URL，也可以通过配置文件覆盖
         const baseUrl = s && s.baseUrl 
           ? String(s.baseUrl) 
@@ -462,26 +461,37 @@ async function fetchSections(){
         const repository = s && s.repository 
           ? String(s.repository) 
           : `https://github.com/MemeTray/gifs-${dir}`
-        return {dir, count, baseUrl, repository}
+        return {dir, baseUrl, repository}
       })
-      .filter(({dir,count})=>!!dir && Number.isFinite(count) && count>=0)
-    if(!normalized.length) throw new Error('invalid sections schema: expect array of {dir, count>=0}')
+      .filter(({dir})=>!!dir)
+    if(!normalized.length) throw new Error('invalid sections schema: expect array of {dir}')
 
-    // 1) 先基于数量快速渲染第一个分组，避免白屏
-    const first=normalized[0]
-    const firstCount=Math.max(0, Number(first.count)||0)
-    const firstFiles=[]; for(let i=1;i<=firstCount;i++){firstFiles.push(fileName(first.dir,i))}
-    sections=[{key:first.dir,title:first.dir,dir:first.dir,files:firstFiles,baseUrl:first.baseUrl,repository:first.repository}]
-    sectionSelect.value=first.dir
-    buildItems()
+    // 1) 异步获取各个分组的配置信息
+    const sectionsWithCount = await Promise.all(
+      normalized.map(async ({dir, baseUrl, repository}) => {
+        try {
+          // config.json 位于仓库根目录，不在子目录中
+          const configUrl = `https://cdn.jsdelivr.net/gh/MemeTray/gifs-${dir}@main/config.json`
+          const configResponse = await fetch(configUrl, {cache: 'no-store'})
+          if (!configResponse.ok) throw new Error(`config.json not found for ${dir}`)
+          const config = await configResponse.json()
+          const count = Number.isFinite(Number(config.count)) ? Number(config.count) : 0
+          const files = []; for(let i=1; i<=count; i++){files.push(fileName(dir,i))}
+          return {key:dir, title:dir, dir, files, baseUrl, repository, count}
+        } catch (err) {
+          console.warn(`Failed to load config for ${dir}:`, err)
+          return {key:dir, title:dir, dir, files:[], baseUrl, repository, count:0}
+        }
+      })
+    )
+    
+    sections = sectionsWithCount.filter(s => s.count > 0)
+    if (sections.length > 0) {
+      sectionSelect.value = sections[0].dir
+      buildItems()
+    }
 
-    // 2) 构建其余分组文件列表（严格使用 count），同时传递 baseUrl
-    const otherSections=normalized.slice(1).map(({dir,count,baseUrl,repository})=>{
-      const c=Math.max(0, Number(count)||0)
-      const files=[]; for(let i=1;i<=c;i++){files.push(fileName(dir,i))}
-      return {key:dir,title:dir,dir,files,baseUrl,repository}
-    })
-    sections=[sections[0], ...otherSections]
+    // sections 已经在上面构建完成
 
     // 构建顶部方格选择器（预览固定为 0001_分组名.gif）
     if(sectionTiles){
@@ -560,7 +570,9 @@ async function fetchSections(){
       }
       sidebar.addEventListener('mouseover', onOver)
       sidebar.addEventListener('mouseout', onOut)
-      highlightSidebar(first.dir)
+      if (sections.length > 0) {
+        highlightSidebar(sections[0].dir)
+      }
     }
 
     // 3) 预加载所有分组前 48 张，确保后续切换秒开

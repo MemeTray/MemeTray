@@ -1,9 +1,9 @@
 {
   "sections": [
-    { "dir": "doro", "count": 181 },
-    { "dir": "genshin", "count": 3 },
-    { "dir": "maodie", "count": 18 },
-    { "dir": "maomaochong", "count": 349 },
-    { "dir": "catmeme", "count": 60 }
+    { "dir": "doro" },
+    { "dir": "genshin" },
+    { "dir": "maodie" },
+    { "dir": "maomaochong" },
+    { "dir": "catmeme" }
   ]
 }

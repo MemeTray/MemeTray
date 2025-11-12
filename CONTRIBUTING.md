@@ -87,21 +87,43 @@ Many GIFs come with a white or solid-colored background. We encourage contributo
 - **Priority**: If two versions of the same GIF exist (one with a background and one without), we will prioritize the version without the background.
 - You are welcome to submit versions with backgrounds removed to replace existing ones.
 
-## Updating `sections.json`
+## Updating Configuration Files
 
-After adding or deleting GIFs, you **must** update the `docs/sections.json` file.
+### Main Project Configuration
 
-**> Why is a manual update required?**
-> We previously attempted to generate the index automatically by probing for files, but this approach led to significant initial loading times. To ensure a fast user experience, we have opted for a static index file, which requires manual updates from contributors.
+When adding a **new GIF category**, you need to update the `docs/sections.json` file in the main project:
 
-1.  **Adding a New Folder/Category**:
-    If you create a new GIF category folder, add a new object to the `sections` array.
-    ```json
-    { "dir": "your-new-folder", "count": 10 }
-    ```
+```json
+{
+  "sections": [
+    { "dir": "your-new-folder" }
+  ]
+}
+```
 
-2.  **Updating GIF Count**:
-    If you add or delete GIFs in an existing folder, make sure to update the `count` value for the corresponding category to match the actual number of GIFs in that folder.
+### GIF Repository Configuration
+
+Each GIF repository (e.g., `gifs-doro`, `gifs-catmeme`) **must** contain a `config.json` file in its root directory to specify the number of GIFs:
+
+```json
+{
+  "count": 181
+}
+```
+
+**When you add or delete GIFs in a repository:**
+1. Update the `count` value in the repository's `config.json` file
+2. The count should match the actual number of GIF files in the repository
+
+**Example repository structure:**
+```
+gifs-doro/
+├── config.json          # Contains {"count": 181}
+├── doro/
+│   ├── 0001_doro.gif
+│   ├── 0002_doro.gif
+│   └── ... (181 files total)
+```
 
 ## Content We Do Not Accept
 
