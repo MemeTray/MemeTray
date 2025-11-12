@@ -40,7 +40,13 @@ const translations = {
     legalFull: '<strong>版权声明</strong>：本网站展示的 GIF 资源均来源于公开互联网，版权归原作者或权利人所有；本站仅用于学习、研究与技术交流，严禁任何商业或非法用途。如您认为内容侵权，请联系我们，我们将在核实后立即移除。<div class="legal-links"><a href="https://github.com/MemeTray/MemeTray/issues" target="_blank" rel="noopener">提交 Issue</a><span>·</span><a href="mailto:vladelaina@gmail.com">vladelaina@gmail.com</a></div>',
     githubLabel: 'GitHub',
     toolLabel: 'Animation Compression',
-    langLabel: '切换语言 / Switch Language'
+    langLabel: '切换语言 / Switch Language',
+    previewLabel: 'GIF 预览',
+    previewTitle: 'GIF 预览',
+    previewDragHint: '拖拽 GIF 文件到这里',
+    previewPasteHint: '或使用 Ctrl+V 粘贴',
+    downloadAllText: '下载全部为 ZIP',
+    clearAllText: '清空全部'
   },
   en: {
     loading: 'Loading',
@@ -54,7 +60,13 @@ const translations = {
     legalFull: '<strong>Copyright Notice</strong>: All GIF resources displayed on this website are sourced from the public Internet, and the copyright belongs to the original author or rights holder. This site is for learning, research and technical exchange only, and any commercial or illegal use is strictly prohibited. If you believe the content infringes on your rights, please contact us and we will remove it immediately after verification.<div class="legal-links"><a href="https://github.com/MemeTray/MemeTray/issues" target="_blank" rel="noopener">Submit Issue</a><span>·</span><a href="mailto:vladelaina@gmail.com">vladelaina@gmail.com</a></div>',
     githubLabel: 'GitHub',
     toolLabel: 'Animation Compression',
-    langLabel: 'Switch Language / 切换语言'
+    langLabel: 'Switch Language / 切换语言',
+    previewLabel: 'GIF Preview',
+    previewTitle: 'GIF Preview',
+    previewDragHint: 'Drag & Drop GIF files here',
+    previewPasteHint: 'or paste with Ctrl+V',
+    downloadAllText: 'Download All as ZIP',
+    clearAllText: 'Clear All'
   }
 }
 
@@ -110,6 +122,13 @@ function updateLanguage() {
     langToggle.setAttribute('title', t('langLabel'))
   }
   
+  // 更新预览按钮
+  const previewToggle = document.getElementById('previewToggle')
+  if (previewToggle) {
+    previewToggle.setAttribute('aria-label', t('previewLabel'))
+    previewToggle.setAttribute('title', t('previewLabel'))
+  }
+  
   // 更新侧边栏标题
   const sideTitle = sidebar && sidebar.querySelector('.side-title')
   if (sideTitle) {
@@ -132,6 +151,33 @@ function updateLanguage() {
     } else {
       lf.innerHTML = t('legalFull')
     }
+  }
+  
+  // 更新预览面板文本
+  const previewPanelTitle = document.getElementById('previewPanelTitle')
+  if (previewPanelTitle) {
+    previewPanelTitle.textContent = t('previewTitle')
+  }
+  
+  const previewDragText = document.getElementById('previewDragText')
+  if (previewDragText) {
+    previewDragText.textContent = t('previewDragHint')
+  }
+  
+  const previewPasteText = document.getElementById('previewPasteText')
+  if (previewPasteText) {
+    previewPasteText.textContent = t('previewPasteHint')
+  }
+  
+  // 更新批量操作按钮 tooltip
+  const downloadAllBtn = document.getElementById('downloadAllBtn')
+  if (downloadAllBtn) {
+    downloadAllBtn.setAttribute('title', t('downloadAllText'))
+  }
+  
+  const clearAllBtn = document.getElementById('clearAllBtn')
+  if (clearAllBtn) {
+    clearAllBtn.setAttribute('title', t('clearAllText'))
   }
   
   // 保存语言设置
@@ -791,6 +837,326 @@ if(infTarget && infTarget.addEventListener){
   }
   explorerTitlebar.addEventListener('mousedown',onDown)
   explorerTitlebar.addEventListener('touchstart',onDown,{passive:true})
+})()
+
+// GIF 预览面板功能
+;(function initPreviewPanel(){
+  const previewToggle = document.getElementById('previewToggle')
+  const previewPanel = document.getElementById('previewPanel')
+  const previewClose = document.getElementById('previewClose')
+  const previewUploadArea = document.getElementById('previewUploadArea')
+  const previewGallery = document.getElementById('previewGallery')
+  const previewActions = document.getElementById('previewActions')
+  const downloadAllBtn = document.getElementById('downloadAllBtn')
+  const clearAllBtn = document.getElementById('clearAllBtn')
+  
+  if (!previewToggle || !previewPanel) return
+  
+  let previewFiles = []
+  
+  // 切换预览面板显示/隐藏
+  function togglePreviewPanel() {
+    const isVisible = previewPanel.style.display !== 'none'
+    previewPanel.style.display = isVisible ? 'none' : 'flex'
+    
+    // 如果是首次打开，初始化拖拽功能
+    if (!isVisible && !previewPanel.dataset.initialized) {
+      initPreviewDragDrop()
+      previewPanel.dataset.initialized = 'true'
+    }
+  }
+  
+  // 初始化拖拽功能
+  async function initPreviewDragDrop() {
+    try {
+      const { setupDragAndDrop, setupPasteSupport } = await import('../tools/common/fileUploadHelpers.js')
+      
+      // 设置拖拽支持
+      setupDragAndDrop({
+        uploadArea: previewUploadArea,
+        onFilesDropped: handlePreviewFiles,
+        acceptType: 'image/gif'
+      })
+      
+      // 设置粘贴支持
+      setupPasteSupport({
+        onFilesPasted: handlePreviewFiles,
+        acceptType: 'image/gif'
+      })
+      
+    } catch (err) {
+      console.warn('Failed to load file upload helpers:', err)
+    }
+  }
+  
+  // 处理预览文件
+  function handlePreviewFiles(files) {
+    files.forEach(fileObj => {
+      const { file, path } = fileObj
+      const url = URL.createObjectURL(file)
+      
+      const previewItem = {
+        id: Date.now() + Math.random(),
+        file,
+        path,
+        url,
+        name: file.name,
+        size: file.size
+      }
+      
+      previewFiles.push(previewItem)
+      renderPreviewItem(previewItem)
+    })
+    
+    // 隐藏上传提示，显示批量操作按钮
+    if (previewFiles.length > 0) {
+      previewUploadArea.style.display = 'none'
+      if (previewActions) {
+        previewActions.style.display = 'flex'
+      }
+    }
+  }
+  
+  // 渲染预览项
+  function renderPreviewItem(item) {
+    const div = document.createElement('div')
+    div.className = 'preview-item'
+    div.dataset.id = item.id
+    
+    const img = document.createElement('img')
+    img.src = item.url
+    img.alt = item.name
+    img.loading = 'lazy'
+    
+    const info = document.createElement('div')
+    info.className = 'preview-item-info'
+    info.textContent = `${item.name} (${formatFileSize(item.size)})`
+    
+    const removeBtn = document.createElement('button')
+    removeBtn.className = 'preview-item-remove'
+    removeBtn.innerHTML = '×'
+    removeBtn.title = 'Remove'
+    removeBtn.addEventListener('click', (e) => {
+      e.stopPropagation()
+      removePreviewItem(item.id)
+    })
+    
+    // 悬停时显示在托盘图标
+    div.addEventListener('mouseenter', () => {
+      setTrayIcon(item.url, img)
+    })
+    
+    div.addEventListener('mouseleave', () => {
+      clearTrayIcon()
+    })
+    
+    div.appendChild(img)
+    div.appendChild(info)
+    div.appendChild(removeBtn)
+    previewGallery.appendChild(div)
+  }
+  
+  // 移除预览项
+  function removePreviewItem(id) {
+    const index = previewFiles.findIndex(item => item.id === id)
+    if (index > -1) {
+      const item = previewFiles[index]
+      URL.revokeObjectURL(item.url)
+      previewFiles.splice(index, 1)
+      
+      const element = previewGallery.querySelector(`[data-id="${id}"]`)
+      if (element) {
+        element.remove()
+      }
+      
+      // 如果没有文件了，显示上传提示，隐藏批量操作按钮
+      if (previewFiles.length === 0) {
+        previewUploadArea.style.display = 'block'
+        if (previewActions) {
+          previewActions.style.display = 'none'
+        }
+      }
+    }
+  }
+  
+  // 格式化文件大小
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B'
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
+  }
+  
+  // 批量下载为 ZIP
+  async function downloadAllAsZip() {
+    if (previewFiles.length === 0) return
+    
+    // 禁用下载按钮，显示加载状态
+    const downloadBtn = document.getElementById('downloadAllBtn')
+    const originalTitle = downloadBtn ? downloadBtn.title : ''
+    if (downloadBtn) {
+      downloadBtn.disabled = true
+      downloadBtn.style.opacity = '0.6'
+      downloadBtn.title = 'Downloading...'
+    }
+    
+    try {
+      // 动态加载 JSZip 库
+      let JSZip
+      if (typeof window.JSZip === 'undefined') {
+        // 如果 JSZip 未加载，动态加载
+        const script = document.createElement('script')
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'
+        document.head.appendChild(script)
+        
+        // 等待脚本加载完成
+        await new Promise((resolve, reject) => {
+          script.onload = resolve
+          script.onerror = reject
+        })
+        
+        JSZip = window.JSZip
+      } else {
+        JSZip = window.JSZip
+      }
+      
+      if (!JSZip) {
+        throw new Error('JSZip library failed to load')
+      }
+      
+      const zip = new JSZip()
+      
+      // 添加所有文件到 ZIP
+      for (const item of previewFiles) {
+        try {
+          const response = await fetch(item.url)
+          if (!response.ok) {
+            throw new Error(`Failed to fetch ${item.name}`)
+          }
+          const blob = await response.blob()
+          zip.file(item.name, blob)
+        } catch (fileErr) {
+          console.warn(`跳过文件 ${item.name}:`, fileErr)
+          // 继续处理其他文件，不中断整个过程
+        }
+      }
+      
+      // 检查是否有文件被成功添加
+      if (Object.keys(zip.files).length === 0) {
+        throw new Error('No files were successfully added to the ZIP')
+      }
+      
+      // 生成 ZIP 文件
+      const zipBlob = await zip.generateAsync({ 
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: { level: 6 }
+      })
+      
+      // 下载 ZIP 文件
+      const url = URL.createObjectURL(zipBlob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `MemeTray-Preview-${new Date().toISOString().slice(0, 10)}.zip`
+      link.style.display = 'none'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      
+      // 延迟清理 URL，确保下载开始
+      setTimeout(() => {
+        URL.revokeObjectURL(url)
+      }, 1000)
+      
+      console.log(`成功下载 ${Object.keys(zip.files).length} 个文件`)
+      
+    } catch (err) {
+      console.error('下载失败:', err)
+      
+      // 提供备用下载方案
+      const fallbackDownload = confirm(`ZIP 打包下载失败: ${err.message}\n\n是否要逐个下载文件？`)
+      if (fallbackDownload) {
+        downloadFilesIndividually()
+      }
+    } finally {
+      // 恢复下载按钮状态
+      if (downloadBtn) {
+        downloadBtn.disabled = false
+        downloadBtn.style.opacity = '1'
+        downloadBtn.title = originalTitle
+      }
+    }
+  }
+  
+  // 备用下载方案：逐个下载文件
+  async function downloadFilesIndividually() {
+    for (let i = 0; i < previewFiles.length; i++) {
+      const item = previewFiles[i]
+      try {
+        const response = await fetch(item.url)
+        const blob = await response.blob()
+        const url = URL.createObjectURL(blob)
+        
+        const link = document.createElement('a')
+        link.href = url
+        link.download = item.name
+        link.style.display = 'none'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        
+        URL.revokeObjectURL(url)
+        
+        // 添加延迟避免浏览器阻止多个下载
+        if (i < previewFiles.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 500))
+        }
+      } catch (err) {
+        console.warn(`下载文件 ${item.name} 失败:`, err)
+      }
+    }
+  }
+  
+  // 清空所有文件
+  function clearAllFiles() {
+    if (previewFiles.length === 0) return
+    
+    // 清理所有 blob URL
+    previewFiles.forEach(item => {
+      URL.revokeObjectURL(item.url)
+    })
+    
+    // 清空数组和界面
+    previewFiles = []
+    previewGallery.innerHTML = ''
+    
+    // 显示上传提示，隐藏批量操作按钮
+    previewUploadArea.style.display = 'block'
+    if (previewActions) {
+      previewActions.style.display = 'none'
+    }
+  }
+  
+  // 事件监听
+  previewToggle.addEventListener('click', togglePreviewPanel)
+  previewClose.addEventListener('click', togglePreviewPanel)
+  
+  // 批量操作按钮事件
+  if (downloadAllBtn) {
+    downloadAllBtn.addEventListener('click', downloadAllAsZip)
+  }
+  
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener('click', clearAllFiles)
+  }
+  
+  // 点击面板外部关闭
+  document.addEventListener('click', (e) => {
+    if (previewPanel.style.display !== 'none' && 
+        !previewPanel.contains(e.target) && 
+        !previewToggle.contains(e.target)) {
+      previewPanel.style.display = 'none'
+    }
+  })
 })()
 
 // 窗口缩放（旧逻辑移除，保留新版）
