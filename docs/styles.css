@@ -160,9 +160,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .crumb .sep{opacity:.6}
 .crumb:hover{text-decoration:underline}
 .crumb--link{opacity:.8}
-.crumb--current{opacity:1;color:var(--text);font-weight:600;cursor:default}
+.crumb--current{opacity:1;color:var(--text);font-weight:600;cursor:default;transition:all .15s ease}
+.crumb--current:hover{color:var(--accent);text-decoration:underline}
 .sep--chev{opacity:.45}
-.count-badge{margin-left:6px;padding:0 6px;height:18px;line-height:18px;border-radius:999px;background:rgba(0,0,0,.45);color:#fff;font-size:11px;display:inline-flex;align-items:center;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.count-badge{margin-left:6px;padding:0 6px;height:18px;line-height:18px;border-radius:999px;background:rgba(0,0,0,.45);color:#fff;font-size:11px;display:inline-flex;align-items:center;text-shadow:0 1px 2px rgba(0,0,0,.25);transition:all .15s ease}
+.count-badge:hover{background:rgba(14,165,233,.8);transform:scale(1.05)}
 
 /* 标题栏内的面包屑采用横向排列 */
 .window-title #windowTitleText{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}

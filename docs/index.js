@@ -46,7 +46,9 @@ const translations = {
     previewDragHint: '拖拽 GIF 文件到这里',
     previewPasteHint: '或使用 Ctrl+V 粘贴',
     downloadAllText: '下载全部为 ZIP',
-    clearAllText: '清空全部'
+    clearAllText: '清空全部',
+    openRepository: '打开 GitHub 仓库',
+    openConfig: '打开配置文件'
   },
   en: {
     loading: 'Loading',
@@ -66,7 +68,9 @@ const translations = {
     previewDragHint: 'Drag & Drop GIF files here',
     previewPasteHint: 'or paste with Ctrl+V',
     downloadAllText: 'Download All as ZIP',
-    clearAllText: 'Clear All'
+    clearAllText: 'Clear All',
+    openRepository: 'Open GitHub Repository',
+    openConfig: 'Open Config File'
   }
 }
 
@@ -432,12 +436,25 @@ function renderBreadcrumbs(){
       const isLast=idx===parts.length-1
       const span=document.createElement('span'); span.className='crumb ' + (isLast?'crumb--current':'crumb--link')
       span.textContent=name
+      
+      // 添加点击事件
       if(!isLast){
         span.addEventListener('click',()=>{
           if(idx===0) return enterRoot()
           if(idx===1) return enterFolder(navState.currentKey)
         })
+      } else if(isLast && idx === 1 && navState.view === 'folder') {
+        // 当前分类名称，点击跳转到 GitHub 仓库
+        span.style.cursor = 'pointer'
+        span.title = t('openRepository')
+        span.addEventListener('click', () => {
+          const sec = sections && sections.find(s => s.key === navState.currentKey)
+          if (sec && sec.repository) {
+            window.open(sec.repository, '_blank', 'noopener,noreferrer')
+          }
+        })
       }
+      
       titleTextEl.appendChild(span)
       if(idx<parts.length-1){
         const sep=document.createElement('span'); sep.className='sep sep--chev'; sep.textContent='›'
@@ -451,6 +468,17 @@ function renderBreadcrumbs(){
         const cnt=document.createElement('span')
         cnt.className='count-badge'
         cnt.textContent=String(sec.files.length)
+        cnt.style.cursor = 'pointer'
+        cnt.title = t('openConfig')
+        
+        // 点击数量标签跳转到 config.json
+        cnt.addEventListener('click', () => {
+          if (sec.repository) {
+            const configUrl = `${sec.repository}/blob/main/config.json`
+            window.open(configUrl, '_blank', 'noopener,noreferrer')
+          }
+        })
+        
         titleTextEl.appendChild(cnt)
       }
     }
