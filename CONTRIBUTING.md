@@ -14,7 +14,7 @@ MemeTray welcomes contributions and corrections. Before contributing, please mak
   - [Dimensions](#dimensions)
   - [Naming Convention](#naming-convention)
   - [Background Removal](#background-removal)
-- [Updating `index.json`](#updating-indexjson)
+- [Updating `sections.json`](#updating-sectionsjson)
 - [Content We Do Not Accept](#content-we-do-not-accept)
 - [Code of Conduct](#code-of-conduct)
 
@@ -49,7 +49,7 @@ Each commit should include a type prefix, for example:
 -   `feat:` for adding new GIFs or features.
     -   `feat: Add 10 new cat memes`
 -   `fix:` for correcting issues or errors.
-    -   `fix: Correct count for doro collection in index.json`
+    -   `fix: Correct count for doro collection in sections.json`
 -   `docs:` for updating documentation, such as `README.md` or `CONTRIBUTING.md`.
     -   `docs: Update contribution guidelines`
 
@@ -87,9 +87,9 @@ Many GIFs come with a white or solid-colored background. We encourage contributo
 - **Priority**: If two versions of the same GIF exist (one with a background and one without), we will prioritize the version without the background.
 - You are welcome to submit versions with backgrounds removed to replace existing ones.
 
-## Updating `index.json`
+## Updating `sections.json`
 
-After adding or deleting GIFs, you **must** update the `gifs/index.json` file in the root directory.
+After adding or deleting GIFs, you **must** update the `docs/sections.json` file.
 
 **> Why is a manual update required?**
 > We previously attempted to generate the index automatically by probing for files, but this approach led to significant initial loading times. To ensure a fast user experience, we have opted for a static index file, which requires manual updates from contributors.

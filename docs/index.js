@@ -440,14 +440,14 @@ setInterval(updateClock,1000);updateClock()
 // 托盘图标根据悬停动态显示
 
 function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
-// 已移除网络探针逻辑，数量完全由 index.json 提供
+// 已移除网络探针逻辑，数量完全由 sections.json 提供
 
 async function fetchSections(){
   if(sections && sections.length){buildItems();return}
   try{
     // 仅使用本地静态索引，避免任何外部 API 依赖
-    const localIdx=await fetch(GIF_BASE+"index.json",{cache:'no-store'})
-    if(!localIdx.ok) throw new Error('index.json not found')
+    const localIdx=await fetch("./sections.json",{cache:'no-store'})
+    if(!localIdx.ok) throw new Error('sections.json not found')
     const data=await localIdx.json()
     if(!Array.isArray(data.sections) || !data.sections.length) throw new Error('empty sections')
     // 严格要求 { dir, count } 结构，自动生成 baseUrl 和 repository

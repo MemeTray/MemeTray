@@ -8,7 +8,7 @@ Thank you for your contribution to MemeTray! To help us review your Pull Request
 
 - [ ] I have read and agree to the **[Contributing Guidelines](./CONTRIBUTING.md)**.
 - [ ] I have read and agree to the **[Legal Disclaimer](./DISCLAIMER.md)**.
-- [ ] I have updated the `gifs/index.json` file to reflect my changes, if necessary.
+- [ ] I have updated the `docs/sections.json` file to reflect my changes, if necessary.
 
 ## Description of Changes
 
@@ -24,4 +24,4 @@ Please provide a clear and concise description of what you have changed.
 
 **Example:**
 *Added 15 new GIFs to the `catmeme` category.*
-*Updated `gifs/index.json` to reflect the new count.*
+*Updated `docs/sections.json` to reflect the new count.*
