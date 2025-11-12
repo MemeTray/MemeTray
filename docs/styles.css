@@ -108,7 +108,8 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .desktop{position:fixed;inset:0;z-index:0;background-image:url("https://t.alcy.cc/moe");background-size:cover;background-position:center;background-repeat:no-repeat;filter:saturate(1.05)}
 .window{position:fixed;z-index:500;left:8px;top:8px;width:calc(100vw - 16px);height:calc(100vh - 48px - 16px);display:flex;flex-direction:column;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-bg);box-shadow:var(--glass-shadow), inset 0 0 0 1px rgba(255,255,255,.25);overflow:hidden;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .window-titlebar{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px 0 6px;background:var(--glass-bg);border-bottom:1px solid var(--glass-border);cursor:move;user-select:none;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
-.window-title{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding-top:2px;padding-bottom:2px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.window-title{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding-top:2px;padding-bottom:2px;text-shadow:0 1px 2px rgba(0,0,0,.25);cursor:pointer;transition:color .15s ease}
+.window-title:hover{color:var(--accent)}
 .window-title img{display:block}
 .nav-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--glass-border);border-radius:6px;background:var(--glass-bg);color:var(--text);cursor:pointer;backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px)}
 .nav-btn[disabled]{opacity:.5;cursor:default}

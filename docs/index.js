@@ -439,7 +439,8 @@ function renderBreadcrumbs(){
       
       // 添加点击事件
       if(!isLast){
-        span.addEventListener('click',()=>{
+        span.addEventListener('click',(e)=>{
+          e.stopPropagation() // 阻止事件冒泡到窗口标题
           if(idx===0) return enterRoot()
           if(idx===1) return enterFolder(navState.currentKey)
         })
@@ -447,7 +448,8 @@ function renderBreadcrumbs(){
         // 当前分类名称，点击跳转到 GitHub 仓库
         span.style.cursor = 'pointer'
         span.title = t('openRepository')
-        span.addEventListener('click', () => {
+        span.addEventListener('click', (e) => {
+          e.stopPropagation() // 阻止事件冒泡到窗口标题
           const sec = sections && sections.find(s => s.key === navState.currentKey)
           if (sec && sec.repository) {
             window.open(sec.repository, '_blank', 'noopener,noreferrer')
@@ -472,7 +474,8 @@ function renderBreadcrumbs(){
         cnt.title = t('openConfig')
         
         // 点击数量标签跳转到 config.json
-        cnt.addEventListener('click', () => {
+        cnt.addEventListener('click', (e) => {
+          e.stopPropagation() // 阻止事件冒泡到窗口标题
           if (sec.repository) {
             const configUrl = `${sec.repository}/blob/main/config.json`
             window.open(configUrl, '_blank', 'noopener,noreferrer')
@@ -492,6 +495,17 @@ function renderBreadcrumbs(){
 // 按钮事件
 btnBack&&btnBack.addEventListener('click',()=>{
   if(navState.view==='folder') enterRoot()
+})
+
+// 窗口标题点击事件
+windowTitle&&windowTitle.addEventListener('click',()=>{
+  if(navState.view==='root') {
+    // 在主目录时点击 MemeTray 跳转到 GitHub
+    window.open('https://github.com/MemeTray/MemeTray', '_blank', 'noopener,noreferrer')
+  } else if(navState.view==='folder') {
+    // 在子目录时点击 MemeTray 返回主目录
+    enterRoot()
+  }
 })
 
 // 已移除复制路径按钮
