@@ -1,0 +1,68 @@
+/* ========================================
+   MemeTray 通用任务栏和预览面板样式
+   直接使用原始类名，保持完全一致
+   ======================================== */
+
+/* 任务栏模拟 */
+.taskbar{position:fixed;bottom:0;left:0;right:0;z-index:1000;color:#0b1220;background:transparent;height:48px;border-radius:0;margin-top:0}
+.taskbar--light{background:transparent}
+.taskcont{position:relative;width:100%;height:100%}
+.taskright{position:absolute;top:0;right:0;height:100%;display:flex;align-items:center;gap:8px;padding-right:8px}
+.tray{display:flex;align-items:center;gap:6px;padding:0 6px;background:transparent}
+.tray-icon{width:20px;height:20px;border-radius:4px;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tray-icon img{width:100%;height:100%;object-fit:contain}
+.tasksCont{width:100%;height:100%;display:flex;flex-direction:column}
+.tasksCont[data-side="center"]{align-items:center}
+.tsbar{height:100%;display:flex;align-items:center}
+.tsIcon{position:relative;width:38px;height:38px;margin:auto 3px;box-sizing:border-box;border-radius:4px;transition:all .2s ease}
+.tsIcon:after{content:"";position:absolute;bottom:0;width:0;height:3px;border-radius:4px;background:#858585;transition:all .2s ease-in-out}
+.tsIcon:hover{background:rgba(255,255,255,.67)}
+.taskIcon{display:flex;flex-direction:row;align-items:center;justify-content:center;width:24px}
+.prtclk{display:flex;align-items:center;gap:6px}
+.taskDate{display:flex;padding:0 8px;font-size:12px;flex-direction:column;justify-content:center}
+.taskDate div{text-align:center;font-weight:400}
+.graybd{border:solid 1px transparent;height:1rem}
+.graybd:hover{border:solid 1px #a1a1a1;border-width:0 0 0 2px}
+.hvlight:hover{background:transparent;transition:all 200ms ease-in-out}
+.battery{display:flex;position:relative}
+.btFull{overflow:hidden;position:absolute;z-index:0}
+.charger svg{position:absolute;z-index:1}
+
+/* spacing utilities to match win11React */
+.flex{display:flex;align-items:center}
+.px-2{padding-left:8px;padding-right:8px}
+.px-1{padding-left:4px;padding-right:4px}
+.my-1{margin-top:4px;margin-bottom:4px}
+.my-4{margin-top:16px;margin-bottom:16px}
+.m-1{margin:4px}
+.rounded{border-radius:6px}
+.taskright>.px-2{margin-right:4px}
+.handcr{cursor:pointer}
+.uicon.taskIcon{display:flex;align-items:center}
+.prtclk img.taskIcon{width:16px;height:16px;display:block;margin:0}
+
+/* GIF 预览面板 */
+.preview-panel{position:fixed;top:60px;right:12px;width:480px;max-height:calc(100vh - 120px);background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.35);border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,.18);backdrop-filter:saturate(1.8) blur(22px);-webkit-backdrop-filter:saturate(1.8) blur(22px);z-index:1000;display:flex;flex-direction:column;overflow:hidden}
+.preview-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.2)}
+.preview-header-left{display:flex;align-items:center;gap:8px}
+.preview-header h3{margin:0;font-size:14px;color:#0b1220;font-weight:600}
+.preview-close{background:none;border:none;font-size:18px;color:#6b7280;cursor:pointer;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:background .15s ease}
+.preview-close:hover{background:rgba(0,0,0,.1);color:#0b1220}
+.preview-upload-area{padding:20px;border:2px dashed rgba(255,255,255,0.35);margin:12px;border-radius:8px;text-align:center;transition:border-color .15s ease,background .15s ease}
+.preview-upload-area.dragover{border-color:#0ea5e9;background:rgba(14,165,233,.05)}
+.upload-hint{color:#6b7280}
+.upload-hint svg{margin-bottom:8px;opacity:.6}
+.upload-hint p{margin:4px 0;font-size:13px}
+.upload-hint-sub{font-size:11px;opacity:.7}
+.preview-gallery{flex:1;overflow-y:auto;padding:8px 12px 12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;max-height:500px}
+.preview-item{position:relative;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;background:#ffffff;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;height:120px;display:flex;align-items:center;justify-content:center}
+.preview-item:hover{transform:scale(1.02);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.preview-item img{max-width:100%;max-height:100%;object-fit:contain}
+.preview-item-info{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;padding:4px 6px;font-size:10px;line-height:1.2}
+.preview-item-remove{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s ease}
+.preview-item:hover .preview-item-remove{opacity:1}
+.preview-item-remove:hover{background:rgba(220,38,38,.8)}
+.preview-header-actions{display:flex;align-items:center;gap:2px}
+.preview-header-btn{background:none;border:none;color:#6b7280;cursor:pointer;padding:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:all .15s ease}
+.preview-header-btn:hover{background:rgba(0,0,0,.1);color:#0b1220;transform:scale(1.1)}
+.preview-header-btn:active{transform:scale(0.95)}

@@ -157,6 +157,13 @@ body {
     flex-direction: column;
 }
 
+.input-hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    opacity: 0.8;
+}
+
 label {
     font-size: 12px;
     font-weight: 500;
@@ -199,16 +206,11 @@ input[type="text"]:focus {
     border-radius: 12px;
     padding: 60px 20px;
     text-align: center;
-    cursor: pointer;
     transition: all 0.3s ease;
     margin-bottom: 20px;
     backdrop-filter: saturate(1.8) blur(22px);
     -webkit-backdrop-filter: saturate(1.8) blur(22px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .08);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
 }
 
 .upload-area:hover {
@@ -222,20 +224,25 @@ input[type="text"]:focus {
     border-color: var(--accent);
 }
 
-.upload-icon {
+.upload-area input[type="file"] {
+    display: none;
+}
+
+.upload-area label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.upload-area svg {
     color: var(--accent);
 }
 
-.upload-text {
+.upload-area span {
     color: var(--muted);
     font-size: 14px;
-    margin: 0;
-}
-
-.upload-hint {
-    color: var(--muted);
-    font-size: 14px;
-    margin: 0;
 }
 
 /* 文件列表 */

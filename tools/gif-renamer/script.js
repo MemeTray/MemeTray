@@ -23,20 +23,19 @@ function init() {
 // 设置事件监听器
 function setupEventListeners() {
     // 文件上传
-    uploadArea.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', handleFileSelect);
-    
+
     // 拖拽上传
     uploadArea.addEventListener('dragover', handleDragOver);
     uploadArea.addEventListener('dragleave', handleDragLeave);
     uploadArea.addEventListener('drop', handleDrop);
-    
+
     // 配置更新
     startNumberInput.addEventListener('input', updatePreview);
-    suffixInput.addEventListener('input', updatePreview);
+    suffixInput.addEventListener('input', handleSuffixInput);
     startNumberInput.addEventListener('input', updateFileList);
     suffixInput.addEventListener('input', updateFileList);
-    
+
     // 按钮事件
     clearBtn.addEventListener('click', clearAll);
     downloadBtn.addEventListener('click', downloadFiles);
@@ -45,16 +44,15 @@ function setupEventListeners() {
 // 更新预览
 function updatePreview() {
     const startNum = Math.max(1, Math.min(9999, parseInt(startNumberInput.value) || 1));
-    const suffix = suffixInput.value.trim().replace(/[^a-zA-Z0-9-_]/g, '') || 'doro';
-    
-    // 更新输入框值（清理无效字符）
-    if (startNumberInput.value !== String(startNum)) {
-        startNumberInput.value = startNum;
+    const rawSuffix = suffixInput.value;
+    const cleanedSuffix = rawSuffix.trim().replace(/[^a-zA-Z0-9-_]/g, '');
+    const suffix = cleanedSuffix || 'doro';
+
+    // 只在需要时清理输入（删除非法字符）
+    if (rawSuffix !== cleanedSuffix && rawSuffix.trim() !== '') {
+        suffixInput.value = cleanedSuffix;
     }
-    if (suffixInput.value !== suffix) {
-        suffixInput.value = suffix;
-    }
-    
+
     const paddedNum = String(startNum).padStart(4, '0');
     preview.textContent = `${paddedNum}_${suffix}.gif`;
 }
@@ -165,6 +163,32 @@ function processFiles(newFiles) {
     if (newFiles.length > 0) {
         console.log(`Added ${newFiles.length} files. Total: ${files.length} files`);
     }
+}
+
+// 处理suffix输入
+function handleSuffixInput() {
+    const rawValue = suffixInput.value;
+    const cleanedValue = rawValue.replace(/[^a-zA-Z0-9-_]/g, '');
+
+    // 如果用户输入了非法字符，实时清理
+    if (rawValue !== cleanedValue) {
+        suffixInput.value = cleanedValue;
+    }
+
+    // 如果清空输入框，提供视觉反馈
+    if (cleanedValue === '') {
+        suffixInput.style.borderColor = 'var(--warning)';
+        suffixInput.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
+
+        // 3秒后恢复正常样式
+        setTimeout(() => {
+            suffixInput.style.borderColor = '';
+            suffixInput.style.backgroundColor = '';
+        }, 3000);
+    }
+
+    updatePreview();
+    updateFileList();
 }
 
 // 更新文件列表显示

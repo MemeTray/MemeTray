@@ -1,3 +1,6 @@
+// 导入任务栏和预览面板模块
+import { initMemeTrayUI } from '../tools/common/taskbarPreview.js'
+
 let sections=window.MEMETRAY_SECTIONS||[]
 const GIF_BASE=location.pathname.includes('/docs/')?'../gifs/':'./gifs/'
 const container=document.getElementById("container")
@@ -14,9 +17,6 @@ const breadcrumbs=document.getElementById('breadcrumbs')
 // 移除复制路径按钮
 const resizeHandles=[...document.querySelectorAll('#explorer .resize-handle')]
 const sectionSelect={value:'all'}
-const trayIcon=document.getElementById("trayIcon")
-const clockTime=document.getElementById("clock-time")
-const clockDate=document.getElementById("clock-date")
 const infiniteLoader=document.getElementById('infiniteLoader')
 
 const ITEMS_PER_PAGE = 50
@@ -510,53 +510,6 @@ windowTitle&&windowTitle.addEventListener('click',()=>{
 
 // 已移除复制路径按钮
 
-function setTrayIcon(src, sourceImg = null){
-  if(!trayIcon) return
-  trayIcon.innerHTML=""
-  
-  // 如果提供了源图片且已加载完成，尝试直接复制当前帧
-  if(sourceImg && sourceImg.complete && sourceImg.naturalWidth > 0) {
-    try {
-      // 方法1：直接克隆图片元素（最简单，但可能重新开始播放）
-      const clonedImg = sourceImg.cloneNode(true)
-      clonedImg.alt = "tray"
-      // 移除可能的类名和事件监听器
-      clonedImg.className = ""
-      clonedImg.style.width = "100%"
-      clonedImg.style.height = "100%"
-      clonedImg.style.objectFit = "contain"
-      trayIcon.appendChild(clonedImg)
-      return
-    } catch (err) {
-      console.warn("Failed to clone image:", err)
-    }
-  }
-  
-  // 降级方案：创建新的图片元素
-  const img=document.createElement("img")
-  img.src=src
-  img.alt="tray"
-  img.style.width = "100%"
-  img.style.height = "100%"
-  img.style.objectFit = "contain"
-  trayIcon.appendChild(img)
-}
-function clearTrayIcon(){
-  if(trayIcon){
-    trayIcon.innerHTML=""
-  }
-}
-
-// 时钟
-function formatDate(d){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return y+"/"+m+"/"+day}
-function updateClock(){const d=new Date();const hh=String(d.getHours()).padStart(2,'0');const mm=String(d.getMinutes()).padStart(2,'0');const ss=String(d.getSeconds()).padStart(2,'0');
-  if(clockTime) clockTime.textContent=hh+":"+mm+":"+ss;
-  if(clockDate) clockDate.textContent=formatDate(d);
-}
-setInterval(updateClock,1000);updateClock()
-
-// 托盘图标根据悬停动态显示
-
 function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
 // 已移除网络探针逻辑，数量完全由 sections.json 提供
 
@@ -877,336 +830,49 @@ if(infTarget && infTarget.addEventListener){
   explorerTitlebar.addEventListener('touchstart',onDown,{passive:true})
 })()
 
-// GIF 预览面板功能
-;(function initPreviewPanel(){
-  const previewToggle = document.getElementById('previewToggle')
-  const previewPanel = document.getElementById('previewPanel')
-  const previewClose = document.getElementById('previewClose')
-  const previewUploadArea = document.getElementById('previewUploadArea')
-  const previewGallery = document.getElementById('previewGallery')
-  const previewActions = document.getElementById('previewActions')
-  const downloadAllBtn = document.getElementById('downloadAllBtn')
-  const clearAllBtn = document.getElementById('clearAllBtn')
-  
-  if (!previewToggle || !previewPanel) return
-  
-  let previewFiles = []
-  
-  // 切换预览面板显示/隐藏
-  function togglePreviewPanel() {
-    const isVisible = previewPanel.style.display !== 'none'
-    previewPanel.style.display = isVisible ? 'none' : 'flex'
-    
-    // 如果是首次打开，初始化拖拽功能
-    if (!isVisible && !previewPanel.dataset.initialized) {
-      initPreviewDragDrop()
-      previewPanel.dataset.initialized = 'true'
-    }
-  }
-  
-  // 初始化拖拽功能
-  async function initPreviewDragDrop() {
-    try {
-      const { setupDragAndDrop, setupPasteSupport } = await import('../tools/common/fileUploadHelpers.js')
-      
-      // 设置拖拽支持
-      setupDragAndDrop({
-        uploadArea: previewUploadArea,
-        onFilesDropped: handlePreviewFiles,
-        acceptType: 'image/gif'
+// 初始化任务栏和预览面板（使用通用模块）
+let memeTrayUI = null
+;(async function initMemeTrayComponents() {
+  try {
+    memeTrayUI = initMemeTrayUI({
+      taskbar: {
+        containerId: 'taskbar',
+        showClock: true,
+        showTrayIcon: true,
+        showSystemIcons: true
+      },
+      preview: {
+        containerId: 'previewPanel',
+        title: t('previewTitle'),
+        dragHint: t('previewDragHint'),
+        pasteHint: t('previewPasteHint'),
+        downloadAllText: t('downloadAllText'),
+        clearAllText: t('clearAllText')
+      }
+    })
+
+    // 绑定预览切换按钮
+    const previewToggle = document.getElementById('previewToggle')
+    if (previewToggle) {
+      previewToggle.addEventListener('click', () => {
+        memeTrayUI.preview.toggle()
       })
-      
-      // 设置粘贴支持
-      setupPasteSupport({
-        onFilesPasted: handlePreviewFiles,
-        acceptType: 'image/gif'
-      })
-      
-    } catch (err) {
-      console.warn('Failed to load file upload helpers:', err)
     }
-  }
-  
-  // 处理预览文件
-  function handlePreviewFiles(files) {
-    console.log(`处理 ${files.length} 个文件`)
-    
-    files.forEach((fileObj, index) => {
-      const { file, path } = fileObj
-      
-      // 检查文件类型
-      if (!file.type.startsWith('image/')) {
-        console.warn(`跳过非图片文件: ${file.name} (${file.type})`)
-        return
-      }
-      
-      const url = URL.createObjectURL(file)
-      
-      const previewItem = {
-        id: `${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
-        file,
-        path,
-        url,
-        name: file.name,
-        size: file.size
-      }
-      
-      previewFiles.push(previewItem)
-      renderPreviewItem(previewItem)
-      console.log(`添加文件: ${file.name}`)
-    })
-    
-    // 隐藏上传提示，显示批量操作按钮
-    if (previewFiles.length > 0) {
-      previewUploadArea.style.display = 'none'
-      if (previewActions) {
-        previewActions.style.display = 'flex'
+
+    // 添加图片悬停时的托盘图标显示功能（保留原有行为）
+    window.setTrayIcon = (src, img) => {
+      if (memeTrayUI) {
+        memeTrayUI.taskbar.setTrayIcon(src, img)
       }
     }
-    
-    console.log(`文件处理完成，当前预览文件总数: ${previewFiles.length}`)
-  }
-  
-  // 渲染预览项
-  function renderPreviewItem(item) {
-    const div = document.createElement('div')
-    div.className = 'preview-item'
-    div.dataset.id = item.id
-    
-    const img = document.createElement('img')
-    img.src = item.url
-    img.alt = item.name
-    img.loading = 'lazy'
-    
-    const info = document.createElement('div')
-    info.className = 'preview-item-info'
-    info.textContent = `${item.name} (${formatFileSize(item.size)})`
-    
-    const removeBtn = document.createElement('button')
-    removeBtn.className = 'preview-item-remove'
-    removeBtn.innerHTML = '×'
-    removeBtn.title = 'Remove'
-    removeBtn.addEventListener('click', (e) => {
-      e.stopPropagation()
-      removePreviewItem(item.id)
-    })
-    
-    // 悬停时显示在托盘图标
-    div.addEventListener('mouseenter', () => {
-      setTrayIcon(item.url, img)
-    })
-    
-    div.addEventListener('mouseleave', () => {
-      clearTrayIcon()
-    })
-    
-    div.appendChild(img)
-    div.appendChild(info)
-    div.appendChild(removeBtn)
-    previewGallery.appendChild(div)
-  }
-  
-  // 移除预览项
-  function removePreviewItem(id) {
-    const index = previewFiles.findIndex(item => item.id === id)
-    if (index > -1) {
-      const item = previewFiles[index]
-      URL.revokeObjectURL(item.url)
-      previewFiles.splice(index, 1)
-      
-      const element = previewGallery.querySelector(`[data-id="${id}"]`)
-      if (element) {
-        element.remove()
-      }
-      
-      // 如果没有文件了，显示上传提示，隐藏批量操作按钮
-      if (previewFiles.length === 0) {
-        previewUploadArea.style.display = 'block'
-        if (previewActions) {
-          previewActions.style.display = 'none'
-        }
+    window.clearTrayIcon = () => {
+      if (memeTrayUI) {
+        memeTrayUI.taskbar.clearTrayIcon()
       }
     }
+  } catch (err) {
+    console.error('Failed to initialize MemeTray UI:', err)
   }
-  
-  // 格式化文件大小
-  function formatFileSize(bytes) {
-    if (bytes < 1024) return bytes + ' B'
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
-  }
-  
-  // 批量下载为 ZIP
-  async function downloadAllAsZip() {
-    if (previewFiles.length === 0) return
-    
-    // 禁用下载按钮，显示加载状态
-    const downloadBtn = document.getElementById('downloadAllBtn')
-    const originalTitle = downloadBtn ? downloadBtn.title : ''
-    if (downloadBtn) {
-      downloadBtn.disabled = true
-      downloadBtn.style.opacity = '0.6'
-      downloadBtn.title = 'Downloading...'
-    }
-    
-    try {
-      // 动态加载 JSZip 库
-      let JSZip
-      if (typeof window.JSZip === 'undefined') {
-        // 如果 JSZip 未加载，动态加载
-        const script = document.createElement('script')
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'
-        document.head.appendChild(script)
-        
-        // 等待脚本加载完成
-        await new Promise((resolve, reject) => {
-          script.onload = resolve
-          script.onerror = reject
-        })
-        
-        JSZip = window.JSZip
-      } else {
-        JSZip = window.JSZip
-      }
-      
-      if (!JSZip) {
-        throw new Error('JSZip library failed to load')
-      }
-      
-      const zip = new JSZip()
-      
-      // 添加所有文件到 ZIP
-      for (const item of previewFiles) {
-        try {
-          const response = await fetch(item.url)
-          if (!response.ok) {
-            throw new Error(`Failed to fetch ${item.name}`)
-          }
-          const blob = await response.blob()
-          zip.file(item.name, blob)
-        } catch (fileErr) {
-          console.warn(`跳过文件 ${item.name}:`, fileErr)
-          // 继续处理其他文件，不中断整个过程
-        }
-      }
-      
-      // 检查是否有文件被成功添加
-      if (Object.keys(zip.files).length === 0) {
-        throw new Error('No files were successfully added to the ZIP')
-      }
-      
-      // 生成 ZIP 文件
-      const zipBlob = await zip.generateAsync({ 
-        type: 'blob',
-        compression: 'DEFLATE',
-        compressionOptions: { level: 6 }
-      })
-      
-      // 下载 ZIP 文件
-      const url = URL.createObjectURL(zipBlob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `MemeTray-Preview-${new Date().toISOString().slice(0, 10)}.zip`
-      link.style.display = 'none'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      
-      // 延迟清理 URL，确保下载开始
-      setTimeout(() => {
-        URL.revokeObjectURL(url)
-      }, 1000)
-      
-      console.log(`成功下载 ${Object.keys(zip.files).length} 个文件`)
-      
-    } catch (err) {
-      console.error('下载失败:', err)
-      
-      // 提供备用下载方案
-      const fallbackDownload = confirm(`ZIP 打包下载失败: ${err.message}\n\n是否要逐个下载文件？`)
-      if (fallbackDownload) {
-        downloadFilesIndividually()
-      }
-    } finally {
-      // 恢复下载按钮状态
-      if (downloadBtn) {
-        downloadBtn.disabled = false
-        downloadBtn.style.opacity = '1'
-        downloadBtn.title = originalTitle
-      }
-    }
-  }
-  
-  // 备用下载方案：逐个下载文件
-  async function downloadFilesIndividually() {
-    for (let i = 0; i < previewFiles.length; i++) {
-      const item = previewFiles[i]
-      try {
-        const response = await fetch(item.url)
-        const blob = await response.blob()
-        const url = URL.createObjectURL(blob)
-        
-        const link = document.createElement('a')
-        link.href = url
-        link.download = item.name
-        link.style.display = 'none'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        
-        URL.revokeObjectURL(url)
-        
-        // 添加延迟避免浏览器阻止多个下载
-        if (i < previewFiles.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 500))
-        }
-      } catch (err) {
-        console.warn(`下载文件 ${item.name} 失败:`, err)
-      }
-    }
-  }
-  
-  // 清空所有文件
-  function clearAllFiles() {
-    if (previewFiles.length === 0) return
-    
-    // 清理所有 blob URL
-    previewFiles.forEach(item => {
-      URL.revokeObjectURL(item.url)
-    })
-    
-    // 清空数组和界面
-    previewFiles = []
-    previewGallery.innerHTML = ''
-    
-    // 显示上传提示，隐藏批量操作按钮
-    previewUploadArea.style.display = 'block'
-    if (previewActions) {
-      previewActions.style.display = 'none'
-    }
-  }
-  
-  // 事件监听
-  previewToggle.addEventListener('click', togglePreviewPanel)
-  previewClose.addEventListener('click', togglePreviewPanel)
-  
-  // 批量操作按钮事件
-  if (downloadAllBtn) {
-    downloadAllBtn.addEventListener('click', downloadAllAsZip)
-  }
-  
-  if (clearAllBtn) {
-    clearAllBtn.addEventListener('click', clearAllFiles)
-  }
-  
-  // 点击面板外部关闭
-  document.addEventListener('click', (e) => {
-    if (previewPanel.style.display !== 'none' && 
-        !previewPanel.contains(e.target) && 
-        !previewToggle.contains(e.target)) {
-      previewPanel.style.display = 'none'
-    }
-  })
 })()
 
 // 窗口缩放（旧逻辑移除，保留新版）
