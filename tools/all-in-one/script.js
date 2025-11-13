@@ -389,6 +389,25 @@ function updatePreview() {
 
     const paddedNum = String(startNum).padStart(4, '0');
     elements.preview.textContent = `${paddedNum}_${suffix}.gif`;
+
+    // 如果已经有处理完成的文件，也更新它们的文件名
+    if (state.finalFiles.length > 0 && state.settings.autoRename) {
+        for (let i = 0; i < state.finalFiles.length; i++) {
+            const file = state.finalFiles[i];
+            const newNumber = startNum + i;
+            const paddedNum = String(newNumber).padStart(4, '0');
+            const newName = `${paddedNum}_${suffix}.gif`;
+
+            state.finalFiles[i] = {
+                ...file,
+                renamedFile: new File([file.compressedFile], newName, { type: 'image/gif' }),
+                newName: newName
+            };
+        }
+
+        // 重新显示结果以更新文件名
+        displayResults();
+    }
 }
 
 // 使用 Pyodide + Pillow 压缩 GIF（保留动画）
@@ -967,46 +986,72 @@ async function downloadFiles() {
     }
 
     elements.downloadBtn.disabled = true;
-    elements.downloadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Preparing ZIP...';
 
     try {
-        const zip = new JSZip();
         const filesToDownload = state.selectedFiles.size > 0
             ? Array.from(state.selectedFiles).map(i => state.finalFiles[i])
             : state.finalFiles;
 
-        for (let i = 0; i < filesToDownload.length; i++) {
-            const file = filesToDownload[i];
-            const fileToAdd = file.renamedFile || file.compressedFile || file.file || file;
-            zip.file(fileToAdd.name, fileToAdd);
+        // 如果只有一个文件，直接下载，不使用 ZIP
+        if (filesToDownload.length === 1) {
+            elements.downloadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Downloading...';
 
-            if (i % 10 === 0) {
-                elements.downloadBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Adding ${i + 1}/${filesToDownload.length}...`;
+            const file = filesToDownload[0];
+            const fileToDownload = file.renamedFile || file.compressedFile || file.file || file;
+
+            const url = URL.createObjectURL(fileToDownload);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileToDownload.name;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 1000);
+
+            console.log(`Successfully downloaded 1 file: ${fileToDownload.name}`);
+        } else {
+            // 多个文件时使用 ZIP 压缩
+            elements.downloadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Preparing ZIP...';
+
+            const zip = new JSZip();
+
+            for (let i = 0; i < filesToDownload.length; i++) {
+                const file = filesToDownload[i];
+                const fileToAdd = file.renamedFile || file.compressedFile || file.file || file;
+                zip.file(fileToAdd.name, fileToAdd);
+
+                if (i % 10 === 0) {
+                    elements.downloadBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Adding ${i + 1}/${filesToDownload.length}...`;
+                }
             }
+
+            elements.downloadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Creating ZIP...';
+
+            const zipBlob = await zip.generateAsync({
+                type: 'blob',
+                compression: 'DEFLATE',
+                compressionOptions: { level: 6 }
+            });
+
+            const url = URL.createObjectURL(zipBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `processed-gifs-${state.settings.suffix}-${new Date().toISOString().slice(0, 10)}.zip`;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 1000);
+
+            console.log(`Successfully downloaded ${filesToDownload.length} files`);
         }
-
-        elements.downloadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Creating ZIP...';
-
-        const zipBlob = await zip.generateAsync({
-            type: 'blob',
-            compression: 'DEFLATE',
-            compressionOptions: { level: 6 }
-        });
-
-        const url = URL.createObjectURL(zipBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `processed-gifs-${state.settings.suffix}-${new Date().toISOString().slice(0, 10)}.zip`;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        setTimeout(() => {
-            URL.revokeObjectURL(url);
-        }, 1000);
-
-        console.log(`Successfully downloaded ${filesToDownload.length} files`);
 
     } catch (error) {
         console.error('Download failed:', error);

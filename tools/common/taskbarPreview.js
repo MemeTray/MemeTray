@@ -94,23 +94,7 @@ ${showClock ? `<div class="taskDate m-1 handcr prtclk rounded hvlight">
     if (!trayIcon) return
     trayIcon.innerHTML = ''
 
-    // 如果提供了源图片且已加载完成，尝试直接复制当前帧
-    if (sourceImg && sourceImg.complete && sourceImg.naturalWidth > 0) {
-      try {
-        const clonedImg = sourceImg.cloneNode(true)
-        clonedImg.alt = 'tray'
-        clonedImg.className = ''
-        clonedImg.style.width = '100%'
-        clonedImg.style.height = '100%'
-        clonedImg.style.objectFit = 'contain'
-        trayIcon.appendChild(clonedImg)
-        return
-      } catch (err) {
-        console.warn('Failed to clone image:', err)
-      }
-    }
-
-    // 降级方案：创建新的图片元素
+    // 创建新的图片元素，使用相同的 src 来保持同步
     const img = document.createElement('img')
     img.src = src
     img.alt = 'tray'
