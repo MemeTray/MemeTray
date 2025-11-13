@@ -10,7 +10,8 @@
 See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Contributions, corrections & requests can be made on GitHub.</p>
 </p>
 
-<img width="1920" height="911" alt="image" src="https://github.com/user-attachments/assets/8699425a-a40b-4d7a-b65a-a334379cd4c3" />
+
+<img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/96741450-343b-460c-acde-cf798a951b07" />
 
 
 ## Usage
