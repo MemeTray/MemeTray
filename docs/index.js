@@ -445,14 +445,16 @@ function renderBreadcrumbs(){
           if(idx===1) return enterFolder(navState.currentKey)
         })
       } else if(isLast && idx === 1 && navState.view === 'folder') {
-        // 当前分类名称，点击跳转到 GitHub 仓库
+        // 当前分类名称，点击跳转到 GitHub 仓库中的文件夹
         span.style.cursor = 'pointer'
         span.title = t('openRepository')
         span.addEventListener('click', (e) => {
           e.stopPropagation() // 阻止事件冒泡到窗口标题
           const sec = sections && sections.find(s => s.key === navState.currentKey)
           if (sec && sec.repository) {
-            window.open(sec.repository, '_blank', 'noopener,noreferrer')
+            // 跳转到仓库中的文件夹，例如 /tree/main/maomaochong
+            const folderUrl = `${sec.repository}/tree/main/${sec.key}`
+            window.open(folderUrl, '_blank', 'noopener,noreferrer')
           }
         })
       }
@@ -470,18 +472,10 @@ function renderBreadcrumbs(){
         const cnt=document.createElement('span')
         cnt.className='count-badge'
         cnt.textContent=String(sec.files.length)
-        cnt.style.cursor = 'pointer'
-        cnt.title = t('openConfig')
-        
-        // 点击数量标签跳转到 config.json
+        // 阻止点击事件冒泡，数量标签不可点击
         cnt.addEventListener('click', (e) => {
-          e.stopPropagation() // 阻止事件冒泡到窗口标题
-          if (sec.repository) {
-            const configUrl = `${sec.repository}/blob/main/config.json`
-            window.open(configUrl, '_blank', 'noopener,noreferrer')
-          }
+          e.stopPropagation()
         })
-        
         titleTextEl.appendChild(cnt)
       }
     }
