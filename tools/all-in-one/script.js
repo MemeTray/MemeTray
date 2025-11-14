@@ -162,7 +162,23 @@ function handleFileSelect(e) {
     files.forEach((file, i) => {
         console.log(`  ${i + 1}. ${file.name} (${file.type})`);
     });
-    processFiles(files);
+
+    // Filter files based on WebP toggle
+    const webpEnabled = state.settings.webpSupport;
+    const validFiles = files.filter(file => {
+        if (webpEnabled) {
+            return file.type === 'image/gif' || file.type === 'image/webp' || file.type === 'image/png' || file.type === 'image/apng';
+        }
+        return file.type === 'image/gif';
+    });
+
+    if (validFiles.length === 0) {
+        const supportedFormats = webpEnabled ? 'GIF, WebP, or APNG' : 'GIF';
+        alert(`No ${supportedFormats} files selected!`);
+        return;
+    }
+
+    processFiles(validFiles);
 }
 
 // Drag-and-drop handlers
@@ -215,15 +231,23 @@ async function handleDrop(e) {
         console.log(`  ${i + 1}. ${file.name} (${file.type}, ${file.size} bytes)`);
     });
 
-    const gifFiles = droppedFiles.filter(file => file.type === 'image/gif');
-    console.log(`🎬 Filtered to ${gifFiles.length} GIF files`);
+    // Filter files based on WebP toggle
+    const webpEnabled = state.settings.webpSupport;
+    const validFiles = droppedFiles.filter(file => {
+        if (webpEnabled) {
+            return file.type === 'image/gif' || file.type === 'image/webp' || file.type === 'image/png' || file.type === 'image/apng';
+        }
+        return file.type === 'image/gif';
+    });
+    console.log(`🎬 Filtered to ${validFiles.length} valid files (WebP support: ${webpEnabled})`);
 
-    if (gifFiles.length === 0) {
-        alert('No GIF files found in the dropped items!');
+    if (validFiles.length === 0) {
+        const supportedFormats = webpEnabled ? 'GIF, WebP, or APNG' : 'GIF';
+        alert(`No ${supportedFormats} files found in the dropped items!`);
         return;
     }
 
-    processFiles(gifFiles);
+    processFiles(validFiles);
 }
 
 // Traverse the dropped file tree
@@ -463,8 +487,17 @@ async function compressSingleGifWithPyodide(file) {
         const random = Math.floor(Math.random() * 10000);
         const uniqueId = `${timestamp}_${random}`;
 
-        const isWebP = file.name.toLowerCase().endsWith('.webp');
-        const inputFile = isWebP ? `/input_${uniqueId}.webp` : `/input_${uniqueId}.gif`;
+        const lowerFileName = file.name.toLowerCase();
+        const isWebP = lowerFileName.endsWith('.webp');
+        const isAPNG = lowerFileName.endsWith('.png') || lowerFileName.endsWith('.apng');
+
+        let inputFile = `/input_${uniqueId}.gif`;
+        if (isWebP) {
+            inputFile = `/input_${uniqueId}.webp`;
+        } else if (isAPNG) {
+            inputFile = `/input_${uniqueId}.png`;
+        }
+
         const outputFile = `/output_${uniqueId}.gif`;
 
         pyodide.FS.writeFile(inputFile, imageData);
