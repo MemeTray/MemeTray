@@ -3,127 +3,133 @@
 > [!IMPORTANT]
 > We ask that all contributors read our [legal disclaimer](./DISCLAIMER.md) before contributing to MemeTray.
 
-MemeTray welcomes contributions and corrections. Before contributing, please make sure you have read the guidelines below. If you're new to _git_ and/or _GitHub_, we suggest you go through [the GitHub Guides](https://guides.github.com/introduction/flow/).
+MemeTray welcomes contributions! Contributing is easy - just process your GIFs with our all-in-one tool and submit them to the appropriate repository. If you're new to _git_ and/or _GitHub_, we suggest you go through [the GitHub Guides](https://guides.github.com/introduction/flow/).
 
 ## Table of Contents
 
-- [Contribution Workflow](#contribution-workflow)
+- [Quick Start: Contributing GIFs](#quick-start-contributing-gifs)
+- [Detailed Contribution Workflow](#detailed-contribution-workflow)
+- [Using the All-in-One Processing Tool](#using-the-all-in-one-processing-tool)
 - [Commit Message Guidelines](#commit-message-guidelines)
-- [GIF Requirements](#gif-requirements)
-  - [File Format](#file-format)
-  - [Dimensions](#dimensions)
-  - [Naming Convention](#naming-convention)
-  - [Background Removal](#background-removal)
-- [Updating `sections.json`](#updating-sectionsjson)
+- [Adding a New Category](#adding-a-new-category)
 - [Content We Do Not Accept](#content-we-do-not-accept)
 - [Code of Conduct](#code-of-conduct)
 
-## Contribution Workflow
+## Quick Start: Contributing GIFs
 
-1.  **Fork** this repository.
-2.  (Optional) Clone the repository.
+**The easiest way to contribute:**
 
-    -   Using SSH
-        ```shell
-        git clone git@github.com:MemeTray/MemeTray.git
-        ```
-    -   Using HTTPS
-        ```shell
-        git clone https://github.com/MemeTray/MemeTray.git
-        ```
-    -   Using GitHub CLI
-        ```shell
-        gh repo clone MemeTray/MemeTray
-        ```
+1. **Process your GIFs**: Visit [**MemeTray All-in-One Tool**](https://memetray.org/tools/all-in-one/)
+   - Upload your GIF files
+   - The tool automatically handles resizing, compression, and renaming
+   - Download the processed files
 
-3.  Create a new branch from the latest `main`.
-4.  Start hacking on the new branch.
-5.  Commit and push to the new branch.
-6.  Make a pull request.
+2. **Submit to the appropriate repository**:
+   - Find the category repository (e.g., `gifs-doro`, `gifs-catmeme`, `gifs-maomaochong`)
+   - Fork the repository and add your processed GIFs to the category folder
+   - Create a pull request
+
+3. **Don't see your category?** Contact the maintainers via [GitHub Issues](https://github.com/MemeTray/MemeTray/issues) to request a new category repository.
+
+**That's it!** No manual configuration needed - our automated system will detect and index your GIFs automatically.
+
+## Detailed Contribution Workflow
+
+### For Existing Categories
+
+**Recommended: Direct GitHub Upload (Best for GIFs)**
+
+Since GIF files are large, we recommend using GitHub's web interface directly:
+
+1. **Process your GIFs** using the [All-in-One Tool](https://memetray.org/tools/all-in-one/)
+2. **Fork the repository** on GitHub (click the "Fork" button on the repository page)
+3. **Upload via web interface**:
+   - Go to your forked repository
+   - Navigate to the category folder (e.g., `doro/`)
+   - Click "Add file" → "Upload files"
+   - Drag and drop your processed GIFs
+   - Commit message: Use the last filename (e.g., `feat: 0019_maodie.gif`)
+   - Click "Commit changes"
+4. **Create a pull request** back to the original repository
+
+**Alternative: Using Git Command Line**
+
+If you prefer using Git locally:
+
+1. **Fork** the target GIF repository (e.g., `MemeTray/gifs-doro`)
+2. **Process your GIFs** using the [All-in-One Tool](https://memetray.org/tools/all-in-one/)
+3. **Clone your fork**:
+    ```shell
+    git clone https://github.com/YourUsername/gifs-categoryname.git
+    ```
+4. **Add your GIFs** to the category folder (e.g., `doro/`)
+5. **Commit and push**:
+    ```shell
+    git add .
+    git commit -m "feat: 0125_doro.gif"
+    git push
+    ```
+6. **Create a pull request** to the original repository
+
+### For New Categories
+
+If you want to contribute GIFs for a category that doesn't exist yet:
+
+1. Open an issue at [MemeTray/MemeTray](https://github.com/MemeTray/MemeTray/issues)
+2. Describe your proposed category and provide sample GIFs
+3. Once approved, we'll create the repository for you
+4. Follow the workflow above to add your GIFs
+
+## Using the All-in-One Processing Tool
+
+Our [**All-in-One Tool**](https://memetray.org/tools/all-in-one/) handles everything automatically:
+
+### Features
+- ✅ **Automatic Resizing**: Converts GIFs to 128px × 128px
+- ✅ **Compression**: Optimizes file size while maintaining quality
+- ✅ **Auto-Numbering**: Generates sequential filenames (0001_category.gif, 0002_category.gif, etc.)
+- ✅ **Batch Processing**: Handle multiple GIFs at once
+- ✅ **Preview**: See your processed GIFs before downloading
+
+### How to Use
+1. Visit https://memetray.org/tools/all-in-one/
+2. Select or drag your GIF files
+3. Choose your category name (the suffix for filenames)
+4. Set the starting number (defaults to 0001)
+5. Adjust compression settings if needed
+6. Download the processed GIFs
+7. Upload them to the appropriate repository folder
+
+**No manual editing required!** The tool ensures all GIFs meet our requirements automatically.
 
 ## Commit Message Guidelines
 
-To maintain a clear and readable project history, we recommend using the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format for your commit messages.
+To maintain a clear and readable project history, we use the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format.
 
-Each commit should include a type prefix, for example:
--   `feat:` for adding new GIFs or features.
-    -   `feat: Add 10 new cat memes`
--   `fix:` for correcting issues or errors.
-    -   `fix: Correct count for doro collection in sections.json`
--   `docs:` for updating documentation, such as `README.md` or `CONTRIBUTING.md`.
-    -   `docs: Update contribution guidelines`
+**For adding GIFs, use the filename of the last GIF in your contribution:**
+-   `feat: 0019_maodie.gif` (if adding GIFs up to 0019)
+-   `feat: 0125_doro.gif` (if adding GIFs up to 0125)
 
-Following this simple convention helps us better manage the project.
+**For other changes:**
+-   `fix: Replace corrupted 0024_doro.gif`
+-   `docs: Update README with new examples`
 
-## GIF Requirements
+Following this convention helps us better manage the project.
 
-### File Format
+## Adding a New Category
 
-We only accept animations in **GIF** format.
+Want to create a new GIF category?
 
-**Reason**: This is to ensure compatibility with older operating systems like Windows 7, which do not have native support for the WebP format.
+1. **Check existing categories** at https://memetray.org/ to avoid duplicates
+2. **Open an issue** at [MemeTray/MemeTray](https://github.com/MemeTray/MemeTray/issues)
+3. **Include in your request**:
+   - Proposed category name (lowercase, no spaces, use hyphens)
+   - Description of what GIFs will be in this category
+   - 3-5 sample GIFs to demonstrate the theme
+4. **Wait for approval** - maintainers will create the `gifs-categoryname` repository
+5. **Start contributing** using the workflow above
 
-### Dimensions
-
-All GIFs must be resized to **128px × 128px**.
-
-To help you with this, we provide an online tool:
-[**MemeTray Animation Compression Tool**](https://memetray.org/tools/animation-compression/)
-
-### Naming Convention
-
-GIF files must follow the format `XXXX_<folder_name>.gif`, where:
-- `XXXX` is a four-digit sequential number, starting from `0001`.
-- `<folder_name>` is the name of the category folder where the GIF is located.
-
-**Examples**:
-- The first GIF in the `catmeme` folder should be named `0001_catmeme.gif`.
-- The 181st GIF in the `doro` folder should be named `0181_doro.gif`.
-
-### Background Removal
-
-Many GIFs come with a white or solid-colored background. We encourage contributors to help remove these backgrounds to make the GIFs more versatile.
-
-- **Priority**: If two versions of the same GIF exist (one with a background and one without), we will prioritize the version without the background.
-- You are welcome to submit versions with backgrounds removed to replace existing ones.
-
-## Updating Configuration Files
-
-### Main Project Configuration
-
-When adding a **new GIF category**, you need to update the `docs/sections.json` file in the main project:
-
-```json
-{
-  "sections": [
-    { "dir": "your-new-folder" }
-  ]
-}
-```
-
-### GIF Repository Configuration
-
-Each GIF repository (e.g., `gifs-doro`, `gifs-catmeme`) **must** contain a `config.json` file in its root directory to specify the number of GIFs:
-
-```json
-{
-  "count": 181
-}
-```
-
-**When you add or delete GIFs in a repository:**
-1. Update the `count` value in the repository's `config.json` file
-2. The count should match the actual number of GIF files in the repository
-
-**Example repository structure:**
-```
-gifs-doro/
-├── config.json          # Contains {"count": 181}
-├── doro/
-│   ├── 0001_doro.gif
-│   ├── 0002_doro.gif
-│   └── ... (181 files total)
-```
+**Note:** Our automated system will automatically detect new repositories named `gifs-*` and add them to the main site. No manual configuration needed!
 
 ## Content We Do Not Accept
 
