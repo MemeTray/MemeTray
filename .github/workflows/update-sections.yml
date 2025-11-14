@@ -80,7 +80,7 @@ jobs:
             return gifsRepos;
           }
 
-          // 统计仓库中的 GIF 数量
+          // 统计仓库中的 GIF 最大编号
           async function countGifs(repo) {
             try {
               console.log(`Counting GIFs in ${repo.name}...`);
@@ -93,8 +93,28 @@ jobs:
                 item.type === 'blob' && item.path.endsWith('.gif')
               );
 
-              console.log(`  → Found ${gifFiles.length} GIF files`);
-              return gifFiles.length;
+              if (gifFiles.length === 0) {
+                console.log(`  → No GIF files found`);
+                return 0;
+              }
+
+              // 提取所有文件的编号（匹配 0001_xxx.gif 格式）
+              const numbers = gifFiles
+                .map(file => {
+                  const match = file.path.match(/(\d{4})_.*\.gif$/);
+                  return match ? parseInt(match[1], 10) : 0;
+                })
+                .filter(num => num > 0);
+
+              if (numbers.length === 0) {
+                console.log(`  → Found ${gifFiles.length} GIF files but no valid numbered files`);
+                return gifFiles.length;
+              }
+
+              // 找到最大编号
+              const maxNumber = Math.max(...numbers);
+              console.log(`  → Found ${gifFiles.length} GIF files, max number: ${maxNumber}`);
+              return maxNumber;
             } catch (error) {
               console.error(`  ✗ Error counting GIFs in ${repo.name}:`, error.message);
               return 0;
