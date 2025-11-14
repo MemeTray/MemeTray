@@ -19,21 +19,12 @@ See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Co
 > [!IMPORTANT]\
 > Before using any GIFs from this project, please read our [legal disclaimer](./DISCLAIMER.md).
 
-## Architecture
 
-MemeTray uses a **centralized configuration architecture**:
+| | | | | |
+| :---: | :---: | :---: | :---: | :---: |
+| <a href="https://memetray.org/#doro"><img height='100px' style='height:100px;' src='https://raw.githubusercontent.com/MemeTray/gifs-doro/refs/heads/main/doro/0001_doro.gif' /></a><br>[doro](https://memetray.org/#doro) | <a href="https://memetray.org/#catmeme"><img height='100px' style='height:100px;' src='https://github.com/MemeTray/gifs-catmeme/blob/main/catmeme/0001_catmeme.gif?raw=true' /></a><br>[catmeme](https://memetray.org/#catmeme) | <a href="https://memetray.org/#genshin"><img height='100px' style='height:100px;' src='https://github.com/MemeTray/gifs-genshin/blob/main/genshin/0001_genshin.gif?raw=true' /></a><br>[genshin](https://memetray.org/#genshin) | <a href="https://memetray.org/#maodie"><img height='100px' style='height:100px;' src='https://github.com/MemeTray/gifs-maodie/blob/main/maodie/0001_maodie.gif?raw=true' /></a><br>[maodie](https://memetray.org/#maodie) | <a href="https://memetray.org/#maomaochong"><img height='100px' style='height:100px;' src='https://github.com/MemeTray/gifs-maomaochong/blob/main/maomaochong/0001_maomaochong.gif?raw=true' /></a><br>[maomaochong](https://memetray.org/#maomaochong) |
 
-- All GIF collections are stored in separate repositories (`gifs-*`)
-- Configuration is centralized in `sections.json`
-- GitHub Actions automatically updates GIF counts daily
-- Fast loading: 1 network request instead of 6
 
-**Adding new collections:**
-1. Create a new repository named `gifs-xxx`
-2. Upload GIF files
-3. Wait for automatic update (or manually trigger the workflow)
-
-No manual configuration needed!
 
 ## Star History
 
