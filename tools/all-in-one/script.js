@@ -49,6 +49,7 @@ const elements = {
     resultsArea: document.getElementById('resultsArea'),
     resultsGrid: document.getElementById('resultsGrid'),
     actionsArea: document.getElementById('actionsArea'),
+    selectAllBtn: document.getElementById('selectAllBtn'),
     deleteSelectedBtn: document.getElementById('deleteSelectedBtn'),
     restartBtn: document.getElementById('restartBtn'),
     downloadBtn: document.getElementById('downloadBtn')
@@ -148,6 +149,7 @@ function setupEventListeners() {
     elements.suffix.addEventListener('input', handleSuffixInput);
 
     // Action buttons
+    elements.selectAllBtn.addEventListener('click', selectAllFiles);
     elements.deleteSelectedBtn.addEventListener('click', removeSelectedFiles);
     elements.restartBtn.addEventListener('click', restart);
     elements.downloadBtn.addEventListener('click', downloadFiles);
