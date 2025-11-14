@@ -26,8 +26,8 @@ function setupEventListeners() {
     
     webpToggle.addEventListener('change', () => {
         if (webpToggle.checked) {
-            fileInput.setAttribute('accept', 'image/gif,image/webp');
-            uploadText.textContent = 'Click to select or drag GIF/WebP files/folder';
+            fileInput.setAttribute('accept', 'image/gif,image/webp,image/apng,image/png');
+            uploadText.textContent = 'Click to select or drag GIF/WebP/APNG files/folder';
         } else {
             fileInput.setAttribute('accept', 'image/gif');
             uploadText.textContent = 'Click to select or drag GIF files/folder';
@@ -70,8 +70,8 @@ function setupEventListeners() {
         console.log('Total files found:', files.length);
         const webpEnabled = document.getElementById('webpToggle').checked;
         const validFiles = files.filter(f => {
-            const isValid = webpEnabled 
-                ? (f.file.type === 'image/gif' || f.file.type === 'image/webp')
+            const isValid = webpEnabled
+                ? (f.file.type === 'image/gif' || f.file.type === 'image/webp' || f.file.type === 'image/png' || f.file.type === 'image/apng')
                 : f.file.type === 'image/gif';
             if (!isValid) {
                 console.log(`跳过文件: ${f.file.name} (类型: ${f.file.type})`);
@@ -164,7 +164,7 @@ function handleFiles(e) {
     const webpEnabled = document.getElementById('webpToggle').checked;
     const validFiles = fileObjects.filter(f => {
         if (webpEnabled) {
-            return f.file.type === 'image/gif' || f.file.type === 'image/webp';
+            return f.file.type === 'image/gif' || f.file.type === 'image/webp' || f.file.type === 'image/png' || f.file.type === 'image/apng';
         }
         return f.file.type === 'image/gif';
     });
@@ -218,9 +218,21 @@ async function calculateHash(blob) {
 
 async function resizeGif(imageData, fileName, filePath) {
     try {
-        const isWebP = fileName.toLowerCase().endsWith('.webp');
-        const inputFile = isWebP ? '/input.webp' : '/input.gif';
-        
+        const lowerFileName = fileName.toLowerCase();
+        const isWebP = lowerFileName.endsWith('.webp');
+        const isAPNG = lowerFileName.endsWith('.png') || lowerFileName.endsWith('.apng');
+
+        let inputFile = '/input.gif';
+        let fileType = 'gif';
+
+        if (isWebP) {
+            inputFile = '/input.webp';
+            fileType = 'webp';
+        } else if (isAPNG) {
+            inputFile = '/input.png';
+            fileType = 'apng';
+        }
+
         pyodide.FS.writeFile(inputFile, imageData);
         
         await pyodide.runPythonAsync(`
@@ -297,13 +309,17 @@ if frames:
         const outputData = pyodide.FS.readFile('/output.gif');
         const blob = new Blob([outputData], { type: 'image/gif' });
         const url = URL.createObjectURL(blob);
-        
-        // Rename WebP files to .gif and mark them to avoid conflicts
+
+        // Rename WebP/APNG files to .gif and mark them to avoid conflicts
         let outputFileName, outputFilePath;
         if (isWebP) {
             // Rename 1.webp to 1_from_webp.gif to prevent clashing with 1.gif
             outputFileName = fileName.replace(/\.webp$/i, '_from_webp.gif');
             outputFilePath = filePath.replace(/\.webp$/i, '_from_webp.gif');
+        } else if (isAPNG) {
+            // Rename 1.png/1.apng to 1_from_apng.gif to prevent clashing with 1.gif
+            outputFileName = fileName.replace(/\.(png|apng)$/i, '_from_apng.gif');
+            outputFilePath = filePath.replace(/\.(png|apng)$/i, '_from_apng.gif');
         } else {
             outputFileName = fileName;
             outputFilePath = filePath;

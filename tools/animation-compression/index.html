@@ -61,19 +61,19 @@
                 <label class="toggle-option">
                     <input type="checkbox" id="webpToggle">
                     <span class="toggle-slider"></span>
-                    <span class="toggle-label">Support WebP to GIF</span>
+                    <span class="toggle-label">Support WebP/APNG to GIF</span>
                 </label>
             </div>
 
             <div class="upload-area" id="uploadArea">
-                <input type="file" id="fileInput" accept="image/gif" multiple webkitdirectory directory>
+                <input type="file" id="fileInput" accept="image/gif,image/webp,image/apng,image/png" multiple webkitdirectory directory>
                 <label for="fileInput">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="17 8 12 3 7 8"></polyline>
                         <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
-                    <span id="uploadText">Click to select or drag GIF files/folder</span>
+                    <span id="uploadText">Click to select or drag GIF/WebP/APNG files/folder</span>
                 </label>
             </div>
 
