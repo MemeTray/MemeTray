@@ -1,4 +1,4 @@
-/* Windows 11 风格主题变量 */
+/* Windows 11 inspired theme variables */
 :root {
     --bg: #f6f7fb;
     --text: #0b1220;
@@ -26,7 +26,7 @@ body {
     overflow: hidden;
 }
 
-/* 桌面背景 */
+/* Desktop background */
 .desktop {
     position: fixed;
     inset: 0;
@@ -38,7 +38,7 @@ body {
     filter: saturate(1.05);
 }
 
-/* 返回主页按钮 */
+/* Back-to-home button */
 .top-links {
     position: fixed;
     top: 10px;
@@ -70,7 +70,7 @@ body {
     transform: translateY(-1px);
 }
 
-/* 语言切换按钮样式 */
+/* Language toggle styling */
 .top-link#langToggle {
     cursor: pointer;
     font-size: 10px;
@@ -90,7 +90,7 @@ body {
     white-space: nowrap;
 }
 
-/* 工具窗口 */
+/* Tool window */
 .tool-window {
     position: fixed;
     z-index: 500;
@@ -111,7 +111,7 @@ body {
     -webkit-backdrop-filter: saturate(1.8) blur(22px);
 }
 
-/* 窗口标题栏 */
+/* Window title bar */
 .window-titlebar {
     height: 40px;
     display: flex;
@@ -132,7 +132,7 @@ body {
     text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
 }
 
-/* 窗口内容 */
+/* Window content */
 .window-content {
     flex: 1;
     overflow-y: auto;
@@ -153,7 +153,7 @@ body {
     font-size: 14px;
 }
 
-/* 加载动画 */
+/* Loading animation */
 .loading {
     text-align: center;
     padding: 60px 20px;
@@ -184,7 +184,7 @@ body {
     font-size: 14px;
 }
 
-/* 选项面板 */
+/* Options panel */
 .options-panel {
     margin-bottom: 20px;
     padding: 16px;
@@ -240,7 +240,7 @@ body {
     font-size: 14px;
 }
 
-/* 上传区域 */
+/* Upload area */
 .upload-area {
     background: var(--glass-bg);
     border: 2px dashed var(--glass-border);
@@ -285,7 +285,7 @@ body {
     font-size: 14px;
 }
 
-/* 进度条 */
+/* Progress bar */
 .progress-container {
     margin: 20px 0;
     padding: 16px;
@@ -318,7 +318,7 @@ body {
     transition: width 0.3s ease;
 }
 
-/* 批量操作按钮 */
+/* Bulk action buttons */
 .batch-actions {
     display: flex;
     gap: 12px;
@@ -364,7 +364,7 @@ body {
     color: #dc2626;
 }
 
-/* 预览网格 */
+/* Preview grid */
 .preview {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -460,7 +460,7 @@ body {
     transform: translateY(-1px);
 }
 
-/* 滚动条样式 */
+/* Scrollbar styling */
 .window-content::-webkit-scrollbar {
     width: 8px;
 }
@@ -478,7 +478,7 @@ body {
     background: rgba(0, 0, 0, .3);
 }
 
-/* 重复文件检测样式 */
+/* Duplicate detection styles */
 .section-header {
     grid-column: 1 / -1;
     margin: 20px 0 10px 0;
@@ -580,7 +580,7 @@ body {
     border-color: #dc2626;
 }
 
-/* 响应式设计 */
+/* Responsive design */
 @media (max-width: 768px) {
     .tool-window {
         width: 95vw;

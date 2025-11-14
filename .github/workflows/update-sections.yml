@@ -1,11 +1,11 @@
 name: Update sections.json
 
 on:
-  # 定时运行：每天凌晨 2 点（UTC 时间）
+  # Schedule: run daily at 2 AM UTC
   schedule:
     - cron: '0 2 * * *'
 
-  # 手动触发
+  # Manual trigger
   workflow_dispatch:
 
 jobs:
@@ -27,12 +27,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 创建 Node.js 脚本来更新 sections.json
+          # Create a Node.js script to update sections.json
           cat > update-sections.js << 'EOF'
           const fs = require('fs');
           const https = require('https');
 
-          // GitHub API 请求函数
+          // GitHub API request helper
           function githubApi(path) {
             return new Promise((resolve, reject) => {
               const options = {
@@ -60,12 +60,12 @@ jobs:
             });
           }
 
-          // 获取组织下所有仓库
+          // Fetch every repository in the organization
           async function getOrgRepos() {
             console.log('Fetching MemeTray organization repositories...');
             const repos = await githubApi('/orgs/MemeTray/repos?per_page=100');
 
-            // 过滤出 gifs- 开头的仓库
+            // Keep repositories whose names start with 'gifs-'
             const gifsRepos = repos
               .filter(repo => repo.name.startsWith('gifs-'))
               .map(repo => ({
@@ -80,15 +80,15 @@ jobs:
             return gifsRepos;
           }
 
-          // 统计仓库中的 GIF 最大编号
+          // Determine the highest GIF index in the repository
           async function countGifs(repo) {
             try {
               console.log(`Counting GIFs in ${repo.name}...`);
 
-              // 获取仓库的文件树
+              // Fetch the repository file tree
               const tree = await githubApi(`/repos/${repo.fullName}/git/trees/${repo.defaultBranch}?recursive=1`);
 
-              // 过滤出 .gif 文件
+              // Filter out .gif files
               const gifFiles = tree.tree.filter(item =>
                 item.type === 'blob' && item.path.endsWith('.gif')
               );
@@ -98,7 +98,7 @@ jobs:
                 return 0;
               }
 
-              // 提取所有文件的编号（匹配 0001_xxx.gif 格式）
+              // Extract numeric prefixes that match 0001_name.gif
               const numbers = gifFiles
                 .map(file => {
                   const match = file.path.match(/(\d{4})_.*\.gif$/);
@@ -111,7 +111,7 @@ jobs:
                 return gifFiles.length;
               }
 
-              // 找到最大编号
+              // Find the maximum index
               const maxNumber = Math.max(...numbers);
               console.log(`  → Found ${gifFiles.length} GIF files, max number: ${maxNumber}`);
               return maxNumber;
@@ -121,10 +121,10 @@ jobs:
             }
           }
 
-          // 主函数
+          // Main function
           async function main() {
             try {
-              // 获取所有 gifs 仓库
+              // Fetch all 'gifs-' repositories
               const repos = await getOrgRepos();
 
               if (repos.length === 0) {
@@ -132,7 +132,7 @@ jobs:
                 return;
               }
 
-              // 构建 sections 对象
+              // Build the sections object
               const sections = {};
 
               for (const repo of repos) {
@@ -149,19 +149,19 @@ jobs:
                 };
               }
 
-              // 生成 sections.json
+              // Generate sections.json
               const output = {
                 version: "1.0",
                 generated: new Date().toISOString(),
                 sections: sections
               };
 
-              // 写入文件（同时写入根目录和 docs 目录）
+              // Write the file to both the repository root and docs directory
               fs.writeFileSync('sections.json', JSON.stringify(output, null, 2) + '\n');
               fs.writeFileSync('docs/sections.json', JSON.stringify(output, null, 2) + '\n');
               console.log('\n✓ sections.json updated successfully!');
 
-              // 打印统计信息
+              // Print summary statistics
               console.log('\nStatistics:');
               Object.entries(sections).forEach(([key, data]) => {
                 console.log(`  ${key}: ${data.count} GIFs`);
@@ -176,7 +176,7 @@ jobs:
           main();
           EOF
 
-          # 运行脚本
+          # Run the script
           node update-sections.js
 
       - name: Commit changes
@@ -184,13 +184,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 检查是否有变化
+          # Check if anything changed
           if git diff --quiet sections.json docs/sections.json; then
             echo "No changes to sections.json"
             exit 0
           fi
 
-          # 提取统计信息用于提交消息
+          # Collect statistics for the commit message
           STATS=$(node -e "
             const data = require('./sections.json');
             const sections = data.sections;

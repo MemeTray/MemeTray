@@ -15,21 +15,21 @@ function setupEventListeners() {
     const addMoreBtn = document.getElementById('addMoreBtn');
     const clearAllBtn = document.getElementById('clearAllBtn');
     
-    // 使用通用库设置文件输入
+    // Configure the shared file input helper
     setupFileInput({
         fileInput,
         onFilesSelected: processFiles,
         acceptType: 'image/gif'
     });
     
-    // 使用通用库设置拖拽功能
+    // Configure the shared drag-and-drop helper
     setupDragAndDrop({
         uploadArea,
         onFilesDropped: processFiles,
         acceptType: 'image/gif'
     });
     
-    // 使用通用库设置粘贴功能
+    // Configure the shared paste helper
     setupPasteSupport({
         onFilesPasted: processFiles,
         acceptType: 'image/gif'
@@ -43,8 +43,8 @@ function setupEventListeners() {
 }
 
 /**
- * 基于 GIF 像素内容计算哈希值
- * 使用 Canvas 读取第一帧的像素数据来计算哈希
+ * Calculate a hash based on GIF pixel content
+ * Use Canvas to read the first frame and compute its hash
  */
 async function calculatePixelHash(file) {
     return new Promise((resolve, reject) => {
@@ -53,20 +53,20 @@ async function calculatePixelHash(file) {
         
         img.onload = async () => {
             try {
-                // 创建 Canvas 来读取像素数据
+                // Create a canvas to sample pixel data
                 const canvas = document.createElement('canvas');
                 canvas.width = img.width;
                 canvas.height = img.height;
                 const ctx = canvas.getContext('2d');
                 
-                // 绘制图像到 Canvas
+                // Draw the frame onto the canvas
                 ctx.drawImage(img, 0, 0);
                 
-                // 获取像素数据
+                // Retrieve the pixel data
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const pixelData = imageData.data;
                 
-                // 计算像素数据的哈希值
+                // Hash the pixel data
                 const hashBuffer = await crypto.subtle.digest('SHA-256', pixelData);
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
                 const hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
@@ -102,10 +102,10 @@ async function processFiles(files) {
     
     for (const fileObj of files) {
         try {
-            // 计算基于像素内容的哈希
+            // Compute the content hash
             const hash = await calculatePixelHash(fileObj.file);
             
-            // 创建预览 URL
+            // Create a preview URL
             const url = URL.createObjectURL(fileObj.file);
             
             allFiles.push({
@@ -133,7 +133,7 @@ async function processFiles(files) {
     batchActions.style.display = 'flex';
     statsContainer.style.display = 'grid';
     
-    // 重置文件输入，允许再次选择相同文件夹
+    // Reset the file input so the same folder can be selected again
     document.getElementById('fileInput').value = '';
     
     analyzeAndDisplay();
@@ -142,7 +142,7 @@ async function processFiles(files) {
 function analyzeAndDisplay() {
     const hashMap = new Map();
     
-    // 按 hash 分组
+    // Group by hash
     allFiles.forEach(file => {
         if (!hashMap.has(file.hash)) {
             hashMap.set(file.hash, []);
@@ -150,7 +150,7 @@ function analyzeAndDisplay() {
         hashMap.get(file.hash).push(file);
     });
     
-    // 统计
+    // Update stats
     const totalFiles = allFiles.length;
     const uniqueHashes = hashMap.size;
     let duplicateFiles = 0;
@@ -158,7 +158,7 @@ function analyzeAndDisplay() {
     
     const duplicateGroupsArray = [];
     
-    // 只统计真正的重复（≥2个相同文件）
+    // Count only real duplicates (≥ 2 identical files)
     hashMap.forEach((files, hash) => {
         if (files.length > 1) {
             duplicateFiles += files.length;
@@ -167,13 +167,13 @@ function analyzeAndDisplay() {
         }
     });
     
-    // 更新统计
+    // Refresh the statistics widgets
     document.getElementById('statTotal').textContent = totalFiles;
     document.getElementById('statUnique').textContent = uniqueHashes;
     document.getElementById('statDuplicate').textContent = duplicateFiles;
     document.getElementById('statGroups').textContent = duplicateGroups;
     
-    // 显示结果
+    // Render the results
     displayResults(duplicateGroupsArray);
 }
 
@@ -192,7 +192,7 @@ function displayResults(duplicateGroups) {
         return;
     }
     
-    // 添加重复文件标题
+    // Add a header for duplicate files
     const header = document.createElement('div');
     header.className = 'section-header duplicate-section';
     header.innerHTML = `
@@ -201,7 +201,7 @@ function displayResults(duplicateGroups) {
     `;
     results.appendChild(header);
     
-    // 显示每个重复组
+    // Display each duplicate group
     duplicateGroups.forEach((group, index) => {
         const groupDiv = document.createElement('div');
         groupDiv.className = 'duplicate-group';
@@ -254,7 +254,7 @@ function displayResults(duplicateGroups) {
 }
 
 function clearAll() {
-    // 清理所有 URL 对象
+    // Revoke every object URL
     allFiles.forEach(file => {
         if (file.url) {
             URL.revokeObjectURL(file.url);
@@ -271,6 +271,6 @@ function clearAll() {
     document.getElementById('fileInput').value = '';
 }
 
-// 初始化
+// Initialize the page
 initRandomBackground();
 setupEventListeners();

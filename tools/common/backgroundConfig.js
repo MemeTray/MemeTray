@@ -1,10 +1,10 @@
 /**
- * MemeTray 背景壁纸配置
- * 集中管理所有随机壁纸 API 池
+ * MemeTray background wallpaper configuration
+ * Centralizes every random wallpaper API pool
  */
 
 /**
- * 随机壁纸 API 池
+ * Pool of random wallpaper APIs
  */
 export const WALLPAPER_API_POOL = [
     'https://t.alcy.cc/ycy',
@@ -19,16 +19,16 @@ export const WALLPAPER_API_POOL = [
 ];
 
 /**
- * 获取随机壁纸 API
- * @returns {string} 随机选择的壁纸 API URL
+ * Retrieve a random wallpaper API URL
+ * @returns {string} Randomly selected wallpaper API URL
  */
 export function getRandomWallpaper() {
     return WALLPAPER_API_POOL[Math.floor(Math.random() * WALLPAPER_API_POOL.length)];
 }
 
 /**
- * 初始化随机背景（支持非模块环境）
- * @param {string} selector - 背景元素选择器（默认 '.desktop'）
+ * Initialize the random background (works outside module environments)
+ * @param {string} selector - Background element selector (defaults to '.desktop')
  */
 export function initRandomBackground(selector = '.desktop') {
     try {

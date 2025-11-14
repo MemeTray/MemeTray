@@ -1,4 +1,4 @@
-/* Windows 11 风格主题变量 */
+/* Windows 11 inspired theme variables */
 :root {
     --bg: #f6f7fb;
     --text: #0b1220;
@@ -26,7 +26,7 @@ body {
     overflow: hidden;
 }
 
-/* 桌面背景 */
+/* Desktop background */
 .desktop {
     position: fixed;
     inset: 0;
@@ -38,7 +38,7 @@ body {
     filter: saturate(1.05);
 }
 
-/* 返回主页按钮 */
+/* Back-to-home button */
 .top-links {
     position: fixed;
     top: 10px;
@@ -70,7 +70,7 @@ body {
     transform: translateY(-1px);
 }
 
-/* 工具窗口 */
+/* Tool window */
 .tool-window {
     position: fixed;
     z-index: 500;
@@ -91,7 +91,7 @@ body {
     -webkit-backdrop-filter: saturate(1.8) blur(22px);
 }
 
-/* 窗口标题栏 */
+/* Window title bar */
 .window-titlebar {
     height: 40px;
     display: flex;
@@ -112,7 +112,7 @@ body {
     text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
 }
 
-/* 窗口内容 */
+/* Window content */
 .window-content {
     flex: 1;
     overflow-y: auto;
@@ -133,7 +133,7 @@ body {
     font-size: 14px;
 }
 
-/* 配置区域 */
+/* Configuration section */
 .config-section {
     margin-bottom: 20px;
     padding: 16px;
@@ -199,7 +199,7 @@ input[type="text"]:focus {
     color: var(--text);
 }
 
-/* 上传区域 */
+/* Upload area */
 .upload-area {
     background: var(--glass-bg);
     border: 2px dashed var(--glass-border);
@@ -245,7 +245,7 @@ input[type="text"]:focus {
     font-size: 14px;
 }
 
-/* 文件列表 */
+/* File list */
 .file-list {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
@@ -319,7 +319,7 @@ input[type="text"]:focus {
     border-color: #dc2626;
 }
 
-/* 操作按钮 */
+/* Action buttons */
 .actions {
     display: flex;
     gap: 12px;
@@ -377,7 +377,7 @@ input[type="text"]:focus {
     display: none;
 }
 
-/* 响应式设计 */
+/* Responsive design */
 @media (max-width: 768px) {
     .tool-window {
         width: 95%;

@@ -11,10 +11,10 @@
 </head>
 
 <body>
-    <!-- 桌面背景层 -->
+    <!-- Desktop background layer -->
     <div class="desktop"></div>
 
-    <!-- 返回主页按钮 -->
+    <!-- Back-to-home button -->
     <div class="top-links">
         <a class="top-link" href="../../index.html" aria-label="Back to Home" title="Back to Home">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
@@ -41,7 +41,7 @@
         </a>
     </div>
 
-    <!-- 工具窗口 -->
+    <!-- Tool window -->
     <div class="tool-window">
         <div class="window-titlebar">
             <img src="../../Images/MemeTray.png" alt="MemeTray" width="18" height="18">
@@ -51,7 +51,7 @@
             <div class="container">
                 <p class="subtitle">Compress, deduplicate, rename, and organize your GIFs in one workflow</p>
 
-                <!-- 步骤指示器 -->
+                <!-- Step indicator -->
                 <div class="workflow-steps">
                     <div class="step active" id="step1">
                         <div class="step-number">1</div>
@@ -75,7 +75,7 @@
                     </div>
                 </div>
 
-                <!-- 上传区域 -->
+                <!-- Upload area -->
                 <div class="upload-area" id="uploadArea">
                     <input type="file" id="fileInput" accept="image/gif" multiple>
                     <label for="fileInput">
@@ -88,7 +88,7 @@
                     </label>
                 </div>
 
-                <!-- 加载状态指示器 -->
+                <!-- Loading indicator -->
                 <div class="loading-indicator" id="loadingIndicator" style="display: none;">
                     <div class="loading-spinner"></div>
                     <span class="loading-text">Loading image processing library...</span>
@@ -97,7 +97,7 @@
                     </div>
                 </div>
 
-                <!-- 选项设置 -->
+                <!-- Options -->
                 <div class="options-panel" id="optionsPanel">
                     <div class="option-group">
                         <label class="toggle-option">
@@ -122,7 +122,7 @@
                     </div>
                 </div>
 
-                <!-- 配置区域 -->
+                <!-- Configuration section -->
                 <div class="config-section" id="configSection" style="display: none;">
                     <div class="config-row">
                         <div class="config-group">
@@ -140,7 +140,7 @@
                     </div>
                 </div>
 
-                <!-- 进度条 -->
+                <!-- Progress bar -->
                 <div id="progressContainer" class="progress-container" style="display: none;">
                     <div class="progress-info">
                         <span id="progressText">Processing: 0 / 0</span>
@@ -151,12 +151,12 @@
                     </div>
                 </div>
 
-                <!-- 结果展示区域（类似主页）-->
+                <!-- Results display area (similar to the homepage) -->
                 <div id="resultsArea" class="results-area" style="display: none;">
                     <div id="resultsGrid" class="results-grid"></div>
                 </div>
 
-                <!-- 操作按钮 -->
+                <!-- Action buttons -->
 <div class="actions" id="actionsArea" style="display: none;">
                     <div class="action-group">
                         <button id="restartBtn" class="btn btn-secondary">
@@ -190,13 +190,13 @@
         </div>
     </div>
 
-    <!-- 任务栏容器（由 taskbarPreview.js 动态生成）-->
+    <!-- Taskbar container (injected by taskbarPreview.js) -->
     <div id="taskbar"></div>
 
-    <!-- 预览面板容器（由 taskbarPreview.js 动态生成）-->
+    <!-- Preview panel container (injected by taskbarPreview.js) -->
     <div id="previewPanel"></div>
 
-    <!-- GIF 处理库和工具库 -->
+    <!-- GIF processing runtime and helper scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
     <script type="module" src="script.js" defer></script>

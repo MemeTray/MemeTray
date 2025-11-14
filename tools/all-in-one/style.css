@@ -1,4 +1,4 @@
-/* Windows 11 风格主题变量 */
+/* Windows 11 inspired theme variables */
 :root {
     --bg: #f6f7fb;
     --text: #0b1220;
@@ -29,7 +29,7 @@ body {
     overflow: hidden;
 }
 
-/* 桌面背景 */
+/* Desktop background */
 .desktop {
     position: fixed;
     inset: 0;
@@ -41,7 +41,7 @@ body {
     filter: saturate(1.05);
 }
 
-/* 返回主页按钮 */
+/* Back-to-home button */
 .top-links {
     position: fixed;
     top: 10px;
@@ -73,7 +73,7 @@ body {
     transform: translateY(-1px);
 }
 
-/* 工具窗口 */
+/* Tool window */
 .tool-window {
     position: fixed;
     z-index: 500;
@@ -94,7 +94,7 @@ body {
     -webkit-backdrop-filter: saturate(1.8) blur(22px);
 }
 
-/* 窗口标题栏 */
+/* Window title bar */
 .window-titlebar {
     height: 40px;
     display: flex;
@@ -115,7 +115,7 @@ body {
     text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
 }
 
-/* 窗口内容 */
+/* Window content */
 .window-content {
     flex: 1;
     overflow-y: auto;
@@ -136,7 +136,7 @@ body {
     font-size: 14px;
 }
 
-/* 工作流程步骤指示器 */
+/* Workflow step indicator */
 .workflow-steps {
     display: flex;
     justify-content: space-between;
@@ -204,7 +204,7 @@ body {
     font-weight: 600;
 }
 
-/* 加载状态指示器 */
+/* Loading indicator */
 .loading-indicator {
     text-align: center;
     padding: 30px 20px;
@@ -270,7 +270,7 @@ body {
     color: var(--danger);
 }
 
-/* 选项面板 */
+/* Options panel */
 .options-panel {
     margin-bottom: 20px;
     padding: 16px;
@@ -334,7 +334,7 @@ body {
     font-size: 14px;
 }
 
-/* 配置区域 */
+/* Configuration section */
 .config-section {
     margin-bottom: 20px;
     padding: 16px;
@@ -399,7 +399,7 @@ body {
     color: var(--text);
 }
 
-/* 上传区域 */
+/* Upload area */
 .upload-area {
     background: var(--glass-bg);
     border: 2px dashed var(--glass-border);
@@ -445,7 +445,7 @@ body {
     font-size: 14px;
 }
 
-/* 进度条 */
+/* Progress bar */
 .progress-container {
     margin: 20px 0;
     padding: 16px;
@@ -478,7 +478,7 @@ body {
     transition: width 0.3s ease;
 }
 
-/* 结果展示区域 */
+/* Results display area */
 .results-area {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
@@ -618,7 +618,7 @@ body {
     color: white;
 }
 
-/* 操作按钮 */
+/* Action buttons */
 .actions {
     display: flex;
     flex-direction: column;
@@ -689,7 +689,7 @@ body {
     flex-shrink: 0;
 }
 
-/* 统计信息 */
+/* Statistics */
 .stats-summary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -719,7 +719,7 @@ body {
     color: var(--text);
 }
 
-/* 滚动条样式 */
+/* Scrollbar styling */
 .window-content::-webkit-scrollbar {
     width: 8px;
 }
@@ -737,7 +737,7 @@ body {
     background: rgba(0, 0, 0, .3);
 }
 
-/* 加载动画 */
+/* Loading animation */
 .loading {
     text-align: center;
     padding: 60px 20px;
@@ -762,7 +762,7 @@ body {
     font-size: 14px;
 }
 
-/* 响应式设计 */
+/* Responsive design */
 @media (max-width: 768px) {
     .tool-window {
         width: 95vw;
