@@ -8,11 +8,6 @@ on:
   # 手动触发
   workflow_dispatch:
 
-  # 当 sections.txt 变化时触发
-  push:
-    paths:
-      - 'sections.txt'
-
 jobs:
   update-sections:
     runs-on: ubuntu-latest
