@@ -1,4 +1,4 @@
-// 导入任务栏和预览面板模块
+// Import the shared taskbar and preview modules
 import { initMemeTrayUI } from '../tools/common/taskbarPreview.js'
 
 let sections=window.MEMETRAY_SECTIONS||[]
@@ -14,7 +14,7 @@ const explorerContent=document.getElementById('explorerContent')
 const btnBack=document.getElementById('btnBack')
 const windowTitle=document.getElementById('windowTitle')
 const breadcrumbs=document.getElementById('breadcrumbs')
-// 移除复制路径按钮
+// Remove the copy-path button
 const resizeHandles=[...document.querySelectorAll('#explorer .resize-handle')]
 const sectionSelect={value:'all'}
 const infiniteLoader=document.getElementById('infiniteLoader')
@@ -25,7 +25,7 @@ let navState={view:'root',currentKey:null}
 const WINDOWS_ROOT='此电脑'
 const CATIME_PATH='%LOCALAPPDATA%\\Catime\\animations'
 
-// 多语言支持
+// Multi-language support
 let currentLang = localStorage.getItem('memetray.lang') || 'en'
 const translations = {
   zh: {
@@ -74,7 +74,7 @@ const translations = {
   }
 }
 
-// URL 参数覆盖语言并持久化（?lang=en 或 ?lang=zh）
+// Allow URL parameters to override and persist the language (?lang=en or ?lang=zh)
 try{
   const sp = new URLSearchParams(location.search)
   const q = (sp.get('lang') || sp.get('language') || '').trim()
@@ -94,20 +94,20 @@ function updateLanguage() {
     langIcon.textContent = currentLang === 'zh' ? 'EN' : '中文'
   }
   
-  // 更新按钮
+  // Update action button labels
   if (btnBack) {
     btnBack.setAttribute('aria-label', t('backBtn'))
     btnBack.setAttribute('title', t('backBtnTitle'))
   }
   
-  // 更新返回顶部按钮
+  // Update the back-to-top button
   const backTopBtn = document.getElementById('backTop')
   if (backTopBtn) {
     backTopBtn.setAttribute('aria-label', t('backTop'))
     backTopBtn.setAttribute('title', t('backTop'))
   }
   
-  // 更新顶部链接
+  // Update the top link labels
   const toolLink = document.getElementById('toolLink')
   if (toolLink) {
     toolLink.setAttribute('aria-label', t('toolLabel'))
@@ -126,20 +126,20 @@ function updateLanguage() {
     langToggle.setAttribute('title', t('langLabel'))
   }
   
-  // 更新预览按钮
+  // Update preview button labels
   const previewToggle = document.getElementById('previewToggle')
   if (previewToggle) {
     previewToggle.setAttribute('aria-label', t('previewLabel'))
     previewToggle.setAttribute('title', t('previewLabel'))
   }
   
-  // 更新侧边栏标题
+  // Update the sidebar title
   const sideTitle = sidebar && sidebar.querySelector('.side-title')
   if (sideTitle) {
     sideTitle.textContent = t('sidebarTitle')
   }
   
-  // 更新侧边栏折叠按钮
+  // Update the sidebar collapse toggle
   const sidebarToggle = sidebar && sidebar.querySelector('.sidebar-toggle')
   if (sidebarToggle) {
     const isCollapsed = sidebar.classList.contains('sidebar--collapsed')
@@ -147,7 +147,7 @@ function updateLanguage() {
     sidebarToggle.setAttribute('title', isCollapsed ? t('sidebarExpand') : t('sidebarCollapse'))
   }
   
-  // 更新法律声明
+  // Update the legal disclaimer content
   const lf = document.getElementById('legalFooter')
   if (lf) {
     if (lf.classList.contains('legal--compact')) {
@@ -157,7 +157,7 @@ function updateLanguage() {
     }
   }
   
-  // 更新预览面板文本
+  // Update text inside the preview panel
   const previewPanelTitle = document.getElementById('previewPanelTitle')
   if (previewPanelTitle) {
     previewPanelTitle.textContent = t('previewTitle')
@@ -173,7 +173,7 @@ function updateLanguage() {
     previewPasteText.textContent = t('previewPasteHint')
   }
   
-  // 更新批量操作按钮 tooltip
+  // Update tooltips for bulk action buttons
   const downloadAllBtn = document.getElementById('downloadAllBtn')
   if (downloadAllBtn) {
     downloadAllBtn.setAttribute('title', t('downloadAllText'))
@@ -184,11 +184,11 @@ function updateLanguage() {
     clearAllBtn.setAttribute('title', t('clearAllText'))
   }
   
-  // 保存语言设置
+  // Persist the selected language
   localStorage.setItem('memetray.lang', currentLang)
 }
 
-// 语言切换
+// Language switching
 const langToggle = document.getElementById('langToggle')
 if (langToggle) {
   langToggle.addEventListener('click', () => {
@@ -197,7 +197,7 @@ if (langToggle) {
   })
 }
 
-// 桌面背景支持（URL 参数优先，其次 localStorage），无值或无效时从API池随机选择
+// Desktop background support (URL parameter first, fallback to localStorage, otherwise random from API pool)
 ;(async function initBackground(){
   try{
     const p=new URLSearchParams(location.search)
@@ -207,13 +207,13 @@ if (langToggle) {
     const savedRaw=localStorage.getItem(key)
     const saved=savedRaw && savedRaw.trim()
     
-    // 动态导入随机壁纸配置
+    // Dynamically import the random wallpaper configuration
     let randomApi
     try{
       const {getRandomWallpaper} = await import('../tools/common/backgroundConfig.js')
       randomApi = getRandomWallpaper()
     }catch(_){
-      // 降级：如果模块加载失败，使用内联配置
+      // Fallback: inline configuration if the module import fails
       const apiPool=[
         'https://t.alcy.cc/ycy','https://t.alcy.cc/moez','https://t.alcy.cc/ysz',
         'https://t.alcy.cc/pc','https://t.alcy.cc/moe','https://t.alcy.cc/fj',
@@ -231,14 +231,14 @@ if (langToggle) {
       if(s==='none'||s==='null'||s==='undefined') return false
       if(s.startsWith('data:')||s.startsWith('blob:')) return true
       if(/\.(png|jpe?g|gif|webp|bmp|svg)(\?.*)?$/i.test(s)) return true
-      // 允许常见的相对/绝对/HTTP(S) 路径，但不做同步探测
+      // Allow common relative/absolute/http(s) paths without synchronous validation
       return /^(https?:|\/|\.\/|\.\.\/)/.test(s)
     }
 
     if(desktop && isValid(val)){
       desktop.style.backgroundImage=`url("${val}")`
     }
-    // 仅在 URL 有效时保存
+    // Persist only when the URL is valid
     if(fromUrl && isValid(fromUrl)){
       localStorage.setItem(key,fromUrl)
     }
@@ -267,22 +267,22 @@ function renderOneSection(secObj, page = 1){
     sec = newSection.sec
     grid = newSection.grid
     sec.dataset.key = key
-    // 文件夹视图不需要内容区上方的“名称与数量”标题
+    // Folder view does not require the header above the content
     if(navState.view==='folder'){
       const h2=sec.querySelector('h2'); if(h2) h2.remove()
     }
     container.appendChild(sec)
   } else {
     grid = sec.querySelector('.gallery')
-    // 已存在 section 时也移除标题
+    // Remove the header when a section already exists
     if(navState.view==='folder'){
       const h2=sec.querySelector('h2'); if(h2) h2.remove()
     }
   }
 
-  // 移除骨架占位，改为图片淡入
+  // Replace skeleton placeholders with a fade-in effect
   
-  // 使用 baseUrl（如果存在）或回退到本地路径
+  // Use baseUrl when available, otherwise fall back to a local path
   const baseUrl = secObj.baseUrl || (GIF_BASE + dir + "/")
 
   for(const id of pagedFiles){
@@ -361,9 +361,9 @@ function buildItems(){
     preloadOthers(others)
   }
 }
-// 顶部方格作为主要交互入口
+// Use the top grid as the primary entry point
 
-// 视图切换
+// Toggle between views
 function enterRoot(){
   navState.view='root'; navState.currentKey=null
   const titleTextEl=document.getElementById('windowTitleText')
@@ -376,10 +376,10 @@ function enterRoot(){
   if(infiniteLoader){infiniteLoader.style.display='none'}
   renderBreadcrumbs()
   updateBackTopVisibility()
-  // 清除 URL hash
+  // Clear the URL hash
   if(history.replaceState){ history.replaceState(null,null,' ') }
   else{ location.hash='' }
-    // 根视图：展示右下角小药丸
+    // Root view: show the bottom-right pill
   try{
     const lf=document.getElementById('legalFooter')
     if(lf){
@@ -397,15 +397,15 @@ function enterFolder(key){
   if(sectionTiles) sectionTiles.style.display='none'
   if(container) container.style.display='block'
   if(sidebar) sidebar.style.display='flex'
-  // 确保侧栏高亮与当前分组一致（从主页点击方块进入时生效）
+  // Ensure the sidebar highlight matches the current group
   highlightSidebar(key)
   if(container) container.classList.add('container--folder')
   sectionSelect.value=key
   buildItems()
-  // 更新 URL hash 以保持状态
+  // Update the URL hash to preserve state
   if(history.replaceState){ history.replaceState(null,null,'#'+encodeURIComponent(key)) }
   else{ location.hash=key }
-  // 保险：进入文件夹后清理内容区所有分区标题
+  // As a safeguard, clear all content section headers after entering a folder
   try{
     if(container){
       container.querySelectorAll('.section h2').forEach(h=>h.remove())
@@ -414,12 +414,12 @@ function enterFolder(key){
   if(explorerContent){ explorerContent.scrollTo({top:0,behavior:'smooth'}) }
   renderBreadcrumbs()
   updateBackTopVisibility()
-  // 文件夹视图：隐藏药丸（避免与分组内声明重复）
+  // In folder view, hide the pill to avoid duplicate disclaimers
   try{
     const lf=document.getElementById('legalFooter')
     if(lf){
       lf.classList.remove('legal--compact')
-      // 文件夹视图填充完整声明，贴在窗口底部
+      // In folder view, pin the full disclaimer to the bottom
       lf.innerHTML=t('legalFull')
     }
   }catch(_){/* ignore */}
@@ -427,9 +427,9 @@ function enterFolder(key){
 
 function renderBreadcrumbs(){
   const titleTextEl=document.getElementById('windowTitleText')
-  // 仅显示 MemeTray 起始，不显示 "此电脑"
+  // Show only the MemeTray root, hiding "This PC"
   const parts = navState.view==='folder' ? ['MemeTray',navState.currentKey] : ['MemeTray']
-  // 1) 清空并渲染到标题文本（与图标同一行）
+  // 1) Clear and render the title text (same row as the icon)
   if(titleTextEl){
     titleTextEl.innerHTML=''
     parts.forEach((name,idx)=>{
@@ -437,22 +437,22 @@ function renderBreadcrumbs(){
       const span=document.createElement('span'); span.className='crumb ' + (isLast?'crumb--current':'crumb--link')
       span.textContent=name
       
-      // 添加点击事件
+      // Attach click handlers
       if(!isLast){
         span.addEventListener('click',(e)=>{
-          e.stopPropagation() // 阻止事件冒泡到窗口标题
+          e.stopPropagation() // Prevent events from bubbling to the window title
           if(idx===0) return enterRoot()
           if(idx===1) return enterFolder(navState.currentKey)
         })
       } else if(isLast && idx === 1 && navState.view === 'folder') {
-        // 当前分类名称，点击跳转到 GitHub 仓库中的文件夹
+        // Clicking the category name opens the corresponding GitHub folder
         span.style.cursor = 'pointer'
         span.title = t('openRepository')
         span.addEventListener('click', (e) => {
-          e.stopPropagation() // 阻止事件冒泡到窗口标题
+          e.stopPropagation() // Prevent events from bubbling to the window title
           const sec = sections && sections.find(s => s.key === navState.currentKey)
           if (sec && sec.repository) {
-            // 跳转到仓库中的文件夹，例如 /tree/main/maomaochong
+            // Navigate to the repository folder, e.g., /tree/main/maomaochong
             const folderUrl = `${sec.repository}/tree/main/${sec.key}`
             window.open(folderUrl, '_blank', 'noopener,noreferrer')
           }
@@ -465,14 +465,14 @@ function renderBreadcrumbs(){
         titleTextEl.appendChild(sep)
       }
     })
-    // 在文件夹视图最后追加数量 (n)
+    // Append the item count (n) at the end of folder view
     if(navState.view==='folder' && navState.currentKey){
       const sec=sections && sections.find(s=>s.key===navState.currentKey)
       if(sec && Array.isArray(sec.files)){
         const cnt=document.createElement('span')
         cnt.className='count-badge'
         cnt.textContent=String(sec.files.length)
-        // 阻止点击事件冒泡，数量标签不可点击
+        // Prevent bubbling so the count label is not clickable
         cnt.addEventListener('click', (e) => {
           e.stopPropagation()
         })
@@ -480,37 +480,37 @@ function renderBreadcrumbs(){
       }
     }
   }
-  // 2) 清空内容区 breadcrumbs，避免重复显示
+  // 2) Clear content breadcrumbs to avoid duplicates
   if(breadcrumbs){
     breadcrumbs.innerHTML=''
   }
 }
 
-// 按钮事件
+// Button handlers
 btnBack&&btnBack.addEventListener('click',()=>{
   if(navState.view==='folder') enterRoot()
 })
 
-// 窗口标题点击事件
+// Window title click behavior
 windowTitle&&windowTitle.addEventListener('click',()=>{
   if(navState.view==='root') {
-    // 在主目录时点击 MemeTray 跳转到 GitHub
+    // When at the root, clicking MemeTray opens GitHub
     window.open('https://github.com/MemeTray/MemeTray', '_blank', 'noopener,noreferrer')
   } else if(navState.view==='folder') {
-    // 在子目录时点击 MemeTray 返回主目录
+    // When in a subdirectory, clicking MemeTray returns home
     enterRoot()
   }
 })
 
-// 已移除复制路径按钮
+// Copy-path button removed
 
 function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
-// 已移除网络探针逻辑，数量完全由 sections.json 提供
+// Network probing removed; counts now come solely from sections.json
 
 async function fetchSections(){
   if(sections && sections.length){buildItems();return}
   try{
-    // 使用新的集中式配置 sections.json
+    // Use the centralized sections.json configuration
     console.log('Loading sections.json...')
     const sectionsResponse = await fetch("./sections.json", {cache: 'no-store'})
 
@@ -521,7 +521,7 @@ async function fetchSections(){
     const sectionsData = await sectionsResponse.json()
     console.log('sections.json loaded successfully:', sectionsData)
 
-    // 转换为所需格式
+    // Convert data into the required format
     sections = Object.entries(sectionsData.sections)
       .map(([key, data]) => {
         const count = Number.isFinite(Number(data.count)) ? Number(data.count) : 0
@@ -547,9 +547,9 @@ async function fetchSections(){
       buildItems()
     }
 
-    // sections 已经在上面构建完成
+    // Sections have already been constructed above
 
-    // 构建顶部方格选择器（预览固定为 0001_分组名.gif）
+    // Build the top grid selector (preview defaults to 0001_group.gif)
     if(sectionTiles){
       sectionTiles.innerHTML=''
       for(const {dir,title,files,baseUrl} of sections){
@@ -568,10 +568,10 @@ async function fetchSections(){
       }
     }
 
-    // 构建左侧侧边栏（分组快速切换）
+    // Build the left sidebar for quick group switching
     if(sidebar){
       sidebar.innerHTML=''
-      // 添加标题和折叠按钮
+      // Add the title and collapse button
       const header=document.createElement('div'); header.className='side-header'
       const title=document.createElement('div'); title.className='side-title'; title.textContent=t('sidebarTitle')
       const toggleBtn=document.createElement('button'); toggleBtn.className='sidebar-toggle'; toggleBtn.setAttribute('aria-label',t('sidebarCollapse')); toggleBtn.title=t('sidebarCollapse')
@@ -580,21 +580,21 @@ async function fetchSections(){
       header.appendChild(toggleBtn)
       sidebar.appendChild(header)
       
-      // 折叠按钮事件
+      // Collapse button behavior
       toggleBtn.addEventListener('click',toggleSidebar)
       
-      // 恢复侧边栏状态（默认收起）
+      // Restore the sidebar state (collapsed by default)
       try{
         const saved=localStorage.getItem('memetray.sidebar.collapsed')
-        // 如果用户从未设置过，默认为收起（collapsed=true）
-        // 如果用户设置过，则按用户偏好显示
+        // Default to collapsed when the user has no preference
+        // Respect the user preference when available
         const collapsed = saved === null ? true : saved === 'true'
         if(collapsed){
           sidebar.classList.add('sidebar--collapsed')
           toggleBtn.setAttribute('title',t('sidebarExpand'))
         }
       }catch(_){
-        // 如果 localStorage 失败，也默认收起
+        // Fall back to collapsed when localStorage access fails
         sidebar.classList.add('sidebar--collapsed')
         toggleBtn.setAttribute('title',t('sidebarExpand'))
       }
@@ -612,7 +612,7 @@ async function fetchSections(){
         item.addEventListener('click',()=>{enterFolder(dir); highlightSidebar(dir)})
         sidebar.appendChild(item)
       }
-      // 侧边栏悬停预览（事件委托，覆盖所有子项）
+      // Sidebar hover preview via event delegation
       const onOver=(e)=>{
         const el=e.target && e.target.closest && e.target.closest('.side-item')
         if(!el || !sidebar.contains(el)) return
@@ -632,26 +632,26 @@ async function fetchSections(){
       }
     }
 
-    // 3) 预加载所有分组前 48 张，确保后续切换秒开
+    // 3) Preload the first 48 items for every group for instant switching
     preloadOthers(sections)
     
-    // 检查 URL hash 以恢复之前的目录状态
+    // Restore prior directory state based on the URL hash
     const hash=location.hash.slice(1)
     const targetKey=hash && decodeURIComponent(hash)
     const hasValidTarget=targetKey && sections.some(s=>s.key===targetKey)
     
     if(hasValidTarget){
-      // 恢复到之前的文件夹视图
+      // Restore the previous folder view
       enterFolder(targetKey)
     }else{
-      // 默认进入根视图（只显示文件夹）
+      // Start in the root view showing folders only
       enterRoot()
     }
     
-    // 初始化语言设置
+    // Initialize the language setting
     updateLanguage()
     
-    // 隐藏加载遮罩
+    // Hide the loading overlay
     setTimeout(()=>{
       const splash = document.getElementById('splash')
       if(splash){
@@ -662,7 +662,7 @@ async function fetchSections(){
 
   }catch(err){
     console.warn('读取本地索引失败',err)
-    // 即使出错也隐藏遮罩
+    // Hide the overlay even when an error occurs
     const splash = document.getElementById('splash')
     if(splash){
       splash.classList.add('hidden')
@@ -673,7 +673,7 @@ async function fetchSections(){
 
 fetchSections()
 
-// 禁止缩放（Ctrl +/-/0、Ctrl+滚轮、手势）
+// Disable zooming (Ctrl +/-/0, wheel, or gestures)
 window.addEventListener('keydown', (e)=>{
   if(e.ctrlKey && (e.key==='+'||e.key==='='||e.key==='-'||e.key==='0')){
     e.preventDefault()
@@ -686,7 +686,7 @@ window.addEventListener('gesturestart', (e)=>{e.preventDefault()})
 window.addEventListener('gesturechange', (e)=>{e.preventDefault()})
 window.addEventListener('gestureend', (e)=>{e.preventDefault()})
 
-// 返回顶部按钮逻辑（绑定到窗口内容滚动）
+// Back-to-top button logic (bound to content scroll)
 const backTopBtn=document.getElementById('backTop')
 function updateBackTopVisibility(){
   if(!backTopBtn||!explorerContent) return
@@ -710,7 +710,7 @@ function highlightSidebar(dir){
   })
 }
 
-// 侧边栏折叠/展开切换
+// Toggle the sidebar open or closed
 function toggleSidebar(){
   if(!sidebar) return
   const isCollapsed=sidebar.classList.contains('sidebar--collapsed')
@@ -729,13 +729,13 @@ function toggleSidebar(){
       btn.setAttribute('aria-label',t('sidebarExpand'))
     }
   }
-  // 保存状态到 localStorage
+  // Save state to localStorage
   try{
     localStorage.setItem('memetray.sidebar.collapsed',String(!isCollapsed))
   }catch(_){/* ignore */}
 }
 
-// Infinite Scroll（绑定到窗口内容滚动）
+// Infinite scroll (bound to content scroll)
 let isLoading = false
 async function handleInfiniteScroll() {
   if (isLoading) return
@@ -775,12 +775,12 @@ if(infTarget && infTarget.addEventListener){
   window.addEventListener('scroll', handleInfiniteScroll, { passive: true })
 }
 
-// 窗口拖拽
+// Drag the window around
 ;(function enableDrag(){
   if(!explorer||!explorerTitlebar) return
   let dragging=false, startX=0, startY=0, startLeft=0, startTop=0
   const onDown=(e)=>{
-    // 如果点击在导航按钮上，不触发拖拽
+    // Do not start dragging when navigation buttons are clicked
     const target=e.target
     if(target && (target.closest && (target.closest('#btnBack')||target.closest('#pathbar')))) return
     dragging=true
@@ -819,7 +819,7 @@ if(infTarget && infTarget.addEventListener){
   explorerTitlebar.addEventListener('touchstart',onDown,{passive:true})
 })()
 
-// 初始化任务栏和预览面板（使用通用模块）
+// Initialize the taskbar and preview panel using the shared module
 let memeTrayUI = null
 ;(async function initMemeTrayComponents() {
   try {
@@ -840,7 +840,7 @@ let memeTrayUI = null
       }
     })
 
-    // 绑定预览切换按钮
+    // Wire up the preview toggle button
     const previewToggle = document.getElementById('previewToggle')
     if (previewToggle) {
       previewToggle.addEventListener('click', () => {
@@ -848,7 +848,7 @@ let memeTrayUI = null
       })
     }
 
-    // 添加图片悬停时的托盘图标显示功能（保留原有行为）
+    // Show the tray icon preview when hovering over images
     window.setTrayIcon = (src, img) => {
       if (memeTrayUI) {
         memeTrayUI.taskbar.setTrayIcon(src, img)
@@ -864,9 +864,9 @@ let memeTrayUI = null
   }
 })()
 
-// 窗口缩放（旧逻辑移除，保留新版）
+// Window resizing (legacy logic removed, using the new implementation)
 
-// 窗口缩放
+// Window resizing
 ;(function enableResize(){
   if(!explorer||!resizeHandles.length) return
   const storeKey='memetray.window.bounds'
@@ -882,7 +882,7 @@ let memeTrayUI = null
     const b={left:r.left,top:r.top,width:r.width,height:r.height}
     try{localStorage.setItem(storeKey,JSON.stringify(b))}catch(_){/* ignore */}
   }
-  // 初始化位置尺寸（若有存储，应用之）
+  // Initialize window position and size when stored
   const saved=loadBounds()
   if(saved&&Number.isFinite(saved.width)&&Number.isFinite(saved.height)){
     explorer.style.left=saved.left+"px"
@@ -890,7 +890,7 @@ let memeTrayUI = null
     explorer.style.width=saved.width+"px"
     explorer.style.height=saved.height+"px"
   }else{
-    // 默认占满视口，四周留缝隙（与 CSS 初始一致）
+    // Default to filling the viewport with margins (matching CSS defaults)
     explorer.style.left='8px'
     explorer.style.top='8px'
     explorer.style.width=(window.innerWidth-16)+"px"
@@ -941,10 +941,10 @@ let memeTrayUI = null
     h.addEventListener('mousedown',onDown)
     h.addEventListener('touchstart',onDown,{passive:false})
   })
-  // 窗口拖拽结束也保存位置
+  // Save the position after dragging the window
   window.addEventListener('mouseup',()=>{ if(!resizing) saveBounds() })
 
-  // 让标题栏顶边与顶角也可触发缩放与显示对应光标
+  // Allow the title bar edge and corners to trigger resizing and show the correct cursor
   if(explorerTitlebar){
     const edge=8
     const corner=12
@@ -981,7 +981,7 @@ let memeTrayUI = null
     },{passive:false})
   }
 
-  // 工具下拉菜单交互
+  // Tool dropdown interactions
   const toolsToggle = document.getElementById('toolsToggle')
   const toolsMenu = document.getElementById('toolsMenu')
   if (toolsToggle && toolsMenu) {
@@ -990,14 +990,14 @@ let memeTrayUI = null
       toolsMenu.classList.toggle('show')
     })
     
-    // 点击外部关闭下拉菜单
+    // Close the dropdown when clicking outside
     document.addEventListener('click', (e) => {
       if (!toolsToggle.contains(e.target) && !toolsMenu.contains(e.target)) {
         toolsMenu.classList.remove('show')
       }
     })
     
-    // ESC 键关闭下拉菜单
+    // Close the dropdown with the ESC key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && toolsMenu.classList.contains('show')) {
         toolsMenu.classList.remove('show')

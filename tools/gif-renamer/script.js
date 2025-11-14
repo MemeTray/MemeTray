@@ -1,7 +1,7 @@
 let files = [];
 let fileIdCounter = 0;
 
-// DOM 元素
+// Cached DOM references
 const uploadArea = document.getElementById('uploadArea');
 const fileInput = document.getElementById('fileInput');
 const startNumberInput = document.getElementById('startNumber');
@@ -14,41 +14,41 @@ const clearBtn = document.getElementById('clearBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const batchActions = document.getElementById('batchActions');
 
-// 初始化
+// Initialize the module
 function init() {
     setupEventListeners();
     updatePreview();
 }
 
-// 设置事件监听器
+// Register event listeners
 function setupEventListeners() {
-    // 文件上传
+    // Handle file uploads
     fileInput.addEventListener('change', handleFileSelect);
 
-    // 拖拽上传
+    // Handle drag-and-drop uploads
     uploadArea.addEventListener('dragover', handleDragOver);
     uploadArea.addEventListener('dragleave', handleDragLeave);
     uploadArea.addEventListener('drop', handleDrop);
 
-    // 配置更新
+    // Respond to configuration changes
     startNumberInput.addEventListener('input', updatePreview);
     suffixInput.addEventListener('input', handleSuffixInput);
     startNumberInput.addEventListener('input', updateFileList);
     suffixInput.addEventListener('input', updateFileList);
 
-    // 按钮事件
+    // Button interactions
     clearBtn.addEventListener('click', clearAll);
     downloadBtn.addEventListener('click', downloadFiles);
 }
 
-// 更新预览
+// Update the filename preview
 function updatePreview() {
     const startNum = Math.max(1, Math.min(9999, parseInt(startNumberInput.value) || 1));
     const rawSuffix = suffixInput.value;
     const cleanedSuffix = rawSuffix.trim().replace(/[^a-zA-Z0-9-_]/g, '');
     const suffix = cleanedSuffix || 'doro';
 
-    // 只在需要时清理输入（删除非法字符）
+    // Sanitize the suffix only when invalid characters are present
     if (rawSuffix !== cleanedSuffix && rawSuffix.trim() !== '') {
         suffixInput.value = cleanedSuffix;
     }
@@ -57,13 +57,13 @@ function updatePreview() {
     preview.textContent = `${paddedNum}_${suffix}.gif`;
 }
 
-// 处理文件选择
+// Handle file selections
 function handleFileSelect(e) {
     const selectedFiles = Array.from(e.target.files);
     processFiles(selectedFiles);
 }
 
-// 处理拖拽
+// Handle drag events
 function handleDragOver(e) {
     e.preventDefault();
     uploadArea.classList.add('dragover');
@@ -80,7 +80,7 @@ async function handleDrop(e) {
     const items = e.dataTransfer.items;
     const droppedFiles = [];
     
-    // 处理拖拽的文件和文件夹
+    // Process files and folders from drag-and-drop
     for (let i = 0; i < items.length; i++) {
         const item = items[i].webkitGetAsEntry();
         if (item) {
@@ -88,12 +88,12 @@ async function handleDrop(e) {
         }
     }
     
-    // 过滤 GIF 文件
+    // Filter out GIF files
     const gifFiles = droppedFiles.filter(file => file.type === 'image/gif');
     processFiles(gifFiles);
 }
 
-// 遍历文件树（处理文件夹）
+// Traverse the file tree for dropped folders
 async function traverseFileTree(item, files) {
     if (item.isFile) {
         return new Promise((resolve) => {
@@ -112,7 +112,7 @@ async function traverseFileTree(item, files) {
     }
 }
 
-// 读取目录中的所有条目
+// Read every entry in the directory
 function readAllEntries(dirReader) {
     return new Promise((resolve) => {
         const allEntries = [];
@@ -132,7 +132,7 @@ function readAllEntries(dirReader) {
     });
 }
 
-// 处理文件
+// Process individual files
 function processFiles(newFiles) {
     if (newFiles.length === 0) {
         alert('No GIF files found!');
@@ -141,9 +141,9 @@ function processFiles(newFiles) {
     
     console.log(`Processing ${newFiles.length} GIF files`);
     
-    // 添加文件到列表
+    // Add the file to the list
     newFiles.forEach(file => {
-        // 检查是否已存在相同文件
+        // Check for duplicates before adding
         const exists = files.some(f => f.originalName === file.name && f.size === file.size);
         if (!exists) {
             const fileObj = {
@@ -159,28 +159,28 @@ function processFiles(newFiles) {
     updateFileList();
     updateUI();
     
-    // 显示成功消息
+    // Show a success notification
     if (newFiles.length > 0) {
         console.log(`Added ${newFiles.length} files. Total: ${files.length} files`);
     }
 }
 
-// 处理suffix输入
+// Handle suffix input
 function handleSuffixInput() {
     const rawValue = suffixInput.value;
     const cleanedValue = rawValue.replace(/[^a-zA-Z0-9-_]/g, '');
 
-    // 如果用户输入了非法字符，实时清理
+    // Remove invalid characters immediately
     if (rawValue !== cleanedValue) {
         suffixInput.value = cleanedValue;
     }
 
-    // 如果清空输入框，提供视觉反馈
+    // Provide visual feedback when the input is cleared
     if (cleanedValue === '') {
         suffixInput.style.borderColor = 'var(--warning)';
         suffixInput.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
 
-        // 3秒后恢复正常样式
+        // Restore styles after three seconds
         setTimeout(() => {
             suffixInput.style.borderColor = '';
             suffixInput.style.backgroundColor = '';
@@ -191,7 +191,7 @@ function handleSuffixInput() {
     updateFileList();
 }
 
-// 更新文件列表显示
+// Refresh the displayed file list
 function updateFileList() {
     if (files.length === 0) {
         fileList.classList.add('hidden');
@@ -226,14 +226,14 @@ function updateFileList() {
     });
 }
 
-// 移除文件
+// Remove a file from the list
 function removeFile(id) {
     files = files.filter(f => f.id !== id);
     updateFileList();
     updateUI();
 }
 
-// 清空所有文件
+// Clear all tracked files
 function clearAll() {
     files = [];
     fileIdCounter = 0;
@@ -241,7 +241,7 @@ function clearAll() {
     updateUI();
 }
 
-// 更新 UI 状态
+// Update UI state
 function updateUI() {
     const hasFiles = files.length > 0;
     
@@ -252,14 +252,14 @@ function updateUI() {
     }
 }
 
-// 格式化文件大小
+// Format file sizes
 function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
-// 下载重命名后的文件
+// Download the renamed files
 async function downloadFiles() {
     if (files.length === 0) return;
     
@@ -267,7 +267,7 @@ async function downloadFiles() {
     downloadBtn.textContent = 'Processing...';
     
     try {
-        // 动态加载 JSZip
+        // Dynamically load the JSZip library
         if (typeof JSZip === 'undefined') {
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
@@ -283,7 +283,7 @@ async function downloadFiles() {
         const startNum = parseInt(startNumberInput.value) || 1;
         const suffix = suffixInput.value.trim() || 'doro';
         
-        // 添加文件到 ZIP
+        // Add files to the ZIP archive
         for (let i = 0; i < files.length; i++) {
             const fileObj = files[i];
             const newNumber = startNum + i;
@@ -293,14 +293,14 @@ async function downloadFiles() {
             zip.file(newName, fileObj.file);
         }
         
-        // 生成 ZIP 文件
+        // Generate the ZIP archive
         const zipBlob = await zip.generateAsync({
             type: 'blob',
             compression: 'DEFLATE',
             compressionOptions: { level: 6 }
         });
         
-        // 下载 ZIP 文件
+        // Trigger the ZIP download
         const url = URL.createObjectURL(zipBlob);
         const link = document.createElement('a');
         link.href = url;
@@ -325,5 +325,5 @@ async function downloadFiles() {
     }
 }
 
-// 初始化应用
+// Initialize the application
 init();

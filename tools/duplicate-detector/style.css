@@ -1,4 +1,4 @@
-/* Windows 11 风格主题变量 */
+/* Windows 11 inspired theme variables */
 :root {
     --bg: #f6f7fb;
     --text: #0b1220;
@@ -29,7 +29,7 @@ body {
     overflow: hidden;
 }
 
-/* 桌面背景 */
+/* Desktop background */
 .desktop {
     position: fixed;
     inset: 0;
@@ -41,7 +41,7 @@ body {
     filter: saturate(1.05);
 }
 
-/* 返回主页按钮 */
+/* Back-to-home button */
 .top-links {
     position: fixed;
     top: 10px;
@@ -73,7 +73,7 @@ body {
     transform: translateY(-1px);
 }
 
-/* 工具窗口 */
+/* Tool window */
 .tool-window {
     position: fixed;
     z-index: 500;
@@ -94,7 +94,7 @@ body {
     -webkit-backdrop-filter: saturate(1.8) blur(22px);
 }
 
-/* 窗口标题栏 */
+/* Window title bar */
 .window-titlebar {
     height: 40px;
     display: flex;
@@ -115,7 +115,7 @@ body {
     text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
 }
 
-/* 窗口内容 */
+/* Window content */
 .window-content {
     flex: 1;
     overflow-y: auto;
@@ -136,7 +136,7 @@ body {
     font-size: 14px;
 }
 
-/* 上传区域 */
+/* Upload area */
 .upload-area {
     background: var(--glass-bg);
     border: 2px dashed var(--glass-border);
@@ -188,7 +188,7 @@ body {
     opacity: 0.7;
 }
 
-/* 进度条 */
+/* Progress bar */
 .progress-container {
     margin: 20px 0;
     padding: 16px;
@@ -221,7 +221,7 @@ body {
     transition: width 0.3s ease;
 }
 
-/* 统计信息 */
+/* Statistics */
 .stats-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -260,7 +260,7 @@ body {
     color: var(--danger);
 }
 
-/* 批量操作按钮 */
+/* Bulk action buttons */
 .batch-actions {
     display: flex;
     gap: 12px;
@@ -306,7 +306,7 @@ body {
     color: var(--danger);
 }
 
-/* 结果区域 */
+/* Results area */
 .results {
     margin-top: 20px;
 }
@@ -338,7 +338,7 @@ body {
     color: var(--muted);
 }
 
-/* 重复组 */
+/* Duplicate groups */
 .duplicate-group {
     margin-bottom: 20px;
     padding: 16px;
@@ -430,7 +430,7 @@ body {
     margin-top: 4px;
 }
 
-/* 滚动条样式 */
+/* Scrollbar styling */
 .window-content::-webkit-scrollbar {
     width: 8px;
 }
@@ -448,7 +448,7 @@ body {
     background: rgba(0, 0, 0, .3);
 }
 
-/* 响应式设计 */
+/* Responsive design */
 @media (max-width: 768px) {
     .tool-window {
         width: 95vw;

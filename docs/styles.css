@@ -1,4 +1,4 @@
-/* 基础主题变量（液态玻璃风格） */
+/* Core theme variables (liquid glass style) */
 :root{--bg:#f6f7fb;--text:#0b1220;--muted:#6b7280;--card-bg:#ffffff;--card-border:#e5e7eb;--card-hover:#0b1220;--accent:#0ea5e9;--glass-bg:rgba(255,255,255,.08);--glass-border:rgba(255,255,255,.18);--glass-shadow:0 8px 32px rgba(31,38,135,.2);--glass-inner-shadow:inset 0 1px 20px rgba(255,255,255,.3),inset 0 -1px 20px rgba(255,255,255,.1)}
 
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:16px;color:var(--text);background:var(--bg);padding-bottom:64px}
@@ -13,13 +13,13 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .legal-links a:hover{text-decoration:underline}
 .meta{font-size:12px;color:var(--muted);margin-bottom:10px}
 
-/* 区块与网格 */
+/* Sections and grid */
 .section{margin:20px 0}
 #container.container--folder .section{margin-top:0}
 .section h2{margin:0 0 12px 0;font-size:14px;color:var(--muted);letter-spacing:.2px}
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;align-items:stretch}
 
-/* 顶部分组小方格选择器 */
+/* Top group selector grid */
 .section-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin:8px 0 12px 0}
 .tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-bg);cursor:pointer;box-shadow:var(--glass-shadow),var(--glass-inner-shadow);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);transition:all .3s cubic-bezier(.4,0,.2,1);overflow:hidden}
 .tile::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(135deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.15) 50%,rgba(255,255,255,0) 100%);transform:translateX(-100%) translateY(-100%) rotate(45deg);transition:transform .6s cubic-bezier(.4,0,.2,1);z-index:0;pointer-events:none}
@@ -30,7 +30,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .tile-thumb img{width:100%;height:100%;object-fit:contain}
 .tile-title{font-size:12px;color:var(--text)}
 
-/* 卡片 */
+/* Cards */
 .gallery a{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:172px;padding:14px;text-decoration:none;color:var(--text);background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:16px;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:var(--glass-shadow),var(--glass-inner-shadow);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);overflow:hidden}
 .gallery a:hover{border-color:var(--card-hover);transform:translateY(-3px) scale(1.02);box-shadow:0 16px 48px rgba(31,38,135,.28),0 6px 16px rgba(31,38,135,.18),var(--glass-inner-shadow)}
 .gallery a:active{transform:translateY(0) scale(.995)}
@@ -47,11 +47,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .top-links{position:fixed;top:10px;right:10px;display:flex;gap:8px;z-index:1000}
 .top-link{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass-bg);color:var(--text);text-decoration:none;box-shadow:var(--glass-shadow),var(--glass-inner-shadow);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);transition:all .3s cubic-bezier(.4,0,.2,1)}
 .top-link:hover{border-color:var(--card-hover);transform:translateY(-1px);box-shadow:0 12px 36px rgba(0,0,0,.15),0 4px 12px rgba(0,0,0,.1),var(--glass-inner-shadow)}
-/* 语言切换按钮样式 */
+/* Language toggle styling */
 .top-link#langToggle{cursor:pointer;font-size:10px;font-weight:600;padding:0;min-width:28px;width:auto;padding:0 6px}
 .top-link#langToggle:active{transform:translateY(0) scale(.95)}
 #langIcon{display:block;white-space:nowrap}
-/* 工具下拉菜单 */
+/* Tool dropdown menu */
 .tools-dropdown{position:relative}
 .tools-dropdown .top-link{cursor:pointer}
 .dropdown-menu{position:absolute;top:calc(100% + 6px);right:0;min-width:200px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.15),var(--glass-inner-shadow);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s cubic-bezier(.4,0,.2,1),transform .3s cubic-bezier(.4,0,.2,1),visibility .3s}
@@ -61,15 +61,15 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .dropdown-item:last-child{border-radius:0 0 9px 9px}
 .dropdown-item:hover{background:rgba(0,0,0,.05)}
 .dropdown-item svg{flex-shrink:0}
-/* 保留旧的 gh-link 类以兼容 */
+/* Keep the legacy gh-link class for compatibility */
 .gh-link{position:fixed;top:10px;right:10px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass-bg);color:var(--text);text-decoration:none;box-shadow:var(--glass-shadow),var(--glass-inner-shadow);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);transition:all .3s cubic-bezier(.4,0,.2,1)}
 .gh-link:hover{border-color:var(--card-hover);transform:translateY(-1px);box-shadow:0 12px 36px rgba(0,0,0,.15),0 4px 12px rgba(0,0,0,.1),var(--glass-inner-shadow)}
 
-/* 返回顶部按钮 */
+/* Back-to-top button */
 .back-top{position:fixed;right:12px;bottom:60px;width:36px;height:36px;border-radius:12px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--text);display:none;align-items:center;justify-content:center;box-shadow:var(--glass-shadow),var(--glass-inner-shadow);cursor:pointer;z-index:1001;backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);transition:all .3s cubic-bezier(.4,0,.2,1)}
 .back-top:hover{border-color:var(--card-hover);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.15),0 4px 12px rgba(0,0,0,.1),var(--glass-inner-shadow)}
 
-/* 桌面与窗口 */
+/* Desktop and window */
 .desktop{position:fixed;inset:0;z-index:0;background-image:url("https://t.alcy.cc/moe");background-size:cover;background-position:center;background-repeat:no-repeat;filter:saturate(1.05)}
 .window{position:fixed;z-index:500;left:8px;top:8px;width:calc(100vw - 16px);height:calc(100vh - 48px - 16px);display:flex;flex-direction:column;border:1px solid var(--glass-border);border-radius:16px;background:var(--glass-bg);box-shadow:0 20px 60px rgba(0,0,0,.15),0 8px 24px rgba(0,0,0,.1),var(--glass-inner-shadow);overflow:hidden;backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
 .window-titlebar{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px 0 6px;background:var(--glass-bg);border-bottom:1px solid var(--glass-border);cursor:move;user-select:none;backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
@@ -81,7 +81,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .nav-btn:hover:not([disabled]){border-color:var(--card-hover);transform:translateY(-1px);box-shadow:var(--glass-shadow),var(--glass-inner-shadow)}
 .window-content{flex:1;min-height:0;overflow:hidden;padding:12px;background:transparent;display:flex;flex-direction:column;position:relative}
 
-/* 主体与侧栏布局 */
+/* Main layout and sidebar */
 .content-row{display:flex;gap:12px;min-height:0;align-items:stretch;flex:1}
 .sidebar{position:relative;height:100%;overflow:auto;flex:0 0 200px;max-width:240px;min-width:160px;display:none;flex-direction:column;gap:6px;padding:8px;border:1px solid var(--glass-border);border-radius:14px;background:var(--glass-bg);box-shadow:var(--glass-shadow),var(--glass-inner-shadow);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);transition:flex-basis .3s cubic-bezier(.4,0,.2,1),min-width .3s cubic-bezier(.4,0,.2,1),max-width .3s cubic-bezier(.4,0,.2,1),opacity .3s cubic-bezier(.4,0,.2,1)}
 .sidebar--collapsed{flex:0 0 48px;min-width:48px;max-width:48px;padding:8px}
@@ -102,10 +102,10 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .sidebar .side-item img{width:100%;height:100%;object-fit:contain}
 .main-pane{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
 
-/* 内容区首个分区去除顶边距，保证与侧栏顶部对齐 */
+/* Remove top margin on the first content section to align with the sidebar */
 #container .section:first-child{margin-top:0}
 
-/* 缩放手柄 */
+/* Resize handles */
 .resize-handle{position:absolute;z-index:1001;pointer-events:auto}
 .rh-n,.rh-s{left:0;right:0;height:8px;cursor:ns-resize}
 .rh-e,.rh-w{top:0;bottom:0;width:6px;cursor:ew-resize}
@@ -119,7 +119,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .rh-se{right:0;bottom:0;cursor:nwse-resize}
 .rh-sw{left:0;bottom:0;cursor:nesw-resize}
 
-/* 路径栏 */
+/* Path bar */
 .pathbar{display:flex;align-items:center;gap:8px;margin:0 0 10px 0}
 .breadcrumbs{display:flex;align-items:center;gap:6px;flex:1;min-width:0;padding:6px 8px;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass-bg);font-size:12px;color:var(--text);box-shadow:var(--glass-shadow),var(--glass-inner-shadow);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
 .crumb{display:flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer}
@@ -132,20 +132,20 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 .count-badge{margin-left:6px;padding:0 6px;height:18px;line-height:18px;border-radius:999px;background:rgba(0,0,0,.45);color:#fff;font-size:11px;display:inline-flex;align-items:center;text-shadow:0 1px 2px rgba(0,0,0,.25);transition:all .3s cubic-bezier(.4,0,.2,1)}
 .count-badge:hover{background:rgba(14,165,233,.8);transform:scale(1.08)}
 
-/* 标题栏内的面包屑采用横向排列 */
+/* Breadcrumbs in the title bar use a horizontal layout */
 .window-title #windowTitleText{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
 .window-title #windowTitleText .crumb{display:inline-flex}
 .window-title #windowTitleText .sep{opacity:.6;text-shadow:0 1px 2px rgba(0,0,0,.25)}
 
-/* 标题栏中的面包屑 */
+/* Breadcrumbs in the title bar */
 .breadcrumbs--title{flex:0 1 auto;margin-left:8px;padding:4px 6px;border:none;background:transparent}
 .window-titlebar .breadcrumbs--title .sep{opacity:.6}
 .window-titlebar .breadcrumbs--title .crumb:hover{text-decoration:underline}
 
-/* 隐藏内容区原有面包屑容器边框以弱化存在感，或根据需要隐藏 */
+/* Hide the original breadcrumb container border to reduce emphasis */
 #pathbar .breadcrumbs{display:none}
 
-/* 页脚固定在资源管理器底部 */
+/* Footer anchored to the bottom of the explorer */
 #legalFooter{margin-top:auto}
 #legalFooter.legal--compact{position:absolute;right:12px;bottom:12px;margin:0;padding:6px 10px;background:#3E495C;border:1px solid rgba(255,255,255,.32);color:#fff;border-radius:999px;display:inline-flex;width:fit-content;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 #legalFooter .legal-link{color:#fff;text-decoration:none;transition:opacity .3s cubic-bezier(.4,0,.2,1)}

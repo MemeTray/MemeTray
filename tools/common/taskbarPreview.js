@@ -1,12 +1,12 @@
 /**
- * MemeTray 通用任务栏和预览面板模块
- * 生成与原始代码完全一致的 HTML 和功能
+ * MemeTray shared taskbar and preview panel module
+ * Reproduces the original HTML structure and behavior
  */
 
 /**
- * 初始化任务栏
- * @param {Object} options - 配置选项
- * @returns {Object} 任务栏 API
+ * Initialize the taskbar
+ * @param {Object} options - Configuration options
+ * @returns {Object} Taskbar API
  */
 export function initTaskbar(options = {}) {
   const {
@@ -18,14 +18,14 @@ export function initTaskbar(options = {}) {
 
   let container = document.getElementById(containerId)
 
-  // 如果容器不存在，创建它
+  // Create the container when it does not exist
   if (!container) {
     container = document.createElement('div')
     container.id = containerId
     document.body.appendChild(container)
   }
 
-  // 获取图标路径
+  // Resolve the icon path
   function getIconPath(filename) {
     const currentPath = window.location.pathname
     if (currentPath.includes('/tools/')) {
@@ -34,7 +34,7 @@ export function initTaskbar(options = {}) {
     return `./docs/icons/${filename}`
   }
 
-  // 创建任务栏 HTML（与原始完全一致）
+  // Create the taskbar HTML (matching the original markup)
   container.className = 'taskbar taskbar--light'
   container.innerHTML = `
 <div class="taskcont">
@@ -60,7 +60,7 @@ ${showClock ? `<div class="taskDate m-1 handcr prtclk rounded hvlight">
 </div>
   `.trim()
 
-  // 时钟更新逻辑
+  // Clock update logic
   let clockInterval = null
   if (showClock) {
     const clockTime = document.getElementById('clock-time')
@@ -87,14 +87,14 @@ ${showClock ? `<div class="taskDate m-1 handcr prtclk rounded hvlight">
     updateClock()
   }
 
-  // 托盘图标 API
+  // Tray icon API
   const trayIcon = showTrayIcon ? document.getElementById('trayIcon') : null
 
   function setTrayIcon(src, sourceImg = null) {
     if (!trayIcon) return
     trayIcon.innerHTML = ''
 
-    // 创建新的图片元素，使用相同的 src 来保持同步
+    // Create a new image element that reuses the same src for sync
     const img = document.createElement('img')
     img.src = src
     img.alt = 'tray'
@@ -110,7 +110,7 @@ ${showClock ? `<div class="taskDate m-1 handcr prtclk rounded hvlight">
     }
   }
 
-  // 返回 API
+  // Return the API
   return {
     container,
     setTrayIcon,
@@ -127,9 +127,9 @@ ${showClock ? `<div class="taskDate m-1 handcr prtclk rounded hvlight">
 }
 
 /**
- * 初始化预览面板
- * @param {Object} options - 配置选项
- * @returns {Object} 预览面板 API
+ * Initialize the preview panel
+ * @param {Object} options - Configuration options
+ * @returns {Object} Preview panel API
  */
 export function initPreviewPanel(options = {}) {
   const {
@@ -145,14 +145,14 @@ export function initPreviewPanel(options = {}) {
 
   let container = document.getElementById(containerId)
 
-  // 如果容器不存在，创建它
+  // Create the container when it does not exist
   if (!container) {
     container = document.createElement('div')
     container.id = containerId
     document.body.appendChild(container)
   }
 
-  // 创建预览面板 HTML（与原始完全一致）
+  // Create the preview panel HTML (matching the original markup)
   container.className = 'preview-panel'
   container.style.display = 'none'
   container.innerHTML = `
@@ -202,12 +202,12 @@ export function initPreviewPanel(options = {}) {
   let previewFiles = []
   let dragDropInitialized = false
 
-  // 切换显示/隐藏
+  // Toggle visibility
   function toggle() {
     const isVisible = container.style.display !== 'none'
     container.style.display = isVisible ? 'none' : 'flex'
 
-    // 首次打开时初始化拖拽功能
+    // Initialize drag-and-drop support on first open
     if (!isVisible && !dragDropInitialized) {
       initDragDrop()
       dragDropInitialized = true
@@ -226,7 +226,7 @@ export function initPreviewPanel(options = {}) {
     container.style.display = 'none'
   }
 
-  // 初始化拖拽功能
+  // Initialize drag-and-drop support
   async function initDragDrop() {
     try {
       const { setupDragAndDrop, setupPasteSupport } = await import('./fileUploadHelpers.js')
@@ -247,14 +247,14 @@ export function initPreviewPanel(options = {}) {
     }
   }
 
-  // 处理预览文件
+  // Handle preview files
   function handlePreviewFiles(files) {
     console.log(`处理 ${files.length} 个文件`)
 
     files.forEach((fileObj, index) => {
       const { file, path } = fileObj
 
-      // 检查文件类型
+      // Check the file type
       if (!file.type.startsWith('image/')) {
         console.warn(`跳过非图片文件: ${file.name} (${file.type})`)
         return
@@ -276,7 +276,7 @@ export function initPreviewPanel(options = {}) {
       console.log(`添加文件: ${file.name}`)
     })
 
-    // 隐藏上传提示，显示批量操作按钮
+    // Hide the upload hint and show bulk actions
     if (previewFiles.length > 0) {
       uploadArea.style.display = 'none'
       if (actionsDiv) {
@@ -287,7 +287,7 @@ export function initPreviewPanel(options = {}) {
     console.log(`文件处理完成，当前预览文件总数: ${previewFiles.length}`)
   }
 
-  // 渲染预览项
+  // Render preview items
   function renderPreviewItem(item) {
     const div = document.createElement('div')
     div.className = 'preview-item'
@@ -311,7 +311,7 @@ export function initPreviewPanel(options = {}) {
       removePreviewItem(item.id)
     })
 
-    // 悬停时显示在托盘图标
+    // Show the preview on the tray icon when hovering
     div.addEventListener('mouseenter', () => {
       if (onTrayIconHover) {
         onTrayIconHover(item.url, img)
@@ -330,7 +330,7 @@ export function initPreviewPanel(options = {}) {
     gallery.appendChild(div)
   }
 
-  // 移除预览项
+  // Remove preview items
   function removePreviewItem(id) {
     const index = previewFiles.findIndex(item => item.id === id)
     if (index > -1) {
@@ -343,7 +343,7 @@ export function initPreviewPanel(options = {}) {
         element.remove()
       }
 
-      // 如果没有文件了，显示上传提示，隐藏批量操作按钮
+      // If no files remain, show the upload hint and hide bulk actions
       if (previewFiles.length === 0) {
         uploadArea.style.display = 'block'
         if (actionsDiv) {
@@ -353,18 +353,18 @@ export function initPreviewPanel(options = {}) {
     }
   }
 
-  // 格式化文件大小
+  // Format the file size
   function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B'
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
   }
 
-  // 批量下载为 ZIP
+  // Batch download as ZIP
   async function downloadAllAsZip() {
     if (previewFiles.length === 0) return
 
-    // 禁用下载按钮，显示加载状态
+    // Disable the download button and show loading state
     const originalTitle = downloadAllBtn ? downloadAllBtn.title : ''
     if (downloadAllBtn) {
       downloadAllBtn.disabled = true
@@ -373,7 +373,7 @@ export function initPreviewPanel(options = {}) {
     }
 
     try {
-      // 动态加载 JSZip 库
+      // Dynamically load the JSZip library
       let JSZip
       if (typeof window.JSZip === 'undefined') {
         const script = document.createElement('script')
@@ -396,7 +396,7 @@ export function initPreviewPanel(options = {}) {
 
       const zip = new JSZip()
 
-      // 添加所有文件到 ZIP
+      // Add all files to the ZIP archive
       for (const item of previewFiles) {
         try {
           const response = await fetch(item.url)
@@ -410,19 +410,19 @@ export function initPreviewPanel(options = {}) {
         }
       }
 
-      // 检查是否有文件被成功添加
+      // Verify that at least one file was added
       if (Object.keys(zip.files).length === 0) {
         throw new Error('No files were successfully added to the ZIP')
       }
 
-      // 生成 ZIP 文件
+      // Generate the ZIP archive
       const zipBlob = await zip.generateAsync({
         type: 'blob',
         compression: 'DEFLATE',
         compressionOptions: { level: 6 }
       })
 
-      // 下载 ZIP 文件
+      // Trigger the ZIP download
       const url = URL.createObjectURL(zipBlob)
       const link = document.createElement('a')
       link.href = url
@@ -441,13 +441,13 @@ export function initPreviewPanel(options = {}) {
     } catch (err) {
       console.error('下载失败:', err)
 
-      // 提供备用下载方案
+      // Offer a fallback download option
       const fallbackDownload = confirm(`ZIP 打包下载失败: ${err.message}\n\n是否要逐个下载文件？`)
       if (fallbackDownload) {
         downloadFilesIndividually()
       }
     } finally {
-      // 恢复下载按钮状态
+      // Restore the download button state
       if (downloadAllBtn) {
         downloadAllBtn.disabled = false
         downloadAllBtn.style.opacity = '1'
@@ -456,7 +456,7 @@ export function initPreviewPanel(options = {}) {
     }
   }
 
-  // 备用下载方案：逐个下载文件
+  // Fallback download strategy: download files one by one
   async function downloadFilesIndividually() {
     for (let i = 0; i < previewFiles.length; i++) {
       const item = previewFiles[i]
@@ -475,7 +475,7 @@ export function initPreviewPanel(options = {}) {
 
         URL.revokeObjectURL(url)
 
-        // 添加延迟避免浏览器阻止多个下载
+        // Add a delay to avoid browsers blocking multiple downloads
         if (i < previewFiles.length - 1) {
           await new Promise(resolve => setTimeout(resolve, 500))
         }
@@ -485,27 +485,27 @@ export function initPreviewPanel(options = {}) {
     }
   }
 
-  // 清空所有文件
+  // Clear every file entry
   function clearAllFiles() {
     if (previewFiles.length === 0) return
 
-    // 清理所有 blob URL
+    // Revoke every blob URL
     previewFiles.forEach(item => {
       URL.revokeObjectURL(item.url)
     })
 
-    // 清空数组和界面
+    // Reset arrays and UI elements
     previewFiles = []
     gallery.innerHTML = ''
 
-    // 显示上传提示，隐藏批量操作按钮
+    // Show the upload hint and hide bulk actions
     uploadArea.style.display = 'block'
     if (actionsDiv) {
       actionsDiv.style.display = 'none'
     }
   }
 
-  // 事件监听
+  // Event listeners
   closeBtn.addEventListener('click', hide)
 
   if (downloadAllBtn) {
@@ -516,11 +516,11 @@ export function initPreviewPanel(options = {}) {
     clearAllBtn.addEventListener('click', clearAllFiles)
   }
 
-  // 点击面板外部关闭
+  // Close the panel when clicking outside
   document.addEventListener('click', (e) => {
     if (container.style.display !== 'none' &&
         !container.contains(e.target)) {
-      // 检查是否点击了触发按钮
+      // Check if the trigger button was clicked
       const triggerBtn = document.getElementById('previewToggle')
       if (triggerBtn && triggerBtn.contains(e.target)) {
         return
@@ -529,7 +529,7 @@ export function initPreviewPanel(options = {}) {
     }
   })
 
-  // 返回 API
+  // Return the API
   return {
     container,
     toggle,
@@ -539,7 +539,7 @@ export function initPreviewPanel(options = {}) {
     clearAll: clearAllFiles,
     getFiles: () => previewFiles,
     destroy: () => {
-      // 清理所有 blob URLs
+      // Revoke every blob URLs
       previewFiles.forEach(item => {
         URL.revokeObjectURL(item.url)
       })
@@ -553,9 +553,9 @@ export function initPreviewPanel(options = {}) {
 }
 
 /**
- * 一键初始化任务栏和预览面板（带集成）
- * @param {Object} options - 配置选项
- * @returns {Object} 包含任务栏和预览面板 API 的对象
+ * Initialize both the taskbar and preview panel with integration
+ * @param {Object} options - Configuration options
+ * @returns {Object} Object containing both taskbar and preview APIs
  */
 export function initMemeTrayUI(options = {}) {
   const {
@@ -563,10 +563,10 @@ export function initMemeTrayUI(options = {}) {
     preview: previewOptions = {}
   } = options
 
-  // 初始化任务栏
+  // Initialize the taskbar
   const taskbar = initTaskbar(taskbarOptions)
 
-  // 初始化预览面板，并集成托盘图标功能
+  // Initialize the preview panel and integrate with the tray icon
   const preview = initPreviewPanel({
     ...previewOptions,
     onTrayIconHover: (url, img) => {

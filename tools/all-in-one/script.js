@@ -1,14 +1,14 @@
-// 随机背景初始化
+// Initialize the random desktop background
 import { initRandomBackground } from '../common/backgroundConfig.js';
 initRandomBackground();
 
-// 导入任务栏和预览面板模块
+// Import the shared taskbar and preview panel modules
 import { initMemeTrayUI } from '../common/taskbarPreview.js';
 
-// Pyodide 实例
+// Pyodide instance reference
 let pyodide = null;
 
-// 全局状态管理
+// Global state container
 let state = {
     step: 1,
     originalFiles: [],
@@ -27,7 +27,7 @@ let state = {
     }
 };
 
-// DOM 元素
+// Cached DOM references
 const elements = {
     uploadArea: document.getElementById('uploadArea'),
     fileInput: document.getElementById('fileInput'),
@@ -53,22 +53,20 @@ const elements = {
     downloadBtn: document.getElementById('downloadBtn')
 };
 
-// 初始化
 async function init() {
-    // 初始化 Pyodide
+    // Initialize Pyodide before wiring up the UI
     await initPyodide();
 
     setupEventListeners();
     updatePreview();
     updateStepIndicator();
 
-    // 初始化任务栏和预览面板
+    // Boot the shared taskbar and preview panel
     initMemeTrayComponents();
 
     console.log('✅ All-in-One tool initialized');
 }
 
-// 初始化 Pyodide
 async function initPyodide() {
     try {
         elements.loadingIndicator.style.display = 'block';
@@ -89,7 +87,7 @@ async function initPyodide() {
     }
 }
 
-// 初始化任务栏和预览面板（使用统一模块）
+// Initialize the taskbar and preview panel via the shared module
 let memeTrayUI = null
 function initMemeTrayComponents() {
     try {
@@ -116,15 +114,15 @@ function initMemeTrayComponents() {
     }
 }
 
-// 设置事件监听器
+// Register event listeners
 function setupEventListeners() {
-    // 文件上传
+    // File upload
     elements.fileInput.addEventListener('change', handleFileSelect);
     elements.uploadArea.addEventListener('dragover', handleDragOver);
     elements.uploadArea.addEventListener('dragleave', handleDragLeave);
     elements.uploadArea.addEventListener('drop', handleDrop);
 
-    // 选项切换
+    // Option toggles
     elements.webpToggle.addEventListener('change', (e) => {
         state.settings.webpSupport = e.target.checked;
     });
@@ -144,17 +142,17 @@ function setupEventListeners() {
         toggleConfigSection();
     });
 
-    // 配置更新
+    // Configuration updates
     elements.startNumber.addEventListener('input', updatePreview);
     elements.suffix.addEventListener('input', handleSuffixInput);
 
-    // 操作按钮
+    // Action buttons
     elements.deleteSelectedBtn.addEventListener('click', removeSelectedFiles);
     elements.restartBtn.addEventListener('click', restart);
     elements.downloadBtn.addEventListener('click', downloadFiles);
 }
 
-// 处理文件选择
+// Handle file selection from the input element
 function handleFileSelect(e) {
     const files = Array.from(e.target.files);
     console.log(`📂 File input selected ${files.length} files`);
@@ -164,7 +162,7 @@ function handleFileSelect(e) {
     processFiles(files);
 }
 
-// 处理拖拽
+// Drag-and-drop handlers
 function handleDragOver(e) {
     e.preventDefault();
     elements.uploadArea.classList.add('dragover');
@@ -186,8 +184,8 @@ async function handleDrop(e) {
     const items = e.dataTransfer.items;
     console.log(`📥 Dropped ${items.length} items`);
 
-    // ⚠️ 重要：DataTransferItemList 只能在同步阶段访问
-    // 必须先把所有 entries 收集到数组中，然后再进行异步操作
+    // ⚠️ Important: DataTransferItemList can only be read synchronously
+    // Collect every entry before running any asynchronous logic
     const entries = [];
     for (let i = 0; i < items.length; i++) {
         console.log(`  Item ${i}: kind=${items[i].kind}, type=${items[i].type}`);
@@ -202,7 +200,7 @@ async function handleDrop(e) {
 
     console.log(`✅ Collected ${entries.length} entries, now processing asynchronously...`);
 
-    // 现在可以安全地进行异步操作了
+    // Safe to run asynchronous operations now
     const droppedFiles = [];
     for (let i = 0; i < entries.length; i++) {
         console.log(`🔄 Processing entry ${i + 1}/${entries.length}`);
@@ -225,7 +223,7 @@ async function handleDrop(e) {
     processFiles(gifFiles);
 }
 
-// 遍历文件树
+// Traverse the dropped file tree
 async function traverseFileTree(item, files) {
     console.log(`🌲 Traversing: ${item.name}, isFile=${item.isFile}, isDirectory=${item.isDirectory}`);
 
@@ -271,7 +269,7 @@ function readAllEntries(dirReader) {
     });
 }
 
-// 处理文件
+// Process the collected files
 async function processFiles(files) {
     if (files.length === 0) {
         alert('No GIF files found!');
@@ -281,7 +279,7 @@ async function processFiles(files) {
     console.log(`Processing ${files.length} GIF files`);
     state.originalFiles = files;
 
-    // 如果 Pyodide 还没准备好，静默等待它加载完成
+    // Wait for Pyodide to finish loading if it is still initializing
     if (!state.pyodideReady) {
         console.log('⏳ Waiting for Pyodide to load...');
         while (!state.pyodideReady) {
@@ -290,29 +288,29 @@ async function processFiles(files) {
         console.log('✅ Pyodide ready, starting workflow...');
     }
 
-    // 开始工作流程
+    // Launch the processing workflow
     await startWorkflow();
 }
 
-// 开始工作流程
+// Execute the end-to-end processing workflow
 async function startWorkflow() {
     try {
         state.isProcessing = true;
         console.log('🚀 Starting workflow...');
 
-        // 步骤 1: 压缩
+        // Step 1: compress
         await setStep(2);
         showProgress('Compressing GIFs...', 0);
         state.compressedFiles = await compressGifs(state.originalFiles);
         console.log(`📦 Compressed files: ${state.compressedFiles.length}`);
 
-        // 步骤 2: 去重
+        // Step 2: deduplicate
         await setStep(3);
         showProgress('Detecting duplicates...', 0);
         state.deduplicatedFiles = await deduplicateGifs(state.compressedFiles);
         console.log(`🔍 After deduplication: ${state.deduplicatedFiles.length}`);
 
-        // 步骤 3: 重命名
+        // Step 3: rename
         if (state.settings.autoRename) {
             await setStep(4);
             showProgress('Renaming files...', 0);
@@ -323,7 +321,7 @@ async function startWorkflow() {
             console.log(`📝 Skipped rename. Final files: ${state.finalFiles.length}`);
         }
 
-        // 步骤 4: 显示结果
+        // Step 4: display results
         await setStep(5);
         console.log(`🎬 Ready to display ${state.finalFiles.length} files`);
         displayResults();
@@ -338,18 +336,18 @@ async function startWorkflow() {
     }
 }
 
-// 设置当前步骤
+// Update the current step
 async function setStep(step) {
     state.step = step;
     updateStepIndicator();
 
-    // 显示/隐藏相关区域
+    // Reveal configuration options after processing steps begin
     if (step >= 4) {
         elements.configSection.style.display = 'block';
     }
 }
 
-// 更新步骤指示器
+// Refresh the step indicator UI
 function updateStepIndicator() {
     const steps = document.querySelectorAll('.step');
     steps.forEach((step, index) => {
@@ -362,7 +360,7 @@ function updateStepIndicator() {
     });
 }
 
-// 显示进度
+// Show progress feedback
 function showProgress(text, percent) {
     elements.progressContainer.style.display = 'block';
     elements.progressText.textContent = text;
@@ -370,19 +368,19 @@ function showProgress(text, percent) {
     elements.progressFill.style.width = `${percent}%`;
 }
 
-// 隐藏进度
+// Hide the progress overlay
 function hideProgress() {
     elements.progressContainer.style.display = 'none';
 }
 
-// 更新预览
+// Update the filename preview sample
 function updatePreview() {
     const startNum = Math.max(1, Math.min(9999, parseInt(elements.startNumber.value) || 1));
     const rawSuffix = elements.suffix.value;
     const cleanedSuffix = rawSuffix.trim().replace(/[^a-zA-Z0-9-_]/g, '');
     const suffix = cleanedSuffix || 'meme';
 
-    // 只在需要时清理输入（删除非法字符）
+    // Only sanitize the suffix when invalid characters are present
     if (rawSuffix !== cleanedSuffix && rawSuffix.trim() !== '') {
         elements.suffix.value = cleanedSuffix;
     }
@@ -390,7 +388,7 @@ function updatePreview() {
     const paddedNum = String(startNum).padStart(4, '0');
     elements.preview.textContent = `${paddedNum}_${suffix}.gif`;
 
-    // 如果已经有处理完成的文件，也更新它们的文件名
+    // Update generated filenames if files have already been processed
     if (state.finalFiles.length > 0 && state.settings.autoRename) {
         for (let i = 0; i < state.finalFiles.length; i++) {
             const file = state.finalFiles[i];
@@ -405,12 +403,12 @@ function updatePreview() {
             };
         }
 
-        // 重新显示结果以更新文件名
+        // Re-render the results so filenames stay in sync
         displayResults();
     }
 }
 
-// 使用 Pyodide + Pillow 压缩 GIF（保留动画）
+// Compress GIFs with Pyodide + Pillow while preserving animation
 async function compressGifs(files) {
     console.log(`🔄 Starting compression for ${files.length} files`);
     const compressedFiles = [];
@@ -433,7 +431,7 @@ async function compressGifs(files) {
             console.log(`✅ Successfully compressed ${file.name}`);
         } catch (error) {
             console.error('❌ Compression failed for file:', file.name, error);
-            // 如果压缩失败，使用原文件
+            // Fall back to the original file if compression fails
             compressedFiles.push({
                 originalFile: file,
                 compressedFile: file,
@@ -443,7 +441,7 @@ async function compressGifs(files) {
             });
         }
 
-        // 每处理一个文件后让出控制权
+        // Yield control after each file to keep the UI responsive
         await new Promise(resolve => setTimeout(resolve, 10));
     }
 
@@ -451,13 +449,13 @@ async function compressGifs(files) {
     return compressedFiles;
 }
 
-// 使用 Pyodide 压缩单个 GIF
+// Compress a single GIF using Pyodide
 async function compressSingleGifWithPyodide(file) {
     try {
         const arrayBuffer = await file.arrayBuffer();
         const imageData = new Uint8Array(arrayBuffer);
 
-        // 为每个文件生成唯一的临时文件名，避免冲突
+        // Generate unique temporary filenames to avoid collisions
         const timestamp = Date.now();
         const random = Math.floor(Math.random() * 10000);
         const uniqueId = `${timestamp}_${random}`;
@@ -475,26 +473,26 @@ img = Image.open('${inputFile}')
 frames = []
 durations = []
 
-# 计算缩放尺寸，保持宽高比
+# Calculate the target size while preserving the aspect ratio
 max_size = 128
 original_width = img.width
 original_height = img.height
 
-# 计算缩放比例，保持宽高比
+# Compute the scale ratio to maintain proportions
 scale = min(max_size / original_width, max_size / original_height)
 new_width = int(original_width * scale)
 new_height = int(original_height * scale)
 
-# 处理每一帧
+# Process every frame in the animation
 try:
     while True:
         frame = img.copy()
 
-        # 保留透明通道，转换为RGBA
+        # Preserve transparency by working in RGBA
         if frame.mode != 'RGBA':
             frame = frame.convert('RGBA')
 
-        # 按比例缩放
+        # Resize proportionally
         frame = frame.resize((new_width, new_height), Image.Resampling.NEAREST)
         frames.append(frame)
         durations.append(frame.info.get('duration', img.info.get('duration', 100)))
@@ -502,33 +500,33 @@ try:
 except EOFError:
     pass
 
-# 如果只有一帧，添加默认时长
+# Provide a default duration when there is only one frame
 if len(frames) == 1:
     durations = [100]
 
 if frames:
-    # 将RGBA帧转换为P模式（调色板模式），这样浏览器才能正确显示
+    # Convert RGBA frames into palette mode so browsers render them correctly
     p_frames = []
 
     for frame in frames:
-        # 使用quantize将RGBA转为P模式，保留透明度
-        # 创建一个带alpha通道的调色板图像
-        alpha = frame.split()[-1]  # 获取alpha通道
+        # Use quantize to switch from RGBA to palette mode while keeping transparency
+        # Create a palette image with an alpha channel reference
+        alpha = frame.split()[-1]  # Extract the alpha channel
 
-        # 将RGBA转换为RGB用于调色板生成
+        # Convert RGBA to RGB for palette generation
         rgb = Image.new('RGB', frame.size, (255, 255, 255))
         rgb.paste(frame, mask=alpha)
 
-        # 转换为P模式
+        # Convert to palette mode
         p_frame = rgb.convert('P', palette=Image.Palette.ADAPTIVE, colors=255)
 
-        # 设置透明色
-        # 找出完全透明的像素，将它们设置为透明色索引
+        # Configure the transparent index for fully transparent pixels
+        # Identify fully transparent pixels and map them to the transparent index
         threshold = 128
         alpha_data = alpha.getdata()
         p_data = list(p_frame.getdata())
 
-        # 添加透明色到调色板（索引255）
+        # Ensure the transparent color occupies palette index 255
         for i, a in enumerate(alpha_data):
             if a < threshold:
                 p_data[i] = 255
@@ -536,7 +534,7 @@ if frames:
         p_frame.putdata(p_data)
         p_frames.append(p_frame)
 
-    # 保存为GIF，指定透明色索引
+    # Save the GIF using the explicit transparency index
     p_frames[0].save(
         '${outputFile}',
         save_all=True,
@@ -554,7 +552,7 @@ if frames:
 
         console.log(`✅ Compressed ${file.name}: ${file.size} → ${blob.size} bytes`);
 
-        // 清理文件系统
+        // Clean up the in-memory filesystem
         pyodide.FS.unlink(inputFile);
         pyodide.FS.unlink(outputFile);
 
@@ -573,7 +571,7 @@ function toggleConfigSection() {
     }
 }
 
-// GIF 去重功能
+// GIF deduplication logic
 async function deduplicateGifs(compressedFiles) {
     console.log(`🔍 Starting deduplication for ${compressedFiles.length} files`);
     const hashMap = new Map();
@@ -587,7 +585,7 @@ async function deduplicateGifs(compressedFiles) {
         const hash = await calculateImageHash(file);
 
         if (hashMap.has(hash)) {
-            // 发现重复
+            // Duplicate detected
             console.log(`🔁 Duplicate found: ${compressedFiles[i].originalFile.name}`);
             duplicates.push({
                 file: compressedFiles[i],
@@ -603,7 +601,7 @@ async function deduplicateGifs(compressedFiles) {
             uniqueFiles.push(compressedFiles[i]);
         }
 
-        // 每处理一个文件后让出控制权
+        // Yield back to the event loop after each file
         if (i % 5 === 0) {
             await new Promise(resolve => setTimeout(resolve, 0));
         }
@@ -621,7 +619,7 @@ async function deduplicateGifs(compressedFiles) {
     return compressedFiles;
 }
 
-// 计算图像哈希
+// Compute a hash for the image
 async function calculateImageHash(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -637,7 +635,7 @@ async function calculateImageHash(file) {
                 const imageData = ctx.getImageData(0, 0, 8, 8);
                 const data = imageData.data;
 
-                // 转换为灰度并计算哈希
+                // Convert to grayscale and compute the hash
                 let hash = '';
                 let prevGray = null;
 
@@ -661,7 +659,7 @@ async function calculateImageHash(file) {
     });
 }
 
-// GIF 重命名功能
+// GIF renaming logic
 async function renameGifs(files) {
     const renamedFiles = [];
     const startNum = parseInt(elements.startNumber.value) || 1;
@@ -685,13 +683,13 @@ async function renameGifs(files) {
     return renamedFiles;
 }
 
-// 显示结果
+// Render the processing results
 function displayResults() {
     console.log(`📺 Displaying results for ${state.finalFiles.length} files`);
     elements.resultsArea.style.display = 'block';
     elements.actionsArea.style.display = 'flex';
 
-    // 清理旧的 blob URLs
+    // Revoke any previously stored blob URLs
     const oldItems = elements.resultsGrid.querySelectorAll('.results-item');
     oldItems.forEach(item => {
         const blobUrl = item.dataset.blobUrl;
@@ -700,7 +698,7 @@ function displayResults() {
         }
     });
 
-    // 清空并填充结果网格
+    // Reset and populate the results grid
     elements.resultsGrid.innerHTML = '';
 
     state.finalFiles.forEach((file, index) => {
@@ -711,16 +709,16 @@ function displayResults() {
 
     console.log(`✅ Display complete. ${state.finalFiles.length} items shown`);
 
-    // 显示统计信息
+    // Show summary statistics
     updateStatsSummary();
 
-    // 在重命名步骤添加预览按钮
+    // Add the preview toggle button during the rename step
     if (state.step === 4) {
         addPreviewButtonToRenameStep();
     }
 }
 
-// 创建结果项
+// Build a single result item card
 function createResultItem(file, index) {
     const item = document.createElement('div');
     item.className = 'results-item';
@@ -729,9 +727,9 @@ function createResultItem(file, index) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = state.selectedFiles.has(index);
-    // 点击 checkbox 也能切换选中状态
+    // Allow toggling selection via the checkbox
     checkbox.addEventListener('click', (e) => {
-        e.stopPropagation(); // 阻止事件冒泡到 item
+        e.stopPropagation(); // Prevent the event from bubbling to the parent item
 
         const isChecked = checkbox.checked;
         if (isChecked) {
@@ -755,11 +753,11 @@ function createResultItem(file, index) {
     const img = document.createElement('img');
     const url = URL.createObjectURL(file.compressedFile || file.file);
     img.src = url;
-    // 不要立即清理 URL，保留给悬停预览使用
-    // URL 会在页面卸载时自动清理，或者在移除结果项时清理
+    // Keep the blob URL alive for hover previews
+    // The URL is cleared on page unload or when the item is removed
     preview.appendChild(img);
 
-    // 保存 URL 引用以便后续清理
+    // Store the blob URL for later cleanup
     item.dataset.blobUrl = url;
 
     const name = document.createElement('div');
@@ -769,7 +767,7 @@ function createResultItem(file, index) {
     const size = document.createElement('div');
     size.className = 'result-size';
 
-    // 始终显示体积变化格式：原始大小 → 新大小 (百分比)
+    // Always show size changes as original → new (percentage)
     if (file.originalSize && file.compressedSize) {
         const ratio = file.originalSize > 0
             ? ((file.originalSize - file.compressedSize) / file.originalSize * 100).toFixed(1)
@@ -777,17 +775,17 @@ function createResultItem(file, index) {
         const savedSize = file.originalSize - file.compressedSize;
 
         if (savedSize > 0) {
-            // 体积减小（压缩成功）
+            // File size decreased (successful compression)
             size.innerHTML = `<span style="color: var(--muted);">${formatFileSize(file.originalSize)}</span> <span style="color: var(--muted);">→</span> ${formatFileSize(file.compressedSize)} <span style="color: var(--success); font-weight: 600;">(-${ratio}%)</span>`;
         } else if (savedSize < 0) {
-            // 体积增大
+            // File size increased
             size.innerHTML = `<span style="color: var(--muted);">${formatFileSize(file.originalSize)}</span> <span style="color: var(--muted);">→</span> ${formatFileSize(file.compressedSize)} <span style="color: var(--warning); font-weight: 600;">(+${Math.abs(ratio)}%)</span>`;
         } else {
-            // 大小相同，显示 0%
+            // Same size, show 0%
             size.innerHTML = `<span style="color: var(--muted);">${formatFileSize(file.originalSize)}</span> <span style="color: var(--muted);">→</span> ${formatFileSize(file.compressedSize)} <span style="color: var(--muted); font-weight: 600;">(0%)</span>`;
         }
     } else {
-        // 回退：只显示文件大小
+        // Fallback: display only the file size
         size.textContent = formatFileSize(file.compressedSize || file.originalSize || file.size);
     }
 
@@ -796,7 +794,7 @@ function createResultItem(file, index) {
     item.appendChild(name);
     item.appendChild(size);
 
-    // 点击整个卡片来切换选中状态
+    // Toggle selection when the entire card is clicked
     item.addEventListener('click', () => {
         const isSelected = state.selectedFiles.has(index);
 
@@ -813,10 +811,10 @@ function createResultItem(file, index) {
         updateSelectionButtons();
     });
 
-    // 添加悬停预览功能（使用统一模块的托盘图标）
+    // Enable hover previews using the shared tray icon module
     item.addEventListener('mouseenter', () => {
         if (memeTrayUI && memeTrayUI.taskbar) {
-            // 直接使用结果项中已有的 img 元素和它的 src
+            // Reuse the existing image element and source from the result item
             memeTrayUI.taskbar.setTrayIcon(img.src, img);
         }
     });
@@ -830,14 +828,14 @@ function createResultItem(file, index) {
     return item;
 }
 
-// 更新统计信息
+// Update the statistics block
 function updateStatsSummary() {
     const total = state.finalFiles.length;
     const compressed = state.finalFiles.filter(f => f.compressionRatio && parseFloat(f.compressionRatio) > 0).length;
     const duplicates = state.finalFiles.filter(f => f.isDuplicate).length;
     const renamed = state.finalFiles.filter(f => f.newName).length;
 
-    // 创建统计摘要元素
+    // Build the statistics summary element
     const existingSummary = document.querySelector('.stats-summary');
     if (existingSummary) {
         existingSummary.remove();
@@ -867,7 +865,7 @@ function updateStatsSummary() {
     elements.resultsArea.insertBefore(summary, elements.resultsGrid);
 }
 
-// 选择操作
+// Selection actions
 function selectAllFiles() {
     state.selectedFiles = new Set();
     state.finalFiles.forEach((_, index) => {
@@ -893,7 +891,7 @@ async function removeSelectedFiles() {
 
     state.selectedFiles.clear();
 
-    // 如果启用了自动重命名，重新编号剩余文件
+    // Recalculate numbering for remaining files when auto-rename is enabled
     if (state.settings.autoRename && state.finalFiles.length > 0) {
         showProgress('Renumbering files...', 0);
         const startNum = parseInt(elements.startNumber.value) || 1;
@@ -938,9 +936,9 @@ function updateSelectionButtons() {
     elements.deleteSelectedBtn.disabled = !hasSelection;
 }
 
-// 重新开始
+// Restart the workflow
 function restart() {
-    // 清理所有 blob URLs
+    // Revoke all stored blob URLs
     const oldItems = elements.resultsGrid.querySelectorAll('.results-item');
     oldItems.forEach(item => {
         const blobUrl = item.dataset.blobUrl;
@@ -966,7 +964,7 @@ function restart() {
         }
     };
 
-    // 重置UI
+    // Reset the UI
     elements.uploadArea.style.display = 'block';
     elements.configSection.style.display = 'none';
     elements.progressContainer.style.display = 'none';
@@ -978,7 +976,7 @@ function restart() {
     updateSelectionButtons();
 }
 
-// 下载文件
+// Download processed files
 async function downloadFiles() {
     if (state.finalFiles.length === 0) {
         alert('No files to download');
@@ -992,7 +990,7 @@ async function downloadFiles() {
             ? Array.from(state.selectedFiles).map(i => state.finalFiles[i])
             : state.finalFiles;
 
-        // 如果只有一个文件，直接下载，不使用 ZIP
+        // Download the single file directly without ZIP
         if (filesToDownload.length === 1) {
             elements.downloadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Downloading...';
 
@@ -1014,7 +1012,7 @@ async function downloadFiles() {
 
             console.log(`Successfully downloaded 1 file: ${fileToDownload.name}`);
         } else {
-            // 多个文件时使用 ZIP 压缩
+            // Use ZIP compression when downloading multiple files
             elements.downloadBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Preparing ZIP...';
 
             const zip = new JSZip();
@@ -1062,22 +1060,22 @@ async function downloadFiles() {
     }
 }
 
-// 处理suffix输入
+// Handle suffix input
 function handleSuffixInput() {
     const rawValue = elements.suffix.value;
     const cleanedValue = rawValue.replace(/[^a-zA-Z0-9-_]/g, '');
 
-    // 如果用户输入了非法字符，实时清理
+    // Strip invalid characters as the user types
     if (rawValue !== cleanedValue) {
         elements.suffix.value = cleanedValue;
     }
 
-    // 如果清空输入框，提供视觉反馈
+    // Provide visual feedback when the input is cleared
     if (cleanedValue === '') {
         elements.suffix.style.borderColor = 'var(--warning)';
         elements.suffix.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
 
-        // 3秒后恢复正常样式
+        // Reset the styles after three seconds
         setTimeout(() => {
             elements.suffix.style.borderColor = '';
             elements.suffix.style.backgroundColor = '';
@@ -1087,15 +1085,15 @@ function handleSuffixInput() {
     updatePreview();
 }
 
-// 添加预览切换按钮到重命名步骤
+// Inject a preview toggle button during the rename step
 function addPreviewButtonToRenameStep() {
-    // 检查是否已经添加了预览按钮
+    // Avoid creating duplicate preview buttons
     const existingPreviewBtn = document.getElementById('previewToggleBtn');
     if (existingPreviewBtn) {
         return;
     }
 
-    // 创建预览按钮
+    // Create the preview button
     const previewBtn = document.createElement('button');
     previewBtn.id = 'previewToggleBtn';
     previewBtn.className = 'btn btn-secondary';
@@ -1112,21 +1110,21 @@ function addPreviewButtonToRenameStep() {
         }
     });
 
-    // 添加到操作按钮区域
+    // Insert it into the action button group
     const actionGroup = document.querySelector('.action-group');
     if (actionGroup) {
         actionGroup.insertBefore(previewBtn, actionGroup.firstChild);
     }
 }
 
-// 格式化文件大小
+// Format a file size value
 function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
-// 初始化应用
+// Initialize the application
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {

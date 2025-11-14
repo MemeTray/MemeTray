@@ -1,23 +1,23 @@
 /**
- * MemeTray 工具通用函数库
- * 包含文件上传、拖拽、粘贴等通用功能
+ * Common utility library for MemeTray tools
+ * Provides shared helpers for uploads, drag-and-drop, and paste handling
  */
 
 /**
- * 遍历文件树（处理文件夹拖拽）
- * @param {FileSystemEntry} item - 文件系统条目
- * @param {string} path - 当前路径
- * @param {Array} files - 文件数组
+ * Traverse the file tree (for folder drag-and-drop)
+ * @param {FileSystemEntry} item - File system entry
+ * @param {string} path - Current path
+ * @param {Array} files - Collected files list
  */
 export async function traverseFileTree(item, path, files) {
     if (item.isFile) {
         return new Promise((resolve, reject) => {
             item.file((file) => {
-                console.log(`找到文件: ${file.name} (${file.type}, ${file.size} bytes)`);
+                console.log(`Found file: ${file.name} (${file.type}, ${file.size} bytes)`);
                 files.push({ file, path: path + file.name });
                 resolve();
             }, (error) => {
-                console.warn(`读取文件失败: ${item.name}`, error);
+                console.warn(`Failed to read file: ${item.name}`, error);
                 reject(error);
             });
         });
@@ -25,7 +25,7 @@ export async function traverseFileTree(item, path, files) {
         const dirReader = item.createReader();
         const newPath = path + item.name + '/';
         
-        console.log(`进入目录: ${item.name}`);
+        console.log(`Entering directory: ${item.name}`);
         
         const readAllEntries = () => {
             return new Promise((resolve, reject) => {
@@ -40,7 +40,7 @@ export async function traverseFileTree(item, path, files) {
                             resolve(allEntries);
                         }
                     }, (error) => {
-                        console.warn(`读取目录失败: ${item.name}`, error);
+                        console.warn(`Failed to read directory: ${item.name}`, error);
                         reject(error);
                     });
                 };
@@ -51,28 +51,28 @@ export async function traverseFileTree(item, path, files) {
         
         try {
             const entries = await readAllEntries();
-            console.log(`目录 ${item.name} 包含 ${entries.length} 个项目`);
+            console.log(`Directory ${item.name} contains ${entries.length} entries`);
             
-            // 使用 Promise.all 并行处理所有条目
+            // Use Promise.all to process entries concurrently
             const promises = entries.map(entry => traverseFileTree(entry, newPath, files));
             await Promise.all(promises);
         } catch (error) {
-            console.warn(`处理目录 ${item.name} 时出错:`, error);
+            console.warn(`Error processing directory ${item.name}:`, error);
         }
     }
 }
 
 /**
- * 设置全局文件拖拽支持
- * @param {Object} options - 配置选项
- * @param {HTMLElement} options.uploadArea - 上传区域元素
- * @param {Function} options.onFilesDropped - 文件拖拽完成回调
- * @param {string} options.acceptType - 接受的文件类型 (例如: 'image/gif')
+ * Enable global drag-and-drop support
+ * @param {Object} options - Configuration options
+ * @param {HTMLElement} options.uploadArea - Upload area element
+ * @param {Function} options.onFilesDropped - Callback after files are dropped
+ * @param {string} options.acceptType - Accepted file type (e.g. 'image/gif')
  */
 export function setupDragAndDrop(options) {
     const { uploadArea, onFilesDropped, acceptType = 'image/gif' } = options;
     
-    // 拖拽到上传区域
+    // Dragging onto the upload area
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
         uploadArea.classList.add('dragover');
@@ -84,12 +84,12 @@ export function setupDragAndDrop(options) {
     
     uploadArea.addEventListener('drop', async (e) => {
         e.preventDefault();
-        e.stopPropagation(); // 阻止事件冒泡，避免重复处理
+        e.stopPropagation(); // Prevent bubbling to avoid duplicate handling
         uploadArea.classList.remove('dragover');
         await handleDrop(e, acceptType, onFilesDropped);
     });
 
-    // 全局拖拽支持（拖拽到窗口任意位置）
+    // Global drag support (dropping anywhere in the window)
     document.body.addEventListener('dragover', (e) => {
         e.preventDefault();
         uploadArea.classList.add('dragover');
@@ -103,22 +103,22 @@ export function setupDragAndDrop(options) {
     
     document.body.addEventListener('drop', async (e) => {
         e.preventDefault();
-        e.stopPropagation(); // 阻止事件冒泡
+        e.stopPropagation(); // Prevent the event from bubbling
         uploadArea.classList.remove('dragover');
         await handleDrop(e, acceptType, onFilesDropped);
     });
 }
 
 /**
- * 处理文件拖拽事件
+ * Handle drag-and-drop events
  */
 async function handleDrop(e, acceptType, callback) {
     const items = e.dataTransfer.items;
     const files = [];
     
-    console.log(`开始处理拖拽，共 ${items.length} 个项目`)
+    console.log(`Processing drag-and-drop with ${items.length} items`)
     
-    // 处理所有拖拽项目
+    // Process every dropped item
     const promises = [];
     for (let i = 0; i < items.length; i++) {
         const item = items[i].webkitGetAsEntry();
@@ -127,21 +127,21 @@ async function handleDrop(e, acceptType, callback) {
         }
     }
     
-    // 等待所有文件处理完成
+    // Wait for all files to finish processing
     await Promise.all(promises);
     
-    console.log(`文件遍历完成，共找到 ${files.length} 个文件`)
+    console.log(`Traversal complete with ${files.length} files found`)
     
-    // 过滤有效文件
+    // Filter valid files
     const validFiles = files.filter(f => {
         const isValid = f.file.type === acceptType || f.file.type.startsWith('image/');
         if (!isValid) {
-            console.log(`跳过文件: ${f.file.name} (类型: ${f.file.type})`);
+            console.log(`Skipping file: ${f.file.name} (type: ${f.file.type})`);
         }
         return isValid;
     });
     
-    console.log(`有效文件数量: ${validFiles.length}`)
+    console.log(`Valid files: ${validFiles.length}`)
     
     if (validFiles.length > 0) {
         callback(validFiles);
@@ -151,10 +151,10 @@ async function handleDrop(e, acceptType, callback) {
 }
 
 /**
- * 设置 Ctrl+V 粘贴支持
- * @param {Object} options - 配置选项
- * @param {Function} options.onFilesPasted - 文件粘贴完成回调
- * @param {string} options.acceptType - 接受的文件类型 (例如: 'image/gif')
+ * Enable Ctrl+V paste support
+ * @param {Object} options - Configuration options
+ * @param {Function} options.onFilesPasted - Callback after paste completes
+ * @param {string} options.acceptType - Accepted file type (e.g. 'image/gif')
  */
 export function setupPasteSupport(options) {
     const { onFilesPasted, acceptType = 'image/gif' } = options;
@@ -181,16 +181,16 @@ export function setupPasteSupport(options) {
 }
 
 /**
- * 初始化随机背景
- * @param {string} selector - 背景元素选择器（默认 '.desktop'）
- * @deprecated 请使用 backgroundConfig.js 中的 initRandomBackground
+ * Initialize a random background
+ * @param {string} selector - Background selector (defaults to '.desktop')
+ * @deprecated Use initRandomBackground from backgroundConfig.js instead
  */
 export function initRandomBackground(selector = '.desktop') {
-    // 为了向后兼容，保留此函数，但建议导入 backgroundConfig.js
+    // Retained for backwards compatibility; prefer importing from backgroundConfig.js
     import('./backgroundConfig.js').then(({ initRandomBackground: init }) => {
         init(selector);
     }).catch(() => {
-        // 降级处理：如果模块加载失败，使用内联实现
+        // Fallback: inline implementation if the module import fails
         try {
             const desktop = document.querySelector(selector);
             if (!desktop) return;
@@ -205,9 +205,9 @@ export function initRandomBackground(selector = '.desktop') {
 }
 
 /**
- * 格式化文件大小
- * @param {number} bytes - 字节数
- * @returns {string} 格式化后的文件大小
+ * Format a file size value
+ * @param {number} bytes - Number of bytes
+ * @returns {string} Human-readable size string
  */
 export function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -216,9 +216,9 @@ export function formatFileSize(bytes) {
 }
 
 /**
- * 计算文件的 SHA-256 哈希值
- * @param {ArrayBuffer} arrayBuffer - 文件的 ArrayBuffer
- * @returns {Promise<string>} 哈希值的十六进制字符串
+ * Calculate the SHA-256 hash of a file
+ * @param {ArrayBuffer} arrayBuffer - File ArrayBuffer
+ * @returns {Promise<string>} Hex-encoded hash string
  */
 export async function calculateFileHash(arrayBuffer) {
     const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
@@ -227,11 +227,11 @@ export async function calculateFileHash(arrayBuffer) {
 }
 
 /**
- * 设置文件输入框变更事件
- * @param {Object} options - 配置选项
- * @param {HTMLInputElement} options.fileInput - 文件输入框元素
- * @param {Function} options.onFilesSelected - 文件选择回调
- * @param {string} options.acceptType - 接受的文件类型
+ * Configure the file input change handler
+ * @param {Object} options - Configuration options
+ * @param {HTMLInputElement} options.fileInput - File input element
+ * @param {Function} options.onFilesSelected - Selection callback
+ * @param {string} options.acceptType - Accepted MIME type
  */
 export function setupFileInput(options) {
     const { fileInput, onFilesSelected, acceptType = 'image/gif' } = options;

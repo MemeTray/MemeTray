@@ -54,7 +54,7 @@ function setupEventListeners() {
         
         console.log(`开始处理拖拽，共 ${items.length} 个项目`);
         
-        // 处理所有拖拽项目
+        // Process every dropped item
         const promises = [];
         for (let i = 0; i < items.length; i++) {
             const item = items[i].webkitGetAsEntry();
@@ -64,7 +64,7 @@ function setupEventListeners() {
             }
         }
         
-        // 等待所有文件处理完成
+        // Wait for every file to finish processing
         await Promise.all(promises);
         
         console.log('Total files found:', files.length);
@@ -112,7 +112,7 @@ async function traverseFileTree(item, path, files) {
         
         console.log(`进入目录: ${item.name}`);
         
-        // readEntries 需要多次调用才能读取所有文件
+        // readEntries must be called multiple times to fetch all files
         const readAllEntries = () => {
             return new Promise((resolve, reject) => {
                 const allEntries = [];
@@ -141,7 +141,7 @@ async function traverseFileTree(item, path, files) {
             const entries = await readAllEntries();
             console.log(`目录 ${item.name} 包含 ${entries.length} 个项目`);
             
-            // 使用 Promise.all 并行处理所有条目
+            // Use Promise.all to handle entries concurrently
             const promises = entries.map(entry => traverseFileTree(entry, newPath, files));
             await Promise.all(promises);
         } catch (error) {
@@ -204,11 +204,11 @@ async function processFiles(files) {
     progressContainer.style.display = 'none';
     batchActions.style.display = 'flex';
     
-    // 检测重复文件
+    // Detect duplicate files
     checkDuplicates();
 }
 
-// 计算文件内容的hash值
+// Calculate a hash for the file contents
 async function calculateHash(blob) {
     const arrayBuffer = await blob.arrayBuffer();
     const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
@@ -230,16 +230,16 @@ img = Image.open('${inputFile}')
 frames = []
 durations = []
 
-# 处理每一帧
+# Process each frame
 try:
     while True:
         frame = img.copy()
         
-        # 保留透明通道，转换为RGBA
+        # Preserve transparency by converting to RGBA
         if frame.mode != 'RGBA':
             frame = frame.convert('RGBA')
         
-        # 缩放到128x128
+        # Scale to 128x128
         frame = frame.resize((128, 128), Image.Resampling.NEAREST)
         frames.append(frame)
         durations.append(frame.info.get('duration', img.info.get('duration', 100)))
@@ -247,33 +247,33 @@ try:
 except EOFError:
     pass
 
-# 如果只有一帧，添加默认时长
+# Provide a default duration when only one frame exists
 if len(frames) == 1:
     durations = [100]
 
 if frames:
-    # 将RGBA帧转换为P模式（调色板模式），这样浏览器才能正确显示
+    # Convert RGBA frames to palette mode so browsers render them correctly
     p_frames = []
     
     for frame in frames:
-        # 使用quantize将RGBA转为P模式，保留透明度
-        # 创建一个带alpha通道的调色板图像
-        alpha = frame.split()[-1]  # 获取alpha通道
+        # Use quantize to convert RGBA to palette mode while keeping transparency
+        # Create a palette image with an alpha channel
+        alpha = frame.split()[-1]  # Extract the alpha channel
         
-        # 将RGBA转换为RGB用于调色板生成
+        # Convert RGBA to RGB for palette creation
         rgb = Image.new('RGB', frame.size, (255, 255, 255))
         rgb.paste(frame, mask=alpha)
         
-        # 转换为P模式
+        # Convert to palette mode
         p_frame = rgb.convert('P', palette=Image.ADAPTIVE, colors=255)
         
-        # 设置透明色
-        # 找出完全透明的像素，将它们设置为透明色索引
+        # Set the transparent color
+        # Map fully transparent pixels to the transparent color index
         threshold = 128
         alpha_data = alpha.getdata()
         p_data = list(p_frame.getdata())
         
-        # 添加透明色到调色板（索引255）
+        # Reserve palette index 255 for the transparent color
         for i, a in enumerate(alpha_data):
             if a < threshold:
                 p_data[i] = 255
@@ -281,7 +281,7 @@ if frames:
         p_frame.putdata(p_data)
         p_frames.append(p_frame)
     
-    # 保存为GIF，指定透明色索引
+    # Save the GIF while specifying the transparency index
     p_frames[0].save(
         '/output.gif',
         save_all=True,
@@ -298,10 +298,10 @@ if frames:
         const blob = new Blob([outputData], { type: 'image/gif' });
         const url = URL.createObjectURL(blob);
         
-        // 如果是 WebP，修改文件名为 .gif，并添加标记避免与原生gif冲突
+        // Rename WebP files to .gif and mark them to avoid conflicts
         let outputFileName, outputFilePath;
         if (isWebP) {
-            // 将 1.webp 改为 1_from_webp.gif 避免和 1.gif 冲突
+            // Rename 1.webp to 1_from_webp.gif to prevent clashing with 1.gif
             outputFileName = fileName.replace(/\.webp$/i, '_from_webp.gif');
             outputFilePath = filePath.replace(/\.webp$/i, '_from_webp.gif');
         } else {
@@ -309,7 +309,7 @@ if frames:
             outputFilePath = filePath;
         }
         
-        // 计算hash值
+        // Calculate the hash value
         const hash = await calculateHash(blob);
         
         displayPreview(url, outputFileName, blob, outputFilePath, hash);
@@ -391,7 +391,7 @@ function checkDuplicates() {
     let duplicateCount = 0;
     const duplicateIds = new Set();
     
-    // 统计每个hash出现的次数
+    // Count the occurrences of each hash
     processedFiles.forEach(file => {
         if (!file.deleted) {
             if (!hashMap.has(file.hash)) {
@@ -401,7 +401,7 @@ function checkDuplicates() {
         }
     });
     
-    // 找出所有重复文件的ID
+    // Identify all duplicate file IDs
     hashMap.forEach((ids, hash) => {
         if (ids.length > 1) {
             duplicateCount += ids.length - 1;
@@ -409,12 +409,12 @@ function checkDuplicates() {
         }
     });
     
-    // 如果有重复文件，重新组织显示顺序
+    // Reorder the display when duplicates exist
     if (duplicateIds.size > 0) {
         const preview = document.getElementById('preview');
         const allItems = Array.from(preview.children);
         
-        // 分离重复文件和唯一文件
+        // Split duplicate and unique files
         const duplicateItems = [];
         const uniqueItems = [];
         
@@ -422,7 +422,7 @@ function checkDuplicates() {
             const fileId = parseInt(item.dataset.fileId);
             if (duplicateIds.has(fileId)) {
                 duplicateItems.push(item);
-                // 标记为重复文件
+                // Mark as duplicate files
                 const warning = item.querySelector('.duplicate-warning');
                 if (warning) {
                     warning.style.display = 'block';
@@ -432,10 +432,10 @@ function checkDuplicates() {
             }
         });
         
-        // 清空预览区域
+        // Clear the preview area
         preview.innerHTML = '';
         
-        // 添加重复文件区域标题
+        // Add a heading for duplicate files
         if (duplicateItems.length > 0) {
             const duplicateSection = document.createElement('div');
             duplicateSection.className = 'section-header duplicate-section';
@@ -445,11 +445,11 @@ function checkDuplicates() {
             `;
             preview.appendChild(duplicateSection);
             
-            // 添加重复文件
+            // Append duplicate files
             duplicateItems.forEach(item => preview.appendChild(item));
         }
         
-        // 添加唯一文件区域标题
+        // Add a heading for unique files
         if (uniqueItems.length > 0) {
             const uniqueSection = document.createElement('div');
             uniqueSection.className = 'section-header unique-section';
@@ -458,11 +458,11 @@ function checkDuplicates() {
             `;
             preview.appendChild(uniqueSection);
             
-            // 添加唯一文件
+            // Append unique files
             uniqueItems.forEach(item => preview.appendChild(item));
         }
         
-        // 显示重复文件提示
+        // Show a hint about duplicates
         const existingAlert = document.getElementById('duplicateAlert');
         if (existingAlert) {
             existingAlert.remove();
@@ -499,7 +499,7 @@ function deleteFile(fileId) {
         }
         URL.revokeObjectURL(file.url);
         
-        // 重新检查重复
+        // Re-check duplicates
         checkDuplicates();
     }
 }
@@ -507,7 +507,7 @@ function deleteFile(fileId) {
 window.autoRemoveDuplicates = function() {
     const hashMap = new Map();
     
-    // 找出所有重复的文件组
+    // Find all duplicate file groups
     processedFiles.forEach(file => {
         if (!file.deleted) {
             if (!hashMap.has(file.hash)) {
@@ -518,7 +518,7 @@ window.autoRemoveDuplicates = function() {
     });
     
     let removedCount = 0;
-    // 对于每组重复文件，保留第一个，删除其余的
+    // Keep the first file in each duplicate group and remove the rest
     hashMap.forEach((files, hash) => {
         if (files.length > 1) {
             for (let i = 1; i < files.length; i++) {
@@ -558,7 +558,7 @@ async function downloadAllAsZip() {
     activeFiles.forEach(file => {
         let pathInZip = file.filePath;
         
-        // 如果有文件夹名，去掉路径中的文件夹前缀
+        // Strip folder prefixes from the path when present
         if (folderName && pathInZip.startsWith(folderName + '/')) {
             pathInZip = pathInZip.substring(folderName.length + 1);
         }
@@ -593,7 +593,7 @@ async function downloadAllAsZip() {
 }
 
 function clearAll() {
-    // 清理所有URL对象
+    // Revoke every object URL
     processedFiles.forEach(file => {
         if (file.url) {
             URL.revokeObjectURL(file.url);
@@ -614,7 +614,7 @@ function clearAll() {
     }
 }
 
-// 随机背景初始化
+// Initialize the random background
 import { initRandomBackground } from '../common/backgroundConfig.js';
 initRandomBackground();
 
