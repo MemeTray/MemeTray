@@ -15,6 +15,7 @@ let state = {
     compressedFiles: [],
     deduplicatedFiles: [],
     finalFiles: [],
+    duplicatesCount: 0, // Track number of duplicates detected
     selectedFiles: new Set(),
     isProcessing: false,
     pyodideReady: false,
@@ -610,6 +611,9 @@ async function deduplicateGifs(compressedFiles) {
     console.log(`✅ Deduplication complete. Found ${duplicates.length} duplicates out of ${compressedFiles.length} files`);
     console.log(`📊 Unique files: ${uniqueFiles.length}`);
 
+    // Store duplicates count in state
+    state.duplicatesCount = duplicates.length;
+
     if (state.settings.autoRemoveDuplicates && duplicates.length > 0) {
         console.log(`🗑️ Auto-removing duplicates. Returning ${uniqueFiles.length} unique files`);
         return uniqueFiles;
@@ -832,7 +836,7 @@ function createResultItem(file, index) {
 function updateStatsSummary() {
     const total = state.finalFiles.length;
     const compressed = state.finalFiles.filter(f => f.compressionRatio && parseFloat(f.compressionRatio) > 0).length;
-    const duplicates = state.finalFiles.filter(f => f.isDuplicate).length;
+    const duplicates = state.duplicatesCount; // Use the stored duplicates count
     const renamed = state.finalFiles.filter(f => f.newName).length;
 
     // Build the statistics summary element
@@ -953,6 +957,7 @@ function restart() {
         compressedFiles: [],
         deduplicatedFiles: [],
         finalFiles: [],
+        duplicatesCount: 0, // Reset duplicates count
         selectedFiles: new Set(),
         isProcessing: false,
         settings: {
