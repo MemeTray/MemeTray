@@ -1,0 +1,192 @@
+name: Update sections.json
+
+on:
+  # 定时运行：每天凌晨 2 点（UTC 时间）
+  schedule:
+    - cron: '0 2 * * *'
+
+  # 手动触发
+  workflow_dispatch:
+
+  # 当 sections.txt 变化时触发
+  push:
+    paths:
+      - 'sections.txt'
+
+jobs:
+  update-sections:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Update sections.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 创建 Node.js 脚本来更新 sections.json
+          cat > update-sections.js << 'EOF'
+          const fs = require('fs');
+          const https = require('https');
+
+          // GitHub API 请求函数
+          function githubApi(path) {
+            return new Promise((resolve, reject) => {
+              const options = {
+                hostname: 'api.github.com',
+                path: path,
+                method: 'GET',
+                headers: {
+                  'User-Agent': 'MemeTray-Bot',
+                  'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+                  'Accept': 'application/vnd.github.v3+json'
+                }
+              };
+
+              https.get(options, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                  if (res.statusCode === 200) {
+                    resolve(JSON.parse(data));
+                  } else {
+                    reject(new Error(`GitHub API error: ${res.statusCode} ${data}`));
+                  }
+                });
+              }).on('error', reject);
+            });
+          }
+
+          // 获取组织下所有仓库
+          async function getOrgRepos() {
+            console.log('Fetching MemeTray organization repositories...');
+            const repos = await githubApi('/orgs/MemeTray/repos?per_page=100');
+
+            // 过滤出 gifs- 开头的仓库
+            const gifsRepos = repos
+              .filter(repo => repo.name.startsWith('gifs-'))
+              .map(repo => ({
+                name: repo.name,
+                fullName: repo.full_name,
+                section: repo.name.replace('gifs-', ''),
+                updatedAt: repo.updated_at,
+                defaultBranch: repo.default_branch || 'main'
+              }));
+
+            console.log(`Found ${gifsRepos.length} gifs repositories:`, gifsRepos.map(r => r.name).join(', '));
+            return gifsRepos;
+          }
+
+          // 统计仓库中的 GIF 数量
+          async function countGifs(repo) {
+            try {
+              console.log(`Counting GIFs in ${repo.name}...`);
+
+              // 获取仓库的文件树
+              const tree = await githubApi(`/repos/${repo.fullName}/git/trees/${repo.defaultBranch}?recursive=1`);
+
+              // 过滤出 .gif 文件
+              const gifFiles = tree.tree.filter(item =>
+                item.type === 'blob' && item.path.endsWith('.gif')
+              );
+
+              console.log(`  → Found ${gifFiles.length} GIF files`);
+              return gifFiles.length;
+            } catch (error) {
+              console.error(`  ✗ Error counting GIFs in ${repo.name}:`, error.message);
+              return 0;
+            }
+          }
+
+          // 主函数
+          async function main() {
+            try {
+              // 获取所有 gifs 仓库
+              const repos = await getOrgRepos();
+
+              if (repos.length === 0) {
+                console.log('No gifs repositories found!');
+                return;
+              }
+
+              // 构建 sections 对象
+              const sections = {};
+
+              for (const repo of repos) {
+                const count = await countGifs(repo);
+                const section = repo.section;
+
+                sections[section] = {
+                  count: count,
+                  title: section,
+                  repository: `https://github.com/${repo.fullName}`,
+                  repositoryName: repo.name,
+                  cdnBase: `https://cdn.jsdelivr.net/gh/${repo.fullName}@${repo.defaultBranch}/${section}/`,
+                  updated: new Date().toISOString()
+                };
+              }
+
+              // 生成 sections.json
+              const output = {
+                version: "1.0",
+                generated: new Date().toISOString(),
+                sections: sections
+              };
+
+              // 写入文件（同时写入根目录和 docs 目录）
+              fs.writeFileSync('sections.json', JSON.stringify(output, null, 2) + '\n');
+              fs.writeFileSync('docs/sections.json', JSON.stringify(output, null, 2) + '\n');
+              console.log('\n✓ sections.json updated successfully!');
+
+              // 打印统计信息
+              console.log('\nStatistics:');
+              Object.entries(sections).forEach(([key, data]) => {
+                console.log(`  ${key}: ${data.count} GIFs`);
+              });
+
+            } catch (error) {
+              console.error('Error:', error);
+              process.exit(1);
+            }
+          }
+
+          main();
+          EOF
+
+          # 运行脚本
+          node update-sections.js
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 检查是否有变化
+          if git diff --quiet sections.json docs/sections.json; then
+            echo "No changes to sections.json"
+            exit 0
+          fi
+
+          # 提取统计信息用于提交消息
+          STATS=$(node -e "
+            const data = require('./sections.json');
+            const sections = data.sections;
+            const summary = Object.entries(sections)
+              .map(([key, val]) => \`\${key}:\${val.count}\`)
+              .join(', ');
+            console.log(summary);
+          ")
+
+          git add sections.json docs/sections.json
+          git commit -m "chore: update sections.json ($STATS)"
+          git push
+
+          echo "✓ sections.json committed and pushed"

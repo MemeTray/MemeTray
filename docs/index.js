@@ -516,43 +516,75 @@ function fileName(dir,i){return String(i).padStart(4,'0')+"_"+dir+".gif"}
 async function fetchSections(){
   if(sections && sections.length){buildItems();return}
   try{
-    // 仅使用本地静态索引，避免任何外部 API 依赖
-    const localIdx=await fetch("./sections.txt",{cache:'no-store'})
-    if(!localIdx.ok) throw new Error('sections.txt not found')
-    const text=await localIdx.text()
-    const sections_list = text.trim().split('\n').map(line => line.trim()).filter(line => line.length > 0)
-    if(!sections_list.length) throw new Error('empty sections')
-    // 处理分类配置，从各个仓库获取 count 信息
-    const normalized = sections_list
-      .map((dir)=>{
-        // 自动生成 URL
-        const baseUrl = `https://cdn.jsdelivr.net/gh/MemeTray/gifs-${dir}@main/${dir}/`
-        const repository = `https://github.com/MemeTray/gifs-${dir}`
-        return {dir, baseUrl, repository}
-      })
-      .filter(({dir})=>!!dir)
-    if(!normalized.length) throw new Error('invalid sections schema: expect array of {dir}')
+    // 优先使用新的 sections.json（集中式配置）
+    console.log('Loading sections.json...')
+    const sectionsResponse = await fetch("./sections.json", {cache: 'no-store'})
 
-    // 1) 异步获取各个分组的配置信息
-    const sectionsWithCount = await Promise.all(
-      normalized.map(async ({dir, baseUrl, repository}) => {
-        try {
-          // config.json 位于仓库根目录，不在子目录中
-          const configUrl = `https://cdn.jsdelivr.net/gh/MemeTray/gifs-${dir}@main/config.json`
-          const configResponse = await fetch(configUrl, {cache: 'no-store'})
-          if (!configResponse.ok) throw new Error(`config.json not found for ${dir}`)
-          const config = await configResponse.json()
-          const count = Number.isFinite(Number(config.count)) ? Number(config.count) : 0
-          const files = []; for(let i=1; i<=count; i++){files.push(fileName(dir,i))}
-          return {key:dir, title:dir, dir, files, baseUrl, repository, count}
-        } catch (err) {
-          console.warn(`Failed to load config for ${dir}:`, err)
-          return {key:dir, title:dir, dir, files:[], baseUrl, repository, count:0}
-        }
-      })
-    )
-    
-    sections = sectionsWithCount.filter(s => s.count > 0)
+    if (sectionsResponse.ok) {
+      // 使用新的集中式配置
+      const sectionsData = await sectionsResponse.json()
+      console.log('sections.json loaded successfully:', sectionsData)
+
+      // 转换为所需格式
+      sections = Object.entries(sectionsData.sections)
+        .map(([key, data]) => {
+          const count = Number.isFinite(Number(data.count)) ? Number(data.count) : 0
+          const files = []
+          for(let i=1; i<=count; i++){
+            files.push(fileName(key, i))
+          }
+          return {
+            key: key,
+            title: data.title || key,
+            dir: key,
+            files: files,
+            baseUrl: data.cdnBase,
+            repository: data.repository,
+            count: count
+          }
+        })
+        .filter(s => s.count > 0)
+
+      console.log(`Loaded ${sections.length} sections from sections.json`)
+    } else {
+      // 回退到旧方式（兼容性）
+      console.warn('sections.json not found, falling back to sections.txt + individual config.json')
+
+      const localIdx=await fetch("./sections.txt",{cache:'no-store'})
+      if(!localIdx.ok) throw new Error('sections.txt not found')
+      const text=await localIdx.text()
+      const sections_list = text.trim().split('\n').map(line => line.trim()).filter(line => line.length > 0)
+      if(!sections_list.length) throw new Error('empty sections')
+
+      const normalized = sections_list
+        .map((dir)=>{
+          const baseUrl = `https://cdn.jsdelivr.net/gh/MemeTray/gifs-${dir}@main/${dir}/`
+          const repository = `https://github.com/MemeTray/gifs-${dir}`
+          return {dir, baseUrl, repository}
+        })
+        .filter(({dir})=>!!dir)
+      if(!normalized.length) throw new Error('invalid sections schema: expect array of {dir}')
+
+      // 异步获取各个分组的配置信息
+      const sectionsWithCount = await Promise.all(
+        normalized.map(async ({dir, baseUrl, repository}) => {
+          try {
+            const configUrl = `https://cdn.jsdelivr.net/gh/MemeTray/gifs-${dir}@main/config.json`
+            const configResponse = await fetch(configUrl, {cache: 'no-store'})
+            if (!configResponse.ok) throw new Error(`config.json not found for ${dir}`)
+            const config = await configResponse.json()
+            const count = Number.isFinite(Number(config.count)) ? Number(config.count) : 0
+            const files = []; for(let i=1; i<=count; i++){files.push(fileName(dir,i))}
+            return {key:dir, title:dir, dir, files, baseUrl, repository, count}
+          } catch (err) {
+            console.warn(`Failed to load config for ${dir}:`, err)
+            return {key:dir, title:dir, dir, files:[], baseUrl, repository, count:0}
+          }
+        })
+      )
+
+      sections = sectionsWithCount.filter(s => s.count > 0)
+    }
     if (sections.length > 0) {
       sectionSelect.value = sections[0].dir
       buildItems()

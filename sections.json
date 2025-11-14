@@ -1,0 +1,46 @@
+{
+  "version": "1.0",
+  "generated": "2025-11-14T00:00:00Z",
+  "sections": {
+    "doro": {
+      "count": 0,
+      "title": "doro",
+      "repository": "https://github.com/MemeTray/gifs-doro",
+      "repositoryName": "gifs-doro",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-doro@main/doro/",
+      "updated": "2025-11-14T00:00:00Z"
+    },
+    "genshin": {
+      "count": 0,
+      "title": "genshin",
+      "repository": "https://github.com/MemeTray/gifs-genshin",
+      "repositoryName": "gifs-genshin",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-genshin@main/genshin/",
+      "updated": "2025-11-14T00:00:00Z"
+    },
+    "maodie": {
+      "count": 0,
+      "title": "maodie",
+      "repository": "https://github.com/MemeTray/gifs-maodie",
+      "repositoryName": "gifs-maodie",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maodie@main/maodie/",
+      "updated": "2025-11-14T00:00:00Z"
+    },
+    "maomaochong": {
+      "count": 0,
+      "title": "maomaochong",
+      "repository": "https://github.com/MemeTray/gifs-maomaochong",
+      "repositoryName": "gifs-maomaochong",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maomaochong@main/maomaochong/",
+      "updated": "2025-11-14T00:00:00Z"
+    },
+    "catmeme": {
+      "count": 0,
+      "title": "catmeme",
+      "repository": "https://github.com/MemeTray/gifs-catmeme",
+      "repositoryName": "gifs-catmeme",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-catmeme@main/catmeme/",
+      "updated": "2025-11-14T00:00:00Z"
+    }
+  }
+}
