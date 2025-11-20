@@ -151,3 +151,10 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-se
 #legalFooter .legal-link{color:#fff;text-decoration:none;transition:opacity .3s cubic-bezier(.4,0,.2,1)}
 #legalFooter .legal-link:hover{text-decoration:underline;opacity:.9}
 
+/* Custom scrollbar styling for sidebar and main pane */
+.sidebar::-webkit-scrollbar,.main-pane::-webkit-scrollbar{width:8px;height:8px}
+.sidebar::-webkit-scrollbar-track,.main-pane::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb,.main-pane::-webkit-scrollbar-thumb{background:rgba(155,155,155,.5);border-radius:10px;border:2px solid transparent;background-clip:padding-box;transition:background .3s cubic-bezier(.4,0,.2,1)}
+.sidebar::-webkit-scrollbar-thumb:hover,.main-pane::-webkit-scrollbar-thumb:hover{background:rgba(155,155,155,.7);border-radius:10px;border:2px solid transparent;background-clip:padding-box}
+.sidebar::-webkit-scrollbar-thumb:active,.main-pane::-webkit-scrollbar-thumb:active{background:rgba(155,155,155,.9)}
+
