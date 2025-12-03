@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2025-12-02T03:11:14.204Z",
+  "generated": "2025-12-03T03:09:47.779Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -8,7 +8,7 @@
       "repository": "https://github.com/MemeTray/gifs-doro",
       "repositoryName": "gifs-doro",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-doro@main/doro/",
-      "updated": "2025-12-02T03:11:12.622Z"
+      "updated": "2025-12-03T03:09:46.509Z"
     },
     "catmeme": {
       "count": 62,
@@ -16,7 +16,7 @@
       "repository": "https://github.com/MemeTray/gifs-catmeme",
       "repositoryName": "gifs-catmeme",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-catmeme@main/catmeme/",
-      "updated": "2025-12-02T03:11:12.960Z"
+      "updated": "2025-12-03T03:09:46.802Z"
     },
     "genshin": {
       "count": 3,
@@ -24,7 +24,7 @@
       "repository": "https://github.com/MemeTray/gifs-genshin",
       "repositoryName": "gifs-genshin",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-genshin@main/genshin/",
-      "updated": "2025-12-02T03:11:13.269Z"
+      "updated": "2025-12-03T03:09:47.004Z"
     },
     "maodie": {
       "count": 19,
@@ -32,7 +32,7 @@
       "repository": "https://github.com/MemeTray/gifs-maodie",
       "repositoryName": "gifs-maodie",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maodie@main/maodie/",
-      "updated": "2025-12-02T03:11:13.548Z"
+      "updated": "2025-12-03T03:09:47.203Z"
     },
     "maomaochong": {
       "count": 349,
@@ -40,7 +40,7 @@
       "repository": "https://github.com/MemeTray/gifs-maomaochong",
       "repositoryName": "gifs-maomaochong",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maomaochong@main/maomaochong/",
-      "updated": "2025-12-02T03:11:13.891Z"
+      "updated": "2025-12-03T03:09:47.500Z"
     },
     "miku": {
       "count": 119,
@@ -48,7 +48,7 @@
       "repository": "https://github.com/MemeTray/gifs-miku",
       "repositoryName": "gifs-miku",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-miku@main/miku/",
-      "updated": "2025-12-02T03:11:14.204Z"
+      "updated": "2025-12-03T03:09:47.779Z"
     }
   }
 }
