@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2025-12-21T03:20:54.217Z",
+  "generated": "2025-12-21T06:02:34.805Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -8,7 +8,7 @@
       "repository": "https://github.com/MemeTray/gifs-doro",
       "repositoryName": "gifs-doro",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-doro@main/doro/",
-      "updated": "2025-12-21T03:20:52.433Z"
+      "updated": "2025-12-21T06:02:33.239Z"
     },
     "catmeme": {
       "count": 62,
@@ -16,7 +16,7 @@
       "repository": "https://github.com/MemeTray/gifs-catmeme",
       "repositoryName": "gifs-catmeme",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-catmeme@main/catmeme/",
-      "updated": "2025-12-21T03:20:52.755Z"
+      "updated": "2025-12-21T06:02:33.544Z"
     },
     "genshin": {
       "count": 3,
@@ -24,7 +24,7 @@
       "repository": "https://github.com/MemeTray/gifs-genshin",
       "repositoryName": "gifs-genshin",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-genshin@main/genshin/",
-      "updated": "2025-12-21T03:20:53.019Z"
+      "updated": "2025-12-21T06:02:33.777Z"
     },
     "maodie": {
       "count": 19,
@@ -32,15 +32,15 @@
       "repository": "https://github.com/MemeTray/gifs-maodie",
       "repositoryName": "gifs-maodie",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maodie@main/maodie/",
-      "updated": "2025-12-21T03:20:53.372Z"
+      "updated": "2025-12-21T06:02:33.993Z"
     },
     "maomaochong": {
-      "count": 349,
+      "count": 352,
       "title": "maomaochong",
       "repository": "https://github.com/MemeTray/gifs-maomaochong",
       "repositoryName": "gifs-maomaochong",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maomaochong@main/maomaochong/",
-      "updated": "2025-12-21T03:20:53.749Z"
+      "updated": "2025-12-21T06:02:34.294Z"
     },
     "miku": {
       "count": 119,
@@ -48,7 +48,15 @@
       "repository": "https://github.com/MemeTray/gifs-miku",
       "repositoryName": "gifs-miku",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-miku@main/miku/",
-      "updated": "2025-12-21T03:20:54.217Z"
+      "updated": "2025-12-21T06:02:34.588Z"
+    },
+    "kipfel": {
+      "count": 4,
+      "title": "kipfel",
+      "repository": "https://github.com/MemeTray/gifs-kipfel",
+      "repositoryName": "gifs-kipfel",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-kipfel@main/kipfel/",
+      "updated": "2025-12-21T06:02:34.805Z"
     }
   }
 }
