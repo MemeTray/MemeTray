@@ -5,6 +5,12 @@ on:
   schedule:
     - cron: '0 2 * * *'
 
+  # Trigger on README updates
+  push:
+    paths:
+      - 'README.md'
+      - '**/README.md'
+
   # Manual trigger
   workflow_dispatch:
 
