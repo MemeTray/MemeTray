@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2025-12-24T03:15:55.623Z",
+  "generated": "2025-12-24T05:33:02.254Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -8,7 +8,7 @@
       "repository": "https://github.com/MemeTray/gifs-doro",
       "repositoryName": "gifs-doro",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-doro@main/doro/",
-      "updated": "2025-12-24T03:15:53.772Z"
+      "updated": "2025-12-24T05:33:00.163Z"
     },
     "catmeme": {
       "count": 62,
@@ -16,7 +16,7 @@
       "repository": "https://github.com/MemeTray/gifs-catmeme",
       "repositoryName": "gifs-catmeme",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-catmeme@main/catmeme/",
-      "updated": "2025-12-24T03:15:53.922Z"
+      "updated": "2025-12-24T05:33:00.351Z"
     },
     "genshin": {
       "count": 3,
@@ -24,7 +24,7 @@
       "repository": "https://github.com/MemeTray/gifs-genshin",
       "repositoryName": "gifs-genshin",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-genshin@main/genshin/",
-      "updated": "2025-12-24T03:15:54.064Z"
+      "updated": "2025-12-24T05:33:00.538Z"
     },
     "maodie": {
       "count": 19,
@@ -32,7 +32,7 @@
       "repository": "https://github.com/MemeTray/gifs-maodie",
       "repositoryName": "gifs-maodie",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maodie@main/maodie/",
-      "updated": "2025-12-24T03:15:54.215Z"
+      "updated": "2025-12-24T05:33:00.696Z"
     },
     "maomaochong": {
       "count": 352,
@@ -40,7 +40,7 @@
       "repository": "https://github.com/MemeTray/gifs-maomaochong",
       "repositoryName": "gifs-maomaochong",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maomaochong@main/maomaochong/",
-      "updated": "2025-12-24T03:15:54.593Z"
+      "updated": "2025-12-24T05:33:00.915Z"
     },
     "miku": {
       "count": 119,
@@ -48,7 +48,7 @@
       "repository": "https://github.com/MemeTray/gifs-miku",
       "repositoryName": "gifs-miku",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-miku@main/miku/",
-      "updated": "2025-12-24T03:15:54.740Z"
+      "updated": "2025-12-24T05:33:01.140Z"
     },
     "kipfel": {
       "count": 33,
@@ -56,7 +56,7 @@
       "repository": "https://github.com/MemeTray/gifs-kipfel",
       "repositoryName": "gifs-kipfel",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-kipfel@main/kipfel/",
-      "updated": "2025-12-24T03:15:54.903Z"
+      "updated": "2025-12-24T05:33:01.328Z"
     },
     "mygo": {
       "count": 3,
@@ -64,7 +64,7 @@
       "repository": "https://github.com/MemeTray/gifs-mygo",
       "repositoryName": "gifs-mygo",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-mygo@main/mygo/",
-      "updated": "2025-12-24T03:15:55.072Z"
+      "updated": "2025-12-24T05:33:01.500Z"
     },
     "taffy": {
       "count": 14,
@@ -72,7 +72,7 @@
       "repository": "https://github.com/MemeTray/gifs-taffy",
       "repositoryName": "gifs-taffy",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-taffy@main/taffy/",
-      "updated": "2025-12-24T03:15:55.233Z"
+      "updated": "2025-12-24T05:33:01.643Z"
     },
     "touhou": {
       "count": 3,
@@ -80,7 +80,7 @@
       "repository": "https://github.com/MemeTray/gifs-touhou",
       "repositoryName": "gifs-touhou",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-touhou@main/touhou/",
-      "updated": "2025-12-24T03:15:55.465Z"
+      "updated": "2025-12-24T05:33:01.802Z"
     },
     "blackcat": {
       "count": 1,
@@ -88,7 +88,23 @@
       "repository": "https://github.com/MemeTray/gifs-blackcat",
       "repositoryName": "gifs-blackcat",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-blackcat@main/blackcat/",
-      "updated": "2025-12-24T03:15:55.623Z"
+      "updated": "2025-12-24T05:33:01.941Z"
+    },
+    "vrc": {
+      "count": 0,
+      "title": "vrc",
+      "repository": "https://github.com/MemeTray/gifs-vrc",
+      "repositoryName": "gifs-vrc",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-vrc@main/vrc/",
+      "updated": "2025-12-24T05:33:02.101Z"
+    },
+    "bluearchive": {
+      "count": 1,
+      "title": "bluearchive",
+      "repository": "https://github.com/MemeTray/gifs-bluearchive",
+      "repositoryName": "gifs-bluearchive",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-bluearchive@main/bluearchive/",
+      "updated": "2025-12-24T05:33:02.254Z"
     }
   }
 }
