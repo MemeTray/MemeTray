@@ -130,6 +130,16 @@ jobs:
           // Main function
           async function main() {
             try {
+              // Load existing data
+              let oldData = { sections: {} };
+              if (fs.existsSync('sections.json')) {
+                try {
+                  oldData = JSON.parse(fs.readFileSync('sections.json', 'utf8'));
+                } catch (e) {
+                  console.warn('Could not parse existing sections.json');
+                }
+              }
+
               // Fetch all 'gifs-' repositories
               const repos = await getOrgRepos();
 
@@ -140,19 +150,49 @@ jobs:
 
               // Build the sections object
               const sections = {};
+              let hasAnyChange = false;
 
               for (const repo of repos) {
                 const count = await countGifs(repo);
                 const section = repo.section;
+                const oldSection = oldData.sections[section];
+                
+                const repositoryUrl = `https://github.com/${repo.fullName}`;
+                const cdnBase = `https://cdn.jsdelivr.net/gh/${repo.fullName}@${repo.defaultBranch}/${section}/`;
+
+                // Check if this section has meaningful changes
+                const isChanged = !oldSection || 
+                                 oldSection.count !== count || 
+                                 oldSection.repository !== repositoryUrl ||
+                                 oldSection.repositoryName !== repo.name ||
+                                 oldSection.cdnBase !== cdnBase;
+
+                if (isChanged) {
+                  hasAnyChange = true;
+                  console.log(`  ! Section ${section} changed`);
+                }
 
                 sections[section] = {
                   count: count,
                   title: section,
-                  repository: `https://github.com/${repo.fullName}`,
+                  repository: repositoryUrl,
                   repositoryName: repo.name,
-                  cdnBase: `https://cdn.jsdelivr.net/gh/${repo.fullName}@${repo.defaultBranch}/${section}/`,
-                  updated: new Date().toISOString()
+                  cdnBase: cdnBase,
+                  updated: isChanged ? new Date().toISOString() : oldSection.updated
                 };
+              }
+
+              // Check if any sections were removed
+              const oldKeys = Object.keys(oldData.sections).sort();
+              const newKeys = Object.keys(sections).sort();
+              if (JSON.stringify(oldKeys) !== JSON.stringify(newKeys)) {
+                hasAnyChange = true;
+                console.log('  ! Set of sections changed');
+              }
+
+              if (!hasAnyChange) {
+                console.log('\nNo meaningful changes detected. Skipping update.');
+                return;
               }
 
               // Generate sections.json
@@ -163,8 +203,11 @@ jobs:
               };
 
               // Write the file to both the repository root and docs directory
-              fs.writeFileSync('sections.json', JSON.stringify(output, null, 2) + '\n');
-              fs.writeFileSync('docs/sections.json', JSON.stringify(output, null, 2) + '\n');
+              const jsonOutput = JSON.stringify(output, null, 2) + '\n';
+              fs.writeFileSync('sections.json', jsonOutput);
+              if (fs.existsSync('docs')) {
+                fs.writeFileSync('docs/sections.json', jsonOutput);
+              }
               console.log('\n✓ sections.json updated successfully!');
 
               // Print summary statistics
