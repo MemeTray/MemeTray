@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-09T06:44:12.733Z",
+  "generated": "2026-01-09T07:10:26.772Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -129,6 +129,14 @@
       "repositoryName": "gifs-pig",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-pig@main/pig/",
       "updated": "2026-01-09T06:44:12.733Z"
+    },
+    "bocchi": {
+      "count": 1,
+      "title": "bocchi",
+      "repository": "https://github.com/MemeTray/gifs-bocchi",
+      "repositoryName": "gifs-bocchi",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-bocchi@main/bocchi/",
+      "updated": "2026-01-09T07:10:26.772Z"
     }
   }
 }
