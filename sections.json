@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-09T06:02:23.886Z",
+  "generated": "2026-01-09T06:44:12.733Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -123,12 +123,12 @@
       "updated": "2026-01-09T05:55:30.362Z"
     },
     "pig": {
-      "count": 1,
+      "count": 10,
       "title": "pig",
       "repository": "https://github.com/MemeTray/gifs-pig",
       "repositoryName": "gifs-pig",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-pig@main/pig/",
-      "updated": "2026-01-09T06:02:23.886Z"
+      "updated": "2026-01-09T06:44:12.733Z"
     }
   }
 }
