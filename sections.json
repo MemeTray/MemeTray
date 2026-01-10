@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-10T14:16:10.468Z",
+  "generated": "2026-01-10T14:41:02.263Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -161,6 +161,22 @@
       "repositoryName": "gifs-gugugu",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gugugu@main/gugugu/",
       "updated": "2026-01-10T14:16:10.468Z"
+    },
+    "moshen": {
+      "count": 1,
+      "title": "moshen",
+      "repository": "https://github.com/MemeTray/gifs-moshen",
+      "repositoryName": "gifs-moshen",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-moshen@main/moshen/",
+      "updated": "2026-01-10T14:41:02.067Z"
+    },
+    "moshen2": {
+      "count": 0,
+      "title": "moshen2",
+      "repository": "https://github.com/MemeTray/gifs-moshen2",
+      "repositoryName": "gifs-moshen2",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-moshen2@main/moshen2/",
+      "updated": "2026-01-10T14:41:02.263Z"
     }
   }
 }
