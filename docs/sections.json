@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-10T14:41:02.263Z",
+  "generated": "2026-01-19T04:41:36.899Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -67,12 +67,12 @@
       "updated": "2026-01-07T03:20:54.306Z"
     },
     "taffy": {
-      "count": 14,
+      "count": 15,
       "title": "taffy",
       "repository": "https://github.com/MemeTray/gifs-taffy",
       "repositoryName": "gifs-taffy",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-taffy@main/taffy/",
-      "updated": "2026-01-07T03:20:54.611Z"
+      "updated": "2026-01-19T04:41:33.100Z"
     },
     "touhou": {
       "count": 3,
