@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-26T03:46:57.065Z",
+  "generated": "2026-01-27T11:20:41.915Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -107,12 +107,12 @@
       "updated": "2026-01-07T03:20:55.821Z"
     },
     "gbc": {
-      "count": 1,
+      "count": 2,
       "title": "gbc",
       "repository": "https://github.com/MemeTray/gifs-gbc",
       "repositoryName": "gifs-gbc",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gbc@main/gbc/",
-      "updated": "2026-01-07T03:20:56.103Z"
+      "updated": "2026-01-27T11:20:38.401Z"
     },
     "bh3": {
       "count": 1,
@@ -193,6 +193,14 @@
       "repositoryName": "gifs-bangdream",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-bangdream@main/bangdream/",
       "updated": "2026-01-26T03:46:57.064Z"
+    },
+    "zmd": {
+      "count": 1,
+      "title": "zmd",
+      "repository": "https://github.com/MemeTray/gifs-zmd",
+      "repositoryName": "gifs-zmd",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-zmd@main/zmd/",
+      "updated": "2026-01-27T11:20:41.915Z"
     }
   }
 }
