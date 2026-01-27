@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-27T11:20:41.915Z",
+  "generated": "2026-01-27T12:31:08.418Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -107,12 +107,12 @@
       "updated": "2026-01-07T03:20:55.821Z"
     },
     "gbc": {
-      "count": 2,
+      "count": 23,
       "title": "gbc",
       "repository": "https://github.com/MemeTray/gifs-gbc",
       "repositoryName": "gifs-gbc",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gbc@main/gbc/",
-      "updated": "2026-01-27T11:20:38.401Z"
+      "updated": "2026-01-27T12:31:06.285Z"
     },
     "bh3": {
       "count": 1,
@@ -147,12 +147,12 @@
       "updated": "2026-01-09T07:45:29.896Z"
     },
     "fufu": {
-      "count": 1,
+      "count": 7,
       "title": "fufu",
       "repository": "https://github.com/MemeTray/gifs-fufu",
       "repositoryName": "gifs-fufu",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-fufu@main/fufu/",
-      "updated": "2026-01-09T08:38:33.921Z"
+      "updated": "2026-01-27T12:31:07.169Z"
     },
     "gugugu": {
       "count": 2,
@@ -201,6 +201,14 @@
       "repositoryName": "gifs-zmd",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-zmd@main/zmd/",
       "updated": "2026-01-27T11:20:41.915Z"
+    },
+    "gogh": {
+      "count": 1,
+      "title": "gogh",
+      "repository": "https://github.com/MemeTray/gifs-gogh",
+      "repositoryName": "gifs-gogh",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gogh@main/gogh/",
+      "updated": "2026-01-27T12:31:08.418Z"
     }
   }
 }
