@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-27T12:31:08.418Z",
+  "generated": "2026-01-28T06:24:31.036Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -187,12 +187,12 @@
       "updated": "2026-01-26T03:46:56.877Z"
     },
     "bangdream": {
-      "count": 0,
+      "count": 2,
       "title": "bangdream",
       "repository": "https://github.com/MemeTray/gifs-bangdream",
       "repositoryName": "gifs-bangdream",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-bangdream@main/bangdream/",
-      "updated": "2026-01-26T03:46:57.064Z"
+      "updated": "2026-01-28T06:24:30.485Z"
     },
     "zmd": {
       "count": 1,
@@ -209,6 +209,22 @@
       "repositoryName": "gifs-gogh",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gogh@main/gogh/",
       "updated": "2026-01-27T12:31:08.418Z"
+    },
+    "hsr": {
+      "count": 0,
+      "title": "hsr",
+      "repository": "https://github.com/MemeTray/gifs-hsr",
+      "repositoryName": "gifs-hsr",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-hsr@main/hsr/",
+      "updated": "2026-01-28T06:24:30.893Z"
+    },
+    "cats": {
+      "count": 0,
+      "title": "cats",
+      "repository": "https://github.com/MemeTray/gifs-cats",
+      "repositoryName": "gifs-cats",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-cats@main/cats/",
+      "updated": "2026-01-28T06:24:31.036Z"
     }
   }
 }
