@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-28T06:24:31.036Z",
+  "generated": "2026-01-28T07:10:21.530Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -225,6 +225,14 @@
       "repositoryName": "gifs-cats",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-cats@main/cats/",
       "updated": "2026-01-28T06:24:31.036Z"
+    },
+    "gakumas": {
+      "count": 1,
+      "title": "gakumas",
+      "repository": "https://github.com/MemeTray/gifs-gakumas",
+      "repositoryName": "gifs-gakumas",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gakumas@main/gakumas/",
+      "updated": "2026-01-28T07:10:21.529Z"
     }
   }
 }
