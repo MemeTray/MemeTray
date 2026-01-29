@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-28T07:21:49.747Z",
+  "generated": "2026-01-29T03:58:25.153Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -163,12 +163,12 @@
       "updated": "2026-01-10T14:16:10.468Z"
     },
     "moshen": {
-      "count": 1,
+      "count": 3,
       "title": "moshen",
       "repository": "https://github.com/MemeTray/gifs-moshen",
       "repositoryName": "gifs-moshen",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-moshen@main/moshen/",
-      "updated": "2026-01-10T14:41:02.067Z"
+      "updated": "2026-01-29T03:58:23.620Z"
     },
     "moshen2": {
       "count": 0,
