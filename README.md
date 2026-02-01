@@ -10,6 +10,11 @@
 See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Contributions, corrections & requests can be made on GitHub.</p>
 </p>
 
+<p align="center">
+    <img src="https://count.getloli.com/@memetray?name=memetray&theme=booru-qualityhentais&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" width="400">
+  </p>
+
+
 
 <img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/96741450-343b-460c-acde-cf798a951b07" />
 
