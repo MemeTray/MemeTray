@@ -6,13 +6,16 @@
   <h1>MemeTray</h1>
 </div>
 
-<p align="center">
-See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Contributions, corrections & requests can be made on GitHub.</p>
-</p>
 
 <p align="center">
     <img src="https://count.getloli.com/@memetray?name=memetray&theme=booru-qualityhentais&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" width="400">
   </p>
+
+
+<p align="center">
+See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Contributions, corrections & requests can be made on GitHub.</p>
+</p>
+
 
 
 
