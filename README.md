@@ -16,10 +16,10 @@
 See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Contributions, corrections & requests can be made on GitHub.</p>
 </p>
 
+<img width="1920" height="911" alt="image" src="https://github.com/user-attachments/assets/78ed278a-2724-4042-961e-5a8806a490aa" />
 
 
 
-<img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/96741450-343b-460c-acde-cf798a951b07" />
 
 
 ## Usage
