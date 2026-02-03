@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-02-03T03:39:00.389Z",
+  "generated": "2026-02-03T04:03:35.641Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -241,6 +241,14 @@
       "repositoryName": "gifs-rotate",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-rotate@main/rotate/",
       "updated": "2026-02-03T03:39:00.389Z"
+    },
+    "warma": {
+      "count": 0,
+      "title": "warma",
+      "repository": "https://github.com/MemeTray/gifs-warma",
+      "repositoryName": "gifs-warma",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-warma@main/warma/",
+      "updated": "2026-02-03T04:03:35.641Z"
     }
   }
 }
