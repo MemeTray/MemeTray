@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-01-29T03:58:25.153Z",
+  "generated": "2026-02-03T03:39:00.389Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -233,6 +233,14 @@
       "repositoryName": "gifs-gakumas",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gakumas@main/gakumas/",
       "updated": "2026-01-28T07:21:49.747Z"
+    },
+    "rotate": {
+      "count": 1,
+      "title": "rotate",
+      "repository": "https://github.com/MemeTray/gifs-rotate",
+      "repositoryName": "gifs-rotate",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-rotate@main/rotate/",
+      "updated": "2026-02-03T03:39:00.389Z"
     }
   }
 }
