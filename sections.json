@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-02-04T04:01:52.676Z",
+  "generated": "2026-02-07T06:12:41.415Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -51,12 +51,12 @@
       "updated": "2026-01-07T03:20:53.702Z"
     },
     "kipfel": {
-      "count": 33,
+      "count": 34,
       "title": "kipfel",
       "repository": "https://github.com/MemeTray/gifs-kipfel",
       "repositoryName": "gifs-kipfel",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-kipfel@main/kipfel/",
-      "updated": "2026-01-07T03:20:54.027Z"
+      "updated": "2026-02-07T06:12:32.489Z"
     },
     "mygo": {
       "count": 3,
@@ -139,12 +139,12 @@
       "updated": "2026-01-09T07:10:26.772Z"
     },
     "gugugaga": {
-      "count": 2,
+      "count": 5,
       "title": "gugugaga",
       "repository": "https://github.com/MemeTray/gifs-gugugaga",
       "repositoryName": "gifs-gugugaga",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gugugaga@main/gugugaga/",
-      "updated": "2026-02-04T04:01:50.577Z"
+      "updated": "2026-02-07T06:12:36.369Z"
     },
     "fufu": {
       "count": 7,
@@ -249,6 +249,14 @@
       "repositoryName": "gifs-warma",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-warma@main/warma/",
       "updated": "2026-02-03T04:03:35.641Z"
+    },
+    "azusa": {
+      "count": 1,
+      "title": "azusa",
+      "repository": "https://github.com/MemeTray/gifs-azusa",
+      "repositoryName": "gifs-azusa",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-azusa@main/azusa/",
+      "updated": "2026-02-07T06:12:41.415Z"
     }
   }
 }
