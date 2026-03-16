@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-02-15T04:09:52.489Z",
+  "generated": "2026-03-16T04:28:27.478Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -139,12 +139,12 @@
       "updated": "2026-01-09T07:10:26.772Z"
     },
     "gugugaga": {
-      "count": 5,
+      "count": 10,
       "title": "gugugaga",
       "repository": "https://github.com/MemeTray/gifs-gugugaga",
       "repositoryName": "gifs-gugugaga",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gugugaga@main/gugugaga/",
-      "updated": "2026-02-07T06:12:36.369Z"
+      "updated": "2026-03-16T04:28:23.262Z"
     },
     "fufu": {
       "count": 7,
