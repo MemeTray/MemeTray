@@ -27,6 +27,7 @@ See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Co
 > [!IMPORTANT]\
 > Before using any GIFs from this project, please read our [legal disclaimer](./DISCLAIMER.md).
 
+- Click on the emoticon pack to enter the download.😋
 
 ### meme
 | 🐱 | 🐱 | 🐱 | 🐱 | 🐱 |
