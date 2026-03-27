@@ -28,6 +28,7 @@ See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Co
 > Before using any GIFs from this project, please read our [legal disclaimer](./DISCLAIMER.md).
 
 - Click on the meme to download.😋
+- Keep updating.😋
 
 ### meme
 | 🐱 | 🐱 | 🐱 | 🐱 | 🐱 |
