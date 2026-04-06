@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-03-20T04:02:30.244Z",
+  "generated": "2026-04-06T13:54:28.474Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -265,6 +265,14 @@
       "repositoryName": "gifs-va",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-va@main/va/",
       "updated": "2026-02-15T04:09:52.489Z"
+    },
+    "diana": {
+      "count": 41,
+      "title": "diana",
+      "repository": "https://github.com/MemeTray/gifs-diana",
+      "repositoryName": "gifs-diana",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-diana@main/diana/",
+      "updated": "2026-04-06T13:54:28.474Z"
     }
   }
 }
