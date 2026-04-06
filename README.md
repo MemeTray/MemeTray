@@ -50,7 +50,7 @@ See them all on one page at <a href="https://memetray.org/">MemeTray.org</a>. Co
 
 ### vtuber
 | 🎙️ | 🎙️ | 🎙️ |
-| :---: | :---: |
+| :---: | :---: | :---: |
 | <a href="https://memetray.org/#taffy"><img height='100px' style='height:100px;' src='https://github.com/MemeTray/gifs-taffy/blob/main/taffy/0015_taffy.gif?raw=true' /></a><br>[taffy](https://memetray.org/#taffy) | <a href="https://memetray.org/#azusa"><img height='100px' style='height:100px;' src='https://github.com/MemeTray/gifs-azusa/blob/main/azusa/0001_azusa.gif?raw=true' /></a><br>[azusa](https://memetray.org/#azusa) | <a href="https://memetray.org/#diana"><img height='100px' style='height:100px;' src='https://github.com/MemeTray/gifs-diana/blob/main/diana/0001_diana.gif?raw=true' /></a><br>[diana](https://memetray.org/#diana) |
 
 
