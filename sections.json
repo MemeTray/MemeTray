@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-05-01T05:31:22.685Z",
+  "generated": "2026-05-05T13:18:49.890Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -275,12 +275,12 @@
       "updated": "2026-04-06T13:54:28.474Z"
     },
     "arknights": {
-      "count": 0,
+      "count": 1,
       "title": "arknights",
       "repository": "https://github.com/MemeTray/gifs-arknights",
       "repositoryName": "gifs-arknights",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-arknights@main/arknights/",
-      "updated": "2026-05-01T05:31:22.685Z"
+      "updated": "2026-05-05T13:18:49.890Z"
     }
   }
 }
