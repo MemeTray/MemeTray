@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-05-05T13:18:49.890Z",
+  "generated": "2026-05-08T02:07:02.494Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -131,12 +131,12 @@
       "updated": "2026-01-09T06:44:12.733Z"
     },
     "bocchi": {
-      "count": 1,
+      "count": 18,
       "title": "bocchi",
       "repository": "https://github.com/MemeTray/gifs-bocchi",
       "repositoryName": "gifs-bocchi",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-bocchi@main/bocchi/",
-      "updated": "2026-01-09T07:10:26.772Z"
+      "updated": "2026-05-08T02:06:55.123Z"
     },
     "gugugaga": {
       "count": 10,
