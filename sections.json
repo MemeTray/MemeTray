@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-05-08T02:07:02.494Z",
+  "generated": "2026-05-11T05:47:31.258Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -75,12 +75,12 @@
       "updated": "2026-01-19T04:41:33.100Z"
     },
     "touhou": {
-      "count": 3,
+      "count": 20,
       "title": "touhou",
       "repository": "https://github.com/MemeTray/gifs-touhou",
       "repositoryName": "gifs-touhou",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-touhou@main/touhou/",
-      "updated": "2026-01-07T03:20:54.906Z"
+      "updated": "2026-05-11T05:47:24.811Z"
     },
     "blackcat": {
       "count": 18,
