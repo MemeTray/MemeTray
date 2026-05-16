@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-05-11T05:47:31.258Z",
+  "generated": "2026-05-16T05:39:18.349Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -281,6 +281,14 @@
       "repositoryName": "gifs-arknights",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-arknights@main/arknights/",
       "updated": "2026-05-05T13:18:49.890Z"
+    },
+    "rocokingdomworld": {
+      "count": 3,
+      "title": "rocokingdomworld",
+      "repository": "https://github.com/MemeTray/gifs-rocokingdomworld",
+      "repositoryName": "gifs-rocokingdomworld",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-rocokingdomworld@main/rocokingdomworld/",
+      "updated": "2026-05-16T05:39:18.349Z"
     }
   }
 }
