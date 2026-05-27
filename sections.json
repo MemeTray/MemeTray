@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-05-25T06:14:18.469Z",
+  "generated": "2026-05-27T06:06:06.714Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -90,13 +90,13 @@
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-blackcat@main/blackcat/",
       "updated": "2026-01-07T03:20:55.182Z"
     },
-    "vrc": {
+    "vrchat": {
       "count": 0,
-      "title": "vrc",
-      "repository": "https://github.com/MemeTray/gifs-vrc",
-      "repositoryName": "gifs-vrc",
-      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-vrc@main/vrc/",
-      "updated": "2026-01-07T03:20:55.470Z"
+      "title": "vrchat",
+      "repository": "https://github.com/MemeTray/gifs-vrchat",
+      "repositoryName": "gifs-vrchat",
+      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-vrchat@main/vrchat/",
+      "updated": "2026-05-27T06:06:00.832Z"
     },
     "bluearchive": {
       "count": 6,
