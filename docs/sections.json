@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-05-27T06:06:06.714Z",
+  "generated": "2026-05-27T06:24:03.805Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -91,12 +91,12 @@
       "updated": "2026-01-07T03:20:55.182Z"
     },
     "vrchat": {
-      "count": 0,
+      "count": 1,
       "title": "vrchat",
       "repository": "https://github.com/MemeTray/gifs-vrchat",
       "repositoryName": "gifs-vrchat",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-vrchat@main/vrchat/",
-      "updated": "2026-05-27T06:06:00.832Z"
+      "updated": "2026-05-27T06:23:58.938Z"
     },
     "bluearchive": {
       "count": 6,
