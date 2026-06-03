@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-05-27T06:24:03.805Z",
+  "generated": "2026-06-03T06:41:46.017Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -19,12 +19,12 @@
       "updated": "2026-01-07T03:20:52.386Z"
     },
     "genshin": {
-      "count": 3,
+      "count": 4,
       "title": "genshin",
       "repository": "https://github.com/MemeTray/gifs-genshin",
       "repositoryName": "gifs-genshin",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-genshin@main/genshin/",
-      "updated": "2026-01-07T03:20:52.636Z"
+      "updated": "2026-06-03T06:41:35.133Z"
     },
     "maodie": {
       "count": 19,
