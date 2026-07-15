@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-06-03T06:41:46.017Z",
+  "generated": "2026-07-15T04:36:48.916Z",
   "sections": {
     "doro": {
       "count": 183,
@@ -25,14 +25,6 @@
       "repositoryName": "gifs-genshin",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-genshin@main/genshin/",
       "updated": "2026-06-03T06:41:35.133Z"
-    },
-    "maodie": {
-      "count": 19,
-      "title": "maodie",
-      "repository": "https://github.com/MemeTray/gifs-maodie",
-      "repositoryName": "gifs-maodie",
-      "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-maodie@main/maodie/",
-      "updated": "2026-01-07T03:20:52.936Z"
     },
     "maomaochong": {
       "count": 352,
@@ -139,12 +131,12 @@
       "updated": "2026-05-08T02:06:55.123Z"
     },
     "gugugaga": {
-      "count": 10,
+      "count": 9,
       "title": "gugugaga",
       "repository": "https://github.com/MemeTray/gifs-gugugaga",
       "repositoryName": "gifs-gugugaga",
       "cdnBase": "https://cdn.jsdelivr.net/gh/MemeTray/gifs-gugugaga@main/gugugaga/",
-      "updated": "2026-03-16T04:28:23.262Z"
+      "updated": "2026-07-15T04:36:44.623Z"
     },
     "fufu": {
       "count": 7,
